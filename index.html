@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NANdART – Galeria Descentralizada</title>
+  <title>NANdART – Galeria de Arte Web3</title>
   <style>
     body { margin: 0; font-family: 'Georgia', serif; background-color: #121212; color: #ffffff; line-height: 1.6; }
     .language-selector { text-align: right; padding: 10px 40px 0 0; }
@@ -29,6 +29,7 @@
       <option value="en">English</option>
     </select>
   </div>
+
   <header>
     <h1>NANdART</h1>
     <nav>
@@ -39,34 +40,41 @@
       <a href="#contacto">Contacto</a>
     </nav>
   </header>
+
   <section class="hero" id="obra">
     <h2>Onde a arte encontra a eternidade.</h2>
-    <p>A NANdART é um santuário etéreo de arte, onde cada criação transcende o tempo.<br>
-    Impressa na blockchain. Animada pelo sopro da alma artística.</p>
+    <p>A NANdART é uma galeria de arte ligada à Web3, onde cada obra se torna imortal.<br>Emoldurada na blockchain. Guiada por visão.</p>
+    <button onclick="window.location.href='submeter.html'">Submeter Obra</button>
     <button>Explorar Galeria Web3</button>
     <img src="obra.jpg" alt="Obra de arte destaque">
   </section>
+
   <section class="section" id="sobre">
-  <h2>Sobre a NANdART</h2>
-  <p>A NANdART é uma galeria onde a arte caminha com os pés no presente e o olhar no infinito. Fundada por Rénner Nunes, natural das ilhas de São Tomé e Princípe, funde tradição e vanguarda para acolher criadores que procuram eternizar as suas obras na cadeia do tempo digital. Cada obra aqui proposta é cuidadosamente acolhida e preparada para nascer na blockchain como NFT — não apenas como produto, mas como testemunho de alma e memória. </p>
-</section>
+    <h2>Sobre a NANdART</h2>
+    <p>A NANdART nasceu da fusão entre tradição artística e inovação tecnológica. Criada por um artista Santomense com raízes profundas no real e um olhar firme sobre o futuro, esta galeria vive na Web3, mas respira arte eterna. Aqui, cada obra é transformada num NFT, garantindo autenticidade, propriedade e um percurso ininterrupto de valor e memória.</p>
+  </section>
+
   <section class="section" id="artistas">
-  <h2>És artista? Junta-te à nova era da arte.</h2>
-  <p>A NANdART convida artistas visuais, digitais, plásticos ou experimentais a exporem as suas obras no mundo Web3. Aqui, cada venda é tua. Cada revenda, também.</p>
-  <button onclick="window.location.href='submeter.html'">Submeter Obra</button>
-</section>
+    <h2>És artista? Junta-te à nova era da arte.</h2>
+    <p>A NANdART convida artistas visuais, digitais, plásticos ou experimentais a exporem as suas obras no mundo Web3. Aqui, cada venda é tua. Cada revenda, também.</p>
+    <button onclick="window.location.href='submeter.html'">Submeter Obra</button>
+  </section>
+
   <section class="section" id="web3">
     <h2>Web3 e Arte</h2>
     <p>A Web3 representa uma nova era para a arte digital. Na NANdART, exploramos o potencial dos NFTs para garantir propriedade, raridade e valor contínuo às criações artísticas.</p>
   </section>
+
   <section class="section" id="contacto">
     <h2>Contacto</h2>
     <p>Email: info@nandart.art</p>
     <p>Segue-nos nas redes sociais para novidades, exposições e convites.</p>
   </section>
+
   <footer>
     <p>© 2025 NANdART. Todos os direitos reservados.<br>Política de Privacidade | Termos de Utilização</p>
   </footer>
+
   <script>
     function changeLanguage() {
       const lang = document.getElementById('language').value;
