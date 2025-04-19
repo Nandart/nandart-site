@@ -104,7 +104,9 @@
   <section class="hero" id="obra">
     <h2>Onde a arte encontra a eternidade.</h2>
     <p>A NANdART é um santuário etéreo de arte, onde cada criação transcende o tempo.<br>Impressa na blockchain. Animada pelo sopro da alma artística.</p>
-    <button onclick="window.location.href='submeter.html'">Submeter Obra</button>
+    <span id="admin-buttons" style="display: none;">
+  <button onclick="window.location.href='submeter.html'">Submeter Obra</button>
+</span>
     <button>Explorar Galeria Web3</button>
     <img src="obra.jpg" alt="Obra de arte destaque">
   </section>
@@ -145,5 +147,23 @@
       }
     }
   </script>
+  function changeLanguage() {
+    const lang = document.getElementById('language').value;
+    if (lang === 'pt') {
+      window.location.href = '/';
+    } else {
+      window.location.href = '/' + lang + '/';
+    }
+  }
+
+  // Mostrar botão de submissão apenas para o link com ?admin=true
+  window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const isAdmin = urlParams.get('admin');
+    if (isAdmin === 'true') {
+      document.getElementById('admin-buttons').style.display = 'inline-block';
+    }
+  };
+</script>
 </body>
 </html>
