@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submeter Obra - NANdART</title>
+  <style>
+    body {
+      font-family: Georgia, serif;
+      background-color: #121212;
+      color: #ffffff;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #d4af37;
+    }
+
+    form {
+      background-color: #1e1e1e;
+      padding: 20px;
+      margin: 20px auto;
+      border: 1px solid #d4af37;
+      max-width: 600px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      background-color: #262626;
+      color: #fff;
+      border: 1px solid #555;
+    }
+
+    button {
+      background-color: #d4af37;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .divider {
+      border-top: 2px solid #555;
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Submissão de Obras</h1>
+
+  <section>
+    <h2>Para Artistas Externos</h2>
+    <form action="https://example.com/submit" method="POST" enctype="multipart/form-data">
+      <label for="nome">Nome do Artista</label>
+      <input type="text" id="nome" name="nome" required />
+
+      <label for="email">Email de Contacto</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="bio">Biografia curta</label>
+      <textarea id="bio" name="bio" rows="4"></textarea>
+
+      <label for="obra">Título da Obra</label>
+      <input type="text" id="obra" name="obra" required />
+
+      <label for="imagem">Imagem da Obra</label>
+      <input type="file" id="imagem" name="imagem" accept="image/*" required />
+
+      <label for="descricao">Descrição da Obra</label>
+      <textarea id="descricao" name="descricao" rows="4"></textarea>
+
+      <button type="submit">Submeter Obra para Avaliação</button>
+    </form>
+  </section>
+
+  <div class="divider"></div>
+
+  <section>
+    <h2>Adicionar Obra da NANdART</h2>
+    <form action="https://example.com/add-own" method="POST" enctype="multipart/form-data">
+      <label for="titulo">Título</label>
+      <input type="text" id="titulo" name="titulo" required />
+
+      <label for="imagem-propria">Imagem da Obra</label>
+      <input type="file" id="imagem-propria" name="imagem-propria" accept="image/*" required />
+
+      <label for="descricao-propria">Descrição</label>
+      <textarea id="descricao-propria" name="descricao-propria" rows="4"></textarea>
+
+      <label for="nft">Transformar em NFT?</label>
+      <select id="nft" name="nft">
+        <option value="sim">Sim</option>
+        <option value="nao">Não</option>
+      </select>
+
+      <button type="submit">Adicionar Obra</button>
+    </form>
+  </section>
+</body>
+</html>
