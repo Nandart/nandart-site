@@ -12,10 +12,12 @@
       margin: 0;
       padding: 20px;
     }
+
     h1, h2 {
       text-align: center;
       color: #d4af37;
     }
+
     form {
       background-color: #1e1e1e;
       padding: 20px;
@@ -23,12 +25,14 @@
       border: 1px solid #d4af37;
       max-width: 600px;
     }
+
     label {
       display: block;
       margin-top: 15px;
       font-weight: bold;
     }
-    input, textarea {
+
+    input, textarea, select {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -36,6 +40,7 @@
       color: #fff;
       border: 1px solid #555;
     }
+
     button {
       background-color: #d4af37;
       color: #000;
@@ -45,18 +50,18 @@
       cursor: pointer;
       font-size: 16px;
     }
+
     #mensagem {
       margin-top: 20px;
       text-align: center;
       font-weight: bold;
     }
+
     .loading {
       text-align: center;
       margin-top: 10px;
     }
-    a {
-      text-decoration: none;
-    }
+
     @media (max-width: 600px) {
       form {
         width: 90%;
@@ -69,11 +74,32 @@
   <h2>Para Artistas Externos</h2>
 
   <form id="formulario-obras">
+    <label for="nomeArtista">Nome do Artista</label>
+    <input type="text" id="nomeArtista" name="nomeArtista" required />
+
     <label for="titulo">Título da Obra</label>
     <input type="text" id="titulo" name="titulo" required />
 
     <label for="descricao">Descrição da Obra</label>
     <textarea id="descricao" name="descricao" rows="4" required></textarea>
+
+    <label for="estiloObra">Estilo da Obra</label>
+    <input type="text" id="estiloObra" name="estiloObra" required />
+
+    <label for="tecnica">Técnica Utilizada</label>
+    <input type="text" id="tecnica" name="tecnica" required />
+
+    <label for="anoCriacao">Ano de Criação</label>
+    <input type="number" id="anoCriacao" name="anoCriacao" required />
+
+    <label for="dimensoes">Dimensões</label>
+    <input type="text" id="dimensoes" name="dimensoes" required />
+
+    <label for="materiais">Materiais Utilizados</label>
+    <input type="text" id="materiais" name="materiais" required />
+
+    <label for="localCriacao">Local de Criação</label>
+    <input type="text" id="localCriacao" name="localCriacao" required />
 
     <label for="enderecowallet">Endereço da Wallet</label>
     <input type="text" id="enderecowallet" name="enderecowallet" required />
@@ -95,7 +121,6 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       mensagem.textContent = '';
-      mensagem.style.color = '#ffffff';
       loading.style.display = 'block';
 
       const formData = new FormData(form);
@@ -111,11 +136,11 @@
 
         if (response.ok) {
           mensagem.style.color = '#32CD32';
-          mensagem.innerHTML = `✅ ${resultado.message}<br><a href="${resultado.imageUrl}" target="_blank" style="color:#d4af37; text-decoration: none;">🖼️ Ver imagem submetida</a>`;
+          mensagem.innerHTML = `✅ ${resultado.message}<br><a href="${resultado.imageUrl}" target="_blank" style="color:#d4af37">🖼️ Ver imagem submetida</a>`;
           form.reset();
         } else {
           mensagem.style.color = 'red';
-          mensagem.innerHTML = `❌ ${resultado.message}${resultado.details ? '<br><small>' + resultado.details + '</small>' : ''}`;
+          mensagem.textContent = `❌ ${resultado.message}`;
         }
       } catch (erro) {
         loading.style.display = 'none';
