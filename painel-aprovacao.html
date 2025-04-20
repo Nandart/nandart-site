@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Aprovação - NANdART</title>
+  <title>Painel de Aprovação de Obras - NANdART</title>
   <style>
     body {
       font-family: Georgia, serif;
@@ -22,92 +22,84 @@
       background-color: #1e1e1e;
       border: 1px solid #d4af37;
       padding: 15px;
-      margin: 20px auto;
-      max-width: 700px;
+      margin-bottom: 20px;
     }
 
-    .obra img {
-      max-width: 100%;
-      margin-top: 10px;
-    }
-
-    .obra button {
-      margin-top: 10px;
-      background-color: #32CD32;
-      color: black;
-      padding: 10px;
+    button {
+      background-color: #d4af37;
+      color: #000;
       border: none;
+      padding: 10px 20px;
+      margin-top: 10px;
       cursor: pointer;
-      font-weight: bold;
-    }
-
-    .mensagem {
-      text-align: center;
-      margin-top: 20px;
-      color: #32CD32;
-      font-weight: bold;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
   <h1>Painel de Aprovação de Obras</h1>
-
   <div id="painel"></div>
-  <div class="mensagem" id="mensagem"></div>
 
   <script>
-    async function carregarSubmissoes() {
+    async function carregarObras() {
       const painel = document.getElementById('painel');
-      painel.innerHTML = '<p>A carregar submissões...</p>';
+      painel.innerHTML = '⏳ A carregar...';
 
       try {
-        const issues = await fetch("https://api.github.com/repos/Nandart/nandart-submissoes/issues", {
-          headers: {
-            Accept: "application/vnd.github+json"
-          }
-        }).then(res => res.json());
+        const response = await fetch('https://api.github.com/repos/Nandart/nandart-submissoes/issues?labels=submissao');
+        const issues = await response.json();
+
+        if (!Array.isArray(issues)) {
+          painel.innerHTML = 'Erro ao carregar obras.';
+          return;
+        }
+
+        if (issues.length === 0) {
+          painel.innerHTML = 'Nenhuma obra pendente de aprovação.';
+          return;
+        }
 
         painel.innerHTML = '';
+        for (const issue of issues) {
+          const imagemMatch = issue.body.match(/!\[Obra\]\((.*?)\)/);
+          const imagemUrl = imagemMatch ? imagemMatch[1] : '';
 
-        issues.filter(issue => issue.state === 'open' && issue.title.includes('🖼️')).forEach(issue => {
           const div = document.createElement('div');
           div.className = 'obra';
-
-          const imagem = issue.body.match(/!\[Obra\]\((.*?)\)/)?.[1] || '';
-
           div.innerHTML = `
-            <h2>${issue.title}</h2>
+            <h3>${issue.title}</h3>
             <p>${issue.body.replace(/\n/g, '<br>')}</p>
-            ${imagem ? `<img src="${imagem}" alt="Imagem da Obra">` : ''}
-            <button onclick="aprovar(${issue.number})">✅ Aprovar</button>
+            ${imagemUrl ? `<img src="${imagemUrl}" alt="Imagem da Obra" style="max-width:100%;">` : ''}
+            <button onclick="aprovarObra(${issue.number})">Aprovar Obra</button>
           `;
-
           painel.appendChild(div);
-        });
+        }
       } catch (erro) {
-        painel.innerHTML = '<p style="color:red">Erro ao carregar submissões.</p>';
+        console.error('[ERRO] Ao carregar as issues:', erro);
+        painel.innerHTML = 'Erro ao contactar o servidor.';
       }
     }
 
-    async function aprovar(issueNumber) {
-      const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ issueNumber })
-      });
+    async function aprovarObra(issueNumber) {
+      if (!confirm('Deseja aprovar esta obra e publicá-la na galeria?')) return;
 
-      const resultado = await resposta.json();
+      try {
+        const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ issueNumber })
+        });
 
-      const mensagem = document.getElementById('mensagem');
-      if (resposta.ok) {
-        mensagem.innerText = `✅ ${resultado.message}`;
-        carregarSubmissoes();
-      } else {
-        mensagem.innerText = `❌ ${resultado.message}`;
+        const resultado = await resposta.json();
+        alert(resultado.message);
+        carregarObras();
+      } catch (erro) {
+        alert('Erro ao aprovar a obra.');
+        console.error(erro);
       }
     }
 
-    carregarSubmissoes();
+    carregarObras();
   </script>
 </body>
 </html>
