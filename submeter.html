@@ -12,27 +12,30 @@
       margin: 0;
       padding: 20px;
     }
-
-    h1, h2 {
+    h1 {
       text-align: center;
       color: #d4af37;
+      font-size: 2.5em;
+      margin-bottom: 10px;
     }
-
+    h2 {
+      text-align: center;
+      color: #d4af37;
+      margin-bottom: 20px;
+    }
     form {
       background-color: #1e1e1e;
       padding: 20px;
-      margin: 20px auto;
+      margin: 0 auto;
       border: 1px solid #d4af37;
       max-width: 600px;
     }
-
     label {
       display: block;
       margin-top: 15px;
       font-weight: bold;
     }
-
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -40,7 +43,6 @@
       color: #fff;
       border: 1px solid #555;
     }
-
     button {
       background-color: #d4af37;
       color: #000;
@@ -49,20 +51,20 @@
       margin-top: 20px;
       cursor: pointer;
       font-size: 16px;
+      width: 100%;
     }
-
+    .divider {
+      border-top: 2px solid #555;
+      margin: 40px 0;
+    }
     #mensagem {
       text-align: center;
       margin-top: 20px;
-      font-weight: bold;
+      font-size: 1.1em;
+      display: none;
     }
-
-    .sucesso {
-      color: #00cc66;
-    }
-
-    .erro {
-      color: #ff4444;
+    #mensagem a {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -71,7 +73,7 @@
   <h1>Submissão de Obras</h1>
   <h2>Para Artistas Externos</h2>
 
-  <form id="formulario">
+  <form id="obraForm" enctype="multipart/form-data">
     <label for="titulo">Título da Obra</label>
     <input type="text" id="titulo" name="titulo" required />
 
@@ -89,17 +91,36 @@
 
   <div id="mensagem"></div>
 
+  <div class="divider"></div>
+
+  <!-- 🖼️ FORMULÁRIO PARA O PRÓPRIO AUTOR (NANdART) -->
+  <section id="admin-section" style="display: none;">
+    <h2>Adicionar Obra da NANdART</h2>
+    <a href="submeter_autor.html">
+      <button>Ir para página de Adição de Obras</button>
+    </a>
+  </section>
+
   <script>
-    const formulario = document.getElementById('formulario');
-    const mensagem = document.getElementById('mensagem');
+    // Mostrar secção do autor apenas com ?admin=true
+    window.onload = function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isAdmin = urlParams.get('admin');
+      if (isAdmin === 'true') {
+        document.getElementById('admin-section').style.display = 'block';
+      }
+    };
 
-    formulario.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    // Submissão com feedback dinâmico
+    document.getElementById('obraForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
 
-      mensagem.textContent = '⏳ A submeter...';
-      mensagem.className = '';
+      const form = event.target;
+      const formData = new FormData(form);
+      const alerta = document.getElementById('mensagem');
 
-      const formData = new FormData(formulario);
+      alerta.textContent = '';
+      alerta.style.display = 'none';
 
       try {
         const response = await fetch('https://nandart-api.vercel.app/api/submit', {
@@ -107,25 +128,22 @@
           body: formData,
         });
 
-        const resultado = await response.json();
+        const result = await response.json();
 
         if (response.ok) {
-          mensagem.textContent = '✅ ' + resultado.message;
-          mensagem.className = 'sucesso';
-          formulario.reset();
+          alerta.innerHTML = `✅ ${result.message}<br><a href="${result.imageUrl}" target="_blank" style="color: #d4af37;">Ver Imagem</a>`;
+          alerta.style.color = '#00ff88';
         } else {
-          mensagem.textContent = '❌ ' + (resultado.message || 'Erro ao submeter');
-          mensagem.className = 'erro';
+          alerta.textContent = `❌ ${result.message}`;
+          alerta.style.color = '#ff4444';
         }
-      } catch (erro) {
-        mensagem.textContent = '❌ Erro ao contactar o servidor.';
-        mensagem.className = 'erro';
+      } catch (error) {
+        console.error('[ERRO] Ligação com a API:', error);
+        alerta.textContent = '❌ Erro ao contactar o servidor.';
+        alerta.style.color = '#ff4444';
       }
 
-      setTimeout(() => {
-        mensagem.textContent = '';
-        mensagem.className = '';
-      }, 7000);
+      alerta.style.display = 'block';
     });
   </script>
 </body>
