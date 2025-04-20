@@ -12,22 +12,27 @@
       margin: 0;
       padding: 20px;
     }
+
     h1, h2 {
       text-align: center;
       color: #d4af37;
     }
+
     form {
       background-color: #1e1e1e;
       padding: 20px;
       margin: 20px auto;
       border: 1px solid #d4af37;
       max-width: 600px;
+      width: 100%;
     }
+
     label {
       display: block;
       margin-top: 15px;
       font-weight: bold;
     }
+
     input, textarea, select {
       width: 100%;
       padding: 8px;
@@ -35,7 +40,9 @@
       background-color: #262626;
       color: #fff;
       border: 1px solid #555;
+      box-sizing: border-box;
     }
+
     button {
       background-color: #d4af37;
       color: #000;
@@ -44,10 +51,38 @@
       margin-top: 20px;
       cursor: pointer;
       font-size: 16px;
+      width: 100%;
     }
+
     .divider {
       border-top: 2px solid #555;
       margin: 40px 0;
+    }
+
+    .alerta {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .sucesso {
+      color: #4caf50;
+    }
+
+    .erro {
+      color: #f44336;
+    }
+
+    #carregamento {
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      form {
+        padding: 15px;
+      }
     }
   </style>
 </head>
@@ -55,9 +90,9 @@
   <h1>Submissão de Obras</h1>
 
   <section>
-    <h2 style="text-align: center; color: #d4af37;">Para Artistas Externos</h2>
+    <h2>Para Artistas Externos</h2>
 
-    <form id="form-submissao" enctype="multipart/form-data">
+    <form id="formulario">
       <label for="titulo">Título da Obra</label>
       <input type="text" id="titulo" name="titulo" required />
 
@@ -71,14 +106,14 @@
       <input type="file" id="imagem" name="imagem" accept="image/*" required />
 
       <button type="submit">Submeter Obra para Avaliação</button>
-
-      <p id="mensagem-feedback" style="margin-top: 20px; text-align: center;"></p>
     </form>
+
+    <div id="carregamento">⏳ A enviar obra para avaliação...</div>
+    <div id="mensagem" class="alerta"></div>
   </section>
 
   <div class="divider"></div>
 
-  <!-- 🖼️ FORMULÁRIO PARA O PRÓPRIO AUTOR (NANdART) -->
   <section id="admin-section" style="display: none;">
     <h2>Adicionar Obra da NANdART</h2>
     <a href="submeter_autor.html">
@@ -94,36 +129,39 @@
         document.getElementById('admin-section').style.display = 'block';
       }
 
-      const form = document.getElementById('form-submissao');
-      const feedback = document.getElementById('mensagem-feedback');
+      const form = document.getElementById('formulario');
+      const mensagem = document.getElementById('mensagem');
+      const carregamento = document.getElementById('carregamento');
 
-      form.addEventListener('submit', async function (e) {
-        e.preventDefault();
+      form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        mensagem.textContent = '';
+        mensagem.className = 'alerta';
+        carregamento.style.display = 'block';
 
         const formData = new FormData(form);
-        feedback.textContent = 'A submeter...';
-        feedback.style.color = '#d4af37';
 
         try {
-          const resposta = await fetch('https://nandart-api.vercel.app/api/submit', {
+          const response = await fetch('https://nandart-api.vercel.app/api/submit', {
             method: 'POST',
-            body: formData,
+            body: formData
           });
 
-          const resultado = await resposta.json();
+          const resultado = await response.json();
+          carregamento.style.display = 'none';
 
-          if (resposta.ok) {
-            feedback.textContent = '✅ Submissão recebida com sucesso!';
-            feedback.style.color = 'lightgreen';
-            console.log('URL da imagem:', resultado.imageUrl);
+          if (response.ok) {
+            mensagem.textContent = '✅ ' + resultado.message;
+            mensagem.classList.add('sucesso');
             form.reset();
           } else {
-            feedback.textContent = '❌ Erro: ' + (resultado.message || 'Erro ao submeter a obra.');
-            feedback.style.color = 'tomato';
+            mensagem.textContent = '❌ ' + resultado.message;
+            mensagem.classList.add('erro');
           }
         } catch (erro) {
-          feedback.textContent = '❌ Erro de ligação ao servidor.';
-          feedback.style.color = 'tomato';
+          carregamento.style.display = 'none';
+          mensagem.textContent = '❌ Erro ao contactar o servidor.';
+          mensagem.classList.add('erro');
         }
       });
     };
