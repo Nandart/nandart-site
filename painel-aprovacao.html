@@ -11,57 +11,53 @@
     .obra img { max-width: 100%; border: 2px solid #d4af37; margin-top: 10px; }
     button { background-color: #d4af37; color: #000; border: none; padding: 10px 15px; margin-top: 10px; cursor: pointer; }
     .loading { text-align: center; margin-top: 20px; }
-    .mensagem-erro { text-align: center; margin-top: 30px; color: red; font-weight: bold; }
   </style>
 </head>
 <body>
   <h1>Painel de Aprovação de Obras</h1>
   <div id="lista-obras"></div>
   <div class="loading" id="loading">A carregar obras...</div>
-  <div class="mensagem-erro" id="erro"></div>
 
   <script>
     async function carregarObras() {
       try {
-        const resposta = await fetch('https://api.github.com/repos/Nandart/nandart-submissoes/issues?labels=submiss%C3%A3o,pendente%20de%20revis%C3%A3o');
+        const resposta = await fetch('https://api.github.com/repos/Nandart/nandart-submissoes/issues?labels=submissão,pendente%20de%20revisão');
         const issues = await resposta.json();
         const container = document.getElementById('lista-obras');
-        const loading = document.getElementById('loading');
-        const erro = document.getElementById('erro');
-
-        loading.style.display = 'none';
-
-        if (!Array.isArray(issues) || issues.length === 0) {
-          erro.textContent = 'Nenhuma obra pendente de revisão.';
-          return;
-        }
+        document.getElementById('loading').style.display = 'none';
 
         issues.forEach(issue => {
           const obra = document.createElement('div');
           obra.className = 'obra';
+          const corpoFormatado = issue.body.replace(/\n/g, '<br>');
           obra.innerHTML = `
             <h2>${issue.title}</h2>
-            <p>${issue.body.replace(/\n/g, '<br>')}</p>
+            <p>${corpoFormatado}</p>
             <button onclick="aprovarObra(${issue.number})">Aprovar Obra</button>
           `;
           container.appendChild(obra);
         });
       } catch (erro) {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('erro').textContent = 'Erro ao carregar obras. Verifica a ligação com o GitHub.';
+        document.getElementById('loading').innerText = 'Erro ao carregar obras.';
+        console.error('Erro ao carregar issues:', erro);
       }
     }
 
     async function aprovarObra(numero) {
-      const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ issueNumber: numero })
-      });
+      try {
+        const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ issueNumber: numero })
+        });
 
-      const resultado = await resposta.json();
-      alert(resultado.message);
-      location.reload();
+        const resultado = await resposta.json();
+        alert(resultado.message);
+        location.reload();
+      } catch (erro) {
+        alert('Erro ao aprovar a obra.');
+        console.error('Erro ao contactar API de aprovação:', erro);
+      }
     }
 
     carregarObras();
