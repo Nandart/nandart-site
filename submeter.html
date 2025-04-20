@@ -62,13 +62,15 @@
       margin-top: 10px;
     }
 
-    .link-aprovacao {
-      display: block;
+    .botoes-pos-envio {
       text-align: center;
       margin-top: 15px;
+    }
+
+    .botoes-pos-envio a {
       color: #d4af37;
+      text-decoration: none;
       font-weight: bold;
-      text-decoration: underline;
     }
 
     @media (max-width: 600px) {
@@ -121,18 +123,20 @@
 
   <div class="loading" id="loading" style="display: none;">⏳ A enviar...</div>
   <div id="mensagem"></div>
-  <a id="painelLink" href="painel-aprovacao.html" class="link-aprovacao" style="display: none;">🔍 Ver Painel de Aprovação</a>
+  <div class="botoes-pos-envio" id="botoes-pos-envio" style="display:none;">
+    <a href="painel-aprovacao.html">📋 Ir para o Painel de Aprovação</a>
+  </div>
 
   <script>
     const form = document.getElementById('formulario-obras');
     const mensagem = document.getElementById('mensagem');
     const loading = document.getElementById('loading');
-    const painelLink = document.getElementById('painelLink');
+    const botoes = document.getElementById('botoes-pos-envio');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       mensagem.textContent = '';
-      painelLink.style.display = 'none';
+      botoes.style.display = 'none';
       loading.style.display = 'block';
 
       const formData = new FormData(form);
@@ -149,7 +153,7 @@
         if (response.ok) {
           mensagem.style.color = '#32CD32';
           mensagem.innerHTML = `✅ ${resultado.message}<br><a href="${resultado.imageUrl}" target="_blank" style="color:#d4af37">🖼️ Ver imagem submetida</a>`;
-          painelLink.style.display = 'block';
+          botoes.style.display = 'block';
           form.reset();
         } else {
           mensagem.style.color = 'red';
