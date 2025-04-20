@@ -5,62 +5,109 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel de Aprovação - NANdART</title>
   <style>
-    body { font-family: Georgia, serif; background-color: #121212; color: #fff; padding: 20px; }
-    h1 { color: #d4af37; text-align: center; }
-    .obra { border: 1px solid #d4af37; margin: 20px auto; padding: 20px; background-color: #1e1e1e; max-width: 700px; }
-    .obra img { max-width: 100%; border: 2px solid #d4af37; margin-top: 10px; }
-    button { background-color: #d4af37; color: #000; border: none; padding: 10px 15px; margin-top: 10px; cursor: pointer; }
-    .loading { text-align: center; margin-top: 20px; }
+    body {
+      font-family: Georgia, serif;
+      background-color: #121212;
+      color: #ffffff;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #d4af37;
+    }
+
+    .obra {
+      background-color: #1e1e1e;
+      border: 1px solid #d4af37;
+      padding: 15px;
+      margin: 20px auto;
+      max-width: 700px;
+    }
+
+    .obra img {
+      max-width: 100%;
+      margin-top: 10px;
+    }
+
+    .obra button {
+      margin-top: 10px;
+      background-color: #32CD32;
+      color: black;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .mensagem {
+      text-align: center;
+      margin-top: 20px;
+      color: #32CD32;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <h1>Painel de Aprovação de Obras</h1>
-  <div id="lista-obras"></div>
-  <div class="loading" id="loading">A carregar obras...</div>
+
+  <div id="painel"></div>
+  <div class="mensagem" id="mensagem"></div>
 
   <script>
-    async function carregarObras() {
-      try {
-        const resposta = await fetch('https://api.github.com/repos/Nandart/nandart-submissoes/issues?labels=submissão,pendente%20de%20revisão');
-        const issues = await resposta.json();
-        const container = document.getElementById('lista-obras');
-        document.getElementById('loading').style.display = 'none';
+    async function carregarSubmissoes() {
+      const painel = document.getElementById('painel');
+      painel.innerHTML = '<p>A carregar submissões...</p>';
 
-        issues.forEach(issue => {
-          const obra = document.createElement('div');
-          obra.className = 'obra';
-          const corpoFormatado = issue.body.replace(/\n/g, '<br>');
-          obra.innerHTML = `
+      try {
+        const issues = await fetch("https://api.github.com/repos/Nandart/nandart-submissoes/issues", {
+          headers: {
+            Accept: "application/vnd.github+json"
+          }
+        }).then(res => res.json());
+
+        painel.innerHTML = '';
+
+        issues.filter(issue => issue.state === 'open' && issue.title.includes('🖼️')).forEach(issue => {
+          const div = document.createElement('div');
+          div.className = 'obra';
+
+          const imagem = issue.body.match(/!\[Obra\]\((.*?)\)/)?.[1] || '';
+
+          div.innerHTML = `
             <h2>${issue.title}</h2>
-            <p>${corpoFormatado}</p>
-            <button onclick="aprovarObra(${issue.number})">Aprovar Obra</button>
+            <p>${issue.body.replace(/\n/g, '<br>')}</p>
+            ${imagem ? `<img src="${imagem}" alt="Imagem da Obra">` : ''}
+            <button onclick="aprovar(${issue.number})">✅ Aprovar</button>
           `;
-          container.appendChild(obra);
+
+          painel.appendChild(div);
         });
       } catch (erro) {
-        document.getElementById('loading').innerText = 'Erro ao carregar obras.';
-        console.error('Erro ao carregar issues:', erro);
+        painel.innerHTML = '<p style="color:red">Erro ao carregar submissões.</p>';
       }
     }
 
-    async function aprovarObra(numero) {
-      try {
-        const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ issueNumber: numero })
-        });
+    async function aprovar(issueNumber) {
+      const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ issueNumber })
+      });
 
-        const resultado = await resposta.json();
-        alert(resultado.message);
-        location.reload();
-      } catch (erro) {
-        alert('Erro ao aprovar a obra.');
-        console.error('Erro ao contactar API de aprovação:', erro);
+      const resultado = await resposta.json();
+
+      const mensagem = document.getElementById('mensagem');
+      if (resposta.ok) {
+        mensagem.innerText = `✅ ${resultado.message}`;
+        carregarSubmissoes();
+      } else {
+        mensagem.innerText = `❌ ${resultado.message}`;
       }
     }
 
-    carregarObras();
+    carregarSubmissoes();
   </script>
 </body>
 </html>
