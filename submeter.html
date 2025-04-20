@@ -41,7 +41,7 @@
       border: 1px solid #555;
     }
 
-    button, .link-aprovacao {
+    button {
       background-color: #d4af37;
       color: #000;
       border: none;
@@ -49,12 +49,6 @@
       margin-top: 20px;
       cursor: pointer;
       font-size: 16px;
-      display: block;
-      width: fit-content;
-      margin-left: auto;
-      margin-right: auto;
-      text-decoration: none;
-      text-align: center;
     }
 
     #mensagem {
@@ -66,6 +60,21 @@
     .loading {
       text-align: center;
       margin-top: 10px;
+    }
+
+    .botao-painel {
+      display: block;
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    .botao-painel a {
+      background-color: #d4af37;
+      color: #000;
+      padding: 10px 15px;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
     }
 
     @media (max-width: 600px) {
@@ -118,19 +127,21 @@
 
   <div class="loading" id="loading" style="display: none;">⏳ A enviar...</div>
   <div id="mensagem"></div>
-  <a id="botao-aprovacao" class="link-aprovacao" href="painel-aprovacao.html" style="display:none">🔎 Ir para o Painel de Aprovação</a>
+  <div class="botao-painel" id="painel-link" style="display: none;">
+    <a href="painel-aprovacao.html">Ir para o Painel de Aprovação</a>
+  </div>
 
   <script>
     const form = document.getElementById('formulario-obras');
     const mensagem = document.getElementById('mensagem');
     const loading = document.getElementById('loading');
-    const botaoAprovacao = document.getElementById('botao-aprovacao');
+    const painelLink = document.getElementById('painel-link');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       mensagem.textContent = '';
-      botaoAprovacao.style.display = 'none';
       loading.style.display = 'block';
+      painelLink.style.display = 'none';
 
       const formData = new FormData(form);
 
@@ -146,8 +157,8 @@
         if (response.ok) {
           mensagem.style.color = '#32CD32';
           mensagem.innerHTML = `✅ ${resultado.message}<br><a href="${resultado.imageUrl}" target="_blank" style="color:#d4af37">🖼️ Ver imagem submetida</a>`;
+          painelLink.style.display = 'block';
           form.reset();
-          botaoAprovacao.style.display = 'inline-block';
         } else {
           mensagem.style.color = 'red';
           mensagem.textContent = `❌ ${resultado.message}`;
