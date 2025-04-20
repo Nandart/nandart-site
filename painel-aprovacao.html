@@ -12,98 +12,112 @@
       margin: 0;
       padding: 20px;
     }
+
     h1 {
       text-align: center;
       color: #d4af37;
+      margin-bottom: 30px;
     }
-    .obra {
+
+    .obra-card {
       background-color: #1e1e1e;
       border: 1px solid #d4af37;
       padding: 20px;
       margin: 20px auto;
       max-width: 800px;
     }
-    button {
+
+    .obra-card h2 {
+      margin-top: 0;
+      color: #d4af37;
+    }
+
+    .obra-card img {
+      max-width: 100%;
+      border: 1px solid #555;
+      margin-top: 10px;
+    }
+
+    .botoes {
+      margin-top: 15px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .botoes button {
       background-color: #d4af37;
       color: #000;
       border: none;
-      padding: 10px 20px;
-      margin-top: 10px;
+      padding: 8px 16px;
       cursor: pointer;
-      font-size: 16px;
+      font-weight: bold;
     }
-    .mensagem {
+
+    .contador {
       text-align: center;
       margin-top: 20px;
-      font-weight: bold;
+      font-size: 16px;
+      color: #aaa;
     }
   </style>
 </head>
 <body>
   <h1>Painel de Aprovação de Obras</h1>
+  <div id="contador" class="contador">Carregando contador de obras...</div>
   <div id="lista-obras"></div>
-  <div class="mensagem" id="mensagem"></div>
 
   <script>
     async function carregarObras() {
-      const container = document.getElementById('lista-obras');
-      const mensagem = document.getElementById('mensagem');
-      mensagem.textContent = '🔄 A carregar obras...';
+      const lista = document.getElementById('lista-obras');
+      const contador = document.getElementById('contador');
 
       try {
-        const res = await fetch('https://api.github.com/repos/Nandart/nandart-submissoes/issues?labels=submissão,pendente de revisão');
-        const obras = await res.json();
+        const resposta = await fetch('https://api.github.com/repos/Nandart/nandart-submissoes/issues?labels=submiss%C3%A3o&state=open');
+        const issues = await resposta.json();
 
-        if (!Array.isArray(obras) || obras.length === 0) {
-          mensagem.textContent = 'Nenhuma obra pendente de aprovação.';
+        contador.textContent = `📌 ${issues.length} obra(s) pendente(s) de aprovação.`;
+
+        if (issues.length === 0) {
+          lista.innerHTML = '<p style="text-align:center;">Nenhuma obra pendente no momento.</p>';
           return;
         }
 
-        mensagem.textContent = '';
-        obras.forEach(obra => {
-          const div = document.createElement('div');
-          div.className = 'obra';
-          div.innerHTML = `
-            <h2>${obra.title}</h2>
-            <p>${obra.body.replace(/\n/g, '<br>')}</p>
-            <button onclick="aprovarObra(${obra.number})">Aprovar</button>
+        issues.forEach(issue => {
+          const card = document.createElement('div');
+          card.className = 'obra-card';
+
+          const body = issue.body || '';
+          const imagem = (body.match(/!\[Obra\]\((.*?)\)/) || [])[1] || '';
+
+          card.innerHTML = `
+            <h2>${issue.title}</h2>
+            <p>${body.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}</p>
+            ${imagem ? `<img src="${imagem}" alt="Imagem da Obra" />` : ''}
+            <div class="botoes">
+              <button onclick="aprovarObra(${issue.number})">Aprovar</button>
+              <button onclick="rejeitarObra(${issue.number})">Rejeitar</button>
+            </div>
           `;
-          container.appendChild(div);
+
+          lista.appendChild(card);
         });
-      } catch (erro) {
-        mensagem.textContent = 'Erro ao carregar as obras.';
-        console.error(erro);
+
+      } catch (e) {
+        contador.textContent = '❌ Erro ao carregar obras.';
+        console.error(e);
       }
     }
 
-    async function aprovarObra(numeroIssue) {
-      const confirmacao = confirm('Desejas aprovar esta obra? Será adicionada automaticamente à galeria.');
-      if (!confirmacao) return;
-
-      const mensagem = document.getElementById('mensagem');
-      mensagem.textContent = '⏳ A aprovar obra...';
-
-      try {
-        const res = await fetch(`https://nandart-api.vercel.app/api/aprovar`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ numero: numeroIssue })
-        });
-
-        const resultado = await res.json();
-        if (res.ok) {
-          mensagem.textContent = '✅ Obra aprovada e publicada na galeria.';
-          setTimeout(() => location.reload(), 2000);
-        } else {
-          mensagem.textContent = `❌ Erro: ${resultado.message}`;
-        }
-      } catch (erro) {
-        mensagem.textContent = 'Erro ao aprovar a obra.';
-        console.error(erro);
-      }
+    async function aprovarObra(numero) {
+      alert(`✅ Obra #${numero} marcada para aprovação. (Em desenvolvimento: PR automático será implementado)`);
     }
 
-    carregarObras();
+    async function rejeitarObra(numero) {
+      alert(`🚫 Obra #${numero} marcada como rejeitada. (Em desenvolvimento)`);
+    }
+
+    window.onload = carregarObras;
   </script>
 </body>
 </html>
