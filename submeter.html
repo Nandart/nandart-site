@@ -74,6 +74,23 @@
   <div class="divider"></div>
 
   <!-- 🖼️ FORMULÁRIO PARA O PRÓPRIO AUTOR (NANdART) -->
+<section id="admin-section" style="display: none;">
+  <h2>Adicionar Obra da NANdART</h2>
+  <form action="submeter_autor.html" method="GET">
+    <button type="submit">Ir para página de Adição de Obras</button>
+  </form>
+</section>
+
+<script>
+  // Mostrar secção do autor apenas com ?admin=true
+  window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const isAdmin = urlParams.get('admin');
+    if (isAdmin === 'true') {
+      document.getElementById('admin-section').style.display = 'block';
+    }
+  };
+</script>
   <section>
     <h2>Adicionar Obra da NANdART</h2>
     <form action="submeter_autor.html" method="GET">
