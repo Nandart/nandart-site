@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt">
 <head>
   <meta charset="UTF-8" />
@@ -113,15 +113,13 @@
 
   <section class="section" id="sobre">
     <h2>Sobre a NANdART</h2>
-    <p>A NANdART é uma galeria onde a arte caminha com os pés no presente e o olhar no infinito. Fundada por um artista Santomense, funde tradição e vanguarda para acolher criadores que procuram eternizar as suas obras na cadeia do tempo digital. Cada obra aqui proposta é cuidadosamente acolhida e preparada para nascer na blockchain como NFT — não apenas como produto, mas como testemunho de alma e memória.</p>
+    <p>A NANdART é uma galeria onde a arte caminha com os pés no presente e o olhar no infinito. Fundada por um artista Santomense, funde tradição e vanguarda para acolher criadores que procuram eternizar as suas obras na cadeia do tempo digital. Cada obra aqui proposta é cuidadosamente acolhida e preparada para nascer na blockchain como NFT — não apenas como produto, mas como testemunho de alma e memória. </p>
   </section>
 
   <section class="section" id="artistas">
     <h2>És artista? Junta-te à nova era da arte.</h2>
     <p>A NANdART convida artistas visuais, digitais, plásticos ou experimentais a exporem as suas obras no mundo Web3. Aqui, cada venda é tua. Cada revenda, também.</p>
-    <span id="admin-buttons-2" style="display: none;">
-      <button onclick="window.location.href='submeter_autor.html'">Submeter Obra</button>
-    </span>
+    <button onclick="window.location.href='submeter.html'">Submeter Obra</button>
   </section>
 
   <section class="section" id="web3">
@@ -149,14 +147,12 @@
       }
     }
 
+    // Mostrar botão "submeter_autor.html" apenas para ?admin=true
     window.onload = function () {
       const urlParams = new URLSearchParams(window.location.search);
       const isAdmin = urlParams.get('admin');
       if (isAdmin === 'true') {
-        const adminBtn1 = document.getElementById('admin-buttons');
-        const adminBtn2 = document.getElementById('admin-buttons-2');
-        if (adminBtn1) adminBtn1.style.display = 'inline-block';
-        if (adminBtn2) adminBtn2.style.display = 'inline-block';
+        document.getElementById('admin-buttons').style.display = 'inline-block';
       }
     };
   </script>
