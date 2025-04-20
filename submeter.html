@@ -54,6 +54,9 @@
       text-align: center;
       margin-top: 10px;
     }
+    a {
+      text-decoration: none;
+    }
     @media (max-width: 600px) {
       form {
         width: 90%;
@@ -92,6 +95,7 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       mensagem.textContent = '';
+      mensagem.style.color = '#ffffff';
       loading.style.display = 'block';
 
       const formData = new FormData(form);
@@ -107,11 +111,11 @@
 
         if (response.ok) {
           mensagem.style.color = '#32CD32';
-          mensagem.innerHTML = `✅ ${resultado.message}<br><a href="${resultado.imageUrl}" target="_blank" style="color:#d4af37">Ver imagem</a>`;
+          mensagem.innerHTML = `✅ ${resultado.message}<br><a href="${resultado.imageUrl}" target="_blank" style="color:#d4af37;">🖼️ Ver imagem submetida</a>`;
           form.reset();
         } else {
           mensagem.style.color = 'red';
-          mensagem.textContent = `❌ ${resultado.message}`;
+          mensagem.innerHTML = `❌ ${resultado.message}${resultado.details ? '<br><small>' + resultado.details + '</small>' : ''}`;
         }
       } catch (erro) {
         loading.style.display = 'none';
