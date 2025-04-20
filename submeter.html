@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -54,10 +55,9 @@
 <body>
   <h1>Submissão de Obras</h1>
 
-  <!-- 🔗 FORMULÁRIO PARA ARTISTAS EXTERNOS -->
   <section>
     <h2>Para Artistas Externos</h2>
-    <form action="https://nandart-api.vercel.app/api/submit" method="POST" enctype="application/x-www-form-urlencoded">
+    <form action="https://nandart-api.vercel.app/api/submit" method="POST" enctype="multipart/form-data">
       <label for="titulo">Título da Obra</label>
       <input type="text" id="titulo" name="titulo" required />
 
@@ -65,7 +65,7 @@
       <textarea id="descricao" name="descricao" rows="4" required></textarea>
 
       <label for="wallet">Endereço da Wallet</label>
-      <input type="text" id="wallet" name="enderecoWallet" required />
+      <input type="text" id="wallet" name="enderecowallet" required />
 
       <button type="submit">Submeter Obra para Avaliação</button>
     </form>
@@ -74,28 +74,22 @@
   <div class="divider"></div>
 
   <!-- 🖼️ FORMULÁRIO PARA O PRÓPRIO AUTOR (NANdART) -->
-<section id="admin-section" style="display: none;">
-  <h2>Adicionar Obra da NANdART</h2>
-  <form action="submeter_autor.html" method="GET">
-    <button type="submit">Ir para página de Adição de Obras</button>
-  </form>
-</section>
-
-<script>
-  // Mostrar secção do autor apenas com ?admin=true
-  window.onload = function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const isAdmin = urlParams.get('admin');
-    if (isAdmin === 'true') {
-      document.getElementById('admin-section').style.display = 'block';
-    }
-  };
-</script>
-  <section>
+  <section id="admin-section" style="display: none;">
     <h2>Adicionar Obra da NANdART</h2>
     <form action="submeter_autor.html" method="GET">
       <button type="submit">Ir para página de Adição de Obras</button>
     </form>
   </section>
+
+  <script>
+    // Mostrar secção do autor apenas com ?admin=true
+    window.onload = function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isAdmin = urlParams.get('admin');
+      if (isAdmin === 'true') {
+        document.getElementById('admin-section').style.display = 'block';
+      }
+    };
+  </script>
 </body>
 </html>
