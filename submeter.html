@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -56,47 +55,77 @@
   <h1>Submissão de Obras</h1>
 
   <section>
-  <h2 style="text-align: center; color: #d4af37;">Para Artistas Externos</h2>
+    <h2 style="text-align: center; color: #d4af37;">Para Artistas Externos</h2>
 
-  <form
-    action="https://nandart-api.vercel.app/api/submit"
-    method="POST"
-    enctype="multipart/form-data"
-    style="background-color: #1e1e1e; padding: 20px; margin: 20px auto; border: 1px solid #d4af37; max-width: 600px; font-family: Georgia, serif; color: #fff;"
-  >
-    <label for="titulo" style="display: block; margin-top: 15px; font-weight: bold;">Título da Obra</label>
-    <input type="text" id="titulo" name="titulo" required style="width: 100%; padding: 8px; margin-top: 5px; background-color: #262626; color: #fff; border: 1px solid #555;" />
+    <form id="form-submissao" enctype="multipart/form-data">
+      <label for="titulo">Título da Obra</label>
+      <input type="text" id="titulo" name="titulo" required />
 
-    <label for="descricao" style="display: block; margin-top: 15px; font-weight: bold;">Descrição da Obra</label>
-    <textarea id="descricao" name="descricao" rows="4" required style="width: 100%; padding: 8px; margin-top: 5px; background-color: #262626; color: #fff; border: 1px solid #555;"></textarea>
+      <label for="descricao">Descrição da Obra</label>
+      <textarea id="descricao" name="descricao" rows="4" required></textarea>
 
-    <label for="wallet" style="display: block; margin-top: 15px; font-weight: bold;">Endereço da Wallet</label>
-    <input type="text" id="wallet" name="enderecowallet" required style="width: 100%; padding: 8px; margin-top: 5px; background-color: #262626; color: #fff; border: 1px solid #555;" />
+      <label for="wallet">Endereço da Wallet</label>
+      <input type="text" id="wallet" name="enderecowallet" required />
 
-    <label for="imagem" style="display: block; margin-top: 15px; font-weight: bold;">Imagem da Obra</label>
-    <input type="file" id="imagem" name="imagem" accept="image/*" required style="width: 100%; padding: 8px; margin-top: 5px; background-color: #262626; color: #fff; border: 1px solid #555;" />
+      <label for="imagem">Imagem da Obra</label>
+      <input type="file" id="imagem" name="imagem" accept="image/*" required />
 
-    <button type="submit" style="background-color: #d4af37; color: #000; border: none; padding: 10px 20px; margin-top: 20px; cursor: pointer; font-size: 16px;">Submeter Obra para Avaliação</button>
-  </form>
-</section>
+      <button type="submit">Submeter Obra para Avaliação</button>
+
+      <p id="mensagem-feedback" style="margin-top: 20px; text-align: center;"></p>
+    </form>
+  </section>
+
   <div class="divider"></div>
 
   <!-- 🖼️ FORMULÁRIO PARA O PRÓPRIO AUTOR (NANdART) -->
   <section id="admin-section" style="display: none;">
     <h2>Adicionar Obra da NANdART</h2>
     <a href="submeter_autor.html">
-  <button>Ir para página de Adição de Obras</button>
-</a>
+      <button>Ir para página de Adição de Obras</button>
+    </a>
   </section>
 
   <script>
-    // Mostrar secção do autor apenas com ?admin=true
     window.onload = function () {
       const urlParams = new URLSearchParams(window.location.search);
       const isAdmin = urlParams.get('admin');
       if (isAdmin === 'true') {
         document.getElementById('admin-section').style.display = 'block';
       }
+
+      const form = document.getElementById('form-submissao');
+      const feedback = document.getElementById('mensagem-feedback');
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        feedback.textContent = 'A submeter...';
+        feedback.style.color = '#d4af37';
+
+        try {
+          const resposta = await fetch('https://nandart-api.vercel.app/api/submit', {
+            method: 'POST',
+            body: formData,
+          });
+
+          const resultado = await resposta.json();
+
+          if (resposta.ok) {
+            feedback.textContent = '✅ Submissão recebida com sucesso!';
+            feedback.style.color = 'lightgreen';
+            console.log('URL da imagem:', resultado.imageUrl);
+            form.reset();
+          } else {
+            feedback.textContent = '❌ Erro: ' + (resultado.message || 'Erro ao submeter a obra.');
+            feedback.style.color = 'tomato';
+          }
+        } catch (erro) {
+          feedback.textContent = '❌ Erro de ligação ao servidor.';
+          feedback.style.color = 'tomato';
+        }
+      });
     };
   </script>
 </body>
