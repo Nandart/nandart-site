@@ -12,21 +12,14 @@
       margin: 0;
       padding: 20px;
     }
-    h1 {
+    h1, h2 {
       text-align: center;
       color: #d4af37;
-      font-size: 2.5em;
-      margin-bottom: 10px;
-    }
-    h2 {
-      text-align: center;
-      color: #d4af37;
-      margin-bottom: 20px;
     }
     form {
       background-color: #1e1e1e;
       padding: 20px;
-      margin: 0 auto;
+      margin: 20px auto;
       border: 1px solid #d4af37;
       max-width: 600px;
     }
@@ -35,7 +28,7 @@
       margin-top: 15px;
       font-weight: bold;
     }
-    input, textarea, select {
+    input, textarea {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -51,37 +44,36 @@
       margin-top: 20px;
       cursor: pointer;
       font-size: 16px;
-      width: 100%;
-    }
-    .divider {
-      border-top: 2px solid #555;
-      margin: 40px 0;
     }
     #mensagem {
-      text-align: center;
       margin-top: 20px;
-      font-size: 1.1em;
-      display: none;
+      text-align: center;
+      font-weight: bold;
     }
-    #mensagem a {
-      text-decoration: underline;
+    .loading {
+      text-align: center;
+      margin-top: 10px;
+    }
+    @media (max-width: 600px) {
+      form {
+        width: 90%;
+      }
     }
   </style>
 </head>
 <body>
-
   <h1>Submissão de Obras</h1>
   <h2>Para Artistas Externos</h2>
 
-  <form id="obraForm" enctype="multipart/form-data">
+  <form id="formulario-obras">
     <label for="titulo">Título da Obra</label>
     <input type="text" id="titulo" name="titulo" required />
 
     <label for="descricao">Descrição da Obra</label>
     <textarea id="descricao" name="descricao" rows="4" required></textarea>
 
-    <label for="wallet">Endereço da Wallet</label>
-    <input type="text" id="wallet" name="enderecowallet" required />
+    <label for="enderecowallet">Endereço da Wallet</label>
+    <input type="text" id="enderecowallet" name="enderecowallet" required />
 
     <label for="imagem">Imagem da Obra</label>
     <input type="file" id="imagem" name="imagem" accept="image/*" required />
@@ -89,61 +81,43 @@
     <button type="submit">Submeter Obra para Avaliação</button>
   </form>
 
+  <div class="loading" id="loading" style="display: none;">⏳ A enviar...</div>
   <div id="mensagem"></div>
 
-  <div class="divider"></div>
-
-  <!-- 🖼️ FORMULÁRIO PARA O PRÓPRIO AUTOR (NANdART) -->
-  <section id="admin-section" style="display: none;">
-    <h2>Adicionar Obra da NANdART</h2>
-    <a href="submeter_autor.html">
-      <button>Ir para página de Adição de Obras</button>
-    </a>
-  </section>
-
   <script>
-    // Mostrar secção do autor apenas com ?admin=true
-    window.onload = function () {
-      const urlParams = new URLSearchParams(window.location.search);
-      const isAdmin = urlParams.get('admin');
-      if (isAdmin === 'true') {
-        document.getElementById('admin-section').style.display = 'block';
-      }
-    };
+    const form = document.getElementById('formulario-obras');
+    const mensagem = document.getElementById('mensagem');
+    const loading = document.getElementById('loading');
 
-    // Submissão com feedback dinâmico
-    document.getElementById('obraForm').addEventListener('submit', async function (event) {
-      event.preventDefault();
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      mensagem.textContent = '';
+      loading.style.display = 'block';
 
-      const form = event.target;
       const formData = new FormData(form);
-      const alerta = document.getElementById('mensagem');
-
-      alerta.textContent = '';
-      alerta.style.display = 'none';
 
       try {
         const response = await fetch('https://nandart-api.vercel.app/api/submit', {
           method: 'POST',
-          body: formData,
+          body: formData
         });
 
-        const result = await response.json();
+        const resultado = await response.json();
+        loading.style.display = 'none';
 
         if (response.ok) {
-          alerta.innerHTML = `✅ ${result.message}<br><a href="${result.imageUrl}" target="_blank" style="color: #d4af37;">Ver Imagem</a>`;
-          alerta.style.color = '#00ff88';
+          mensagem.style.color = '#32CD32';
+          mensagem.innerHTML = `✅ ${resultado.message}<br><a href="${resultado.imageUrl}" target="_blank" style="color:#d4af37">Ver imagem</a>`;
+          form.reset();
         } else {
-          alerta.textContent = `❌ ${result.message}`;
-          alerta.style.color = '#ff4444';
+          mensagem.style.color = 'red';
+          mensagem.textContent = `❌ ${resultado.message}`;
         }
-      } catch (error) {
-        console.error('[ERRO] Ligação com a API:', error);
-        alerta.textContent = '❌ Erro ao contactar o servidor.';
-        alerta.style.color = '#ff4444';
+      } catch (erro) {
+        loading.style.display = 'none';
+        mensagem.style.color = 'red';
+        mensagem.textContent = '❌ Erro ao contactar o servidor.';
       }
-
-      alerta.style.display = 'block';
     });
   </script>
 </body>
