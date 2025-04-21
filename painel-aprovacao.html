@@ -26,7 +26,7 @@
 
     .obra {
       border: 1px solid #d4af37;
-      padding: 15px;
+      padding: 10px;
       margin-bottom: 15px;
       background-color: #1e1e1e;
     }
@@ -36,26 +36,18 @@
       color: #ffd700;
     }
 
-    .obra img {
-      max-width: 100%;
-      margin-top: 10px;
-      border: 1px solid #555;
+    .obra a {
+      color: #d4af37;
+      text-decoration: none;
     }
 
     .obra button {
       background-color: #d4af37;
       color: #000;
       border: none;
-      padding: 8px 15px;
-      margin-top: 10px;
+      padding: 5px 10px;
       cursor: pointer;
-      font-size: 14px;
-    }
-
-    .obra a {
-      color: #d4af37;
-      text-decoration: none;
-      font-weight: bold;
+      margin-top: 10px;
     }
 
     @media (max-width: 600px) {
@@ -67,7 +59,7 @@
 </head>
 <body>
   <h1>Painel de Aprovação</h1>
-  <div class="contador" id="contador">🔄 A carregar submissões...</div>
+  <div class="contador" id="contador"></div>
   <div id="lista-obras"></div>
 
   <script>
@@ -91,28 +83,21 @@
         const lista = document.getElementById('lista-obras');
         lista.innerHTML = '';
 
-        if (dados.total === 0) {
-          lista.innerHTML = '<p style="text-align: center; color: #aaa;">Não existem submissões pendentes.</p>';
-          return;
-        }
-
         dados.pendentes.forEach((obra) => {
           const div = document.createElement('div');
           div.className = 'obra';
 
           div.innerHTML = `
-            <h3>${obra.titulo}</h3>
-            <p>👤 Artista: <strong>${obra.nomeArtista}</strong></p>
-            ${obra.imagem ? `<img src="${obra.imagem}" alt="Imagem da obra">` : ''}
-            <p>🔗 <a href="${obra.url}" target="_blank">Ver submissão original</a></p>
+            <h3>🖼️ Nova Submissão: "${obra.titulo}" por ${obra.nomeArtista}</h3>
+            <p>🔗 <a href="${obra.url}" target="_blank">Ver submissão</a></p>
             <button onclick="aprovarObra(${obra.id}, '${obra.titulo}', '${obra.nomeArtista}', '${obra.imagem}')">✅ Aprovar</button>
           `;
 
           lista.appendChild(div);
         });
       } catch (erro) {
-        console.error('Erro ao carregar submissões:', erro);
-        document.getElementById('contador').textContent = '❌ Erro ao carregar dados.';
+        console.error('Erro ao carregar obras:', erro);
+        alert('Erro ao contactar o servidor para carregar as submissões.');
       }
     }
 
@@ -126,17 +111,16 @@
           body: JSON.stringify({ id, titulo, nomeArtista, imagem })
         });
 
-        const resultado = await resposta.json();
-
         if (resposta.ok) {
-          alert('✅ Obra aprovada com sucesso!');
+          alert('Obra aprovada com sucesso!');
           carregarObras();
         } else {
-          alert('❌ Erro: ' + resultado.message);
+          const dados = await resposta.json();
+          alert('Erro: ' + dados.message);
         }
       } catch (erro) {
         console.error('Erro ao aprovar obra:', erro);
-        alert('❌ Erro ao contactar o servidor.');
+        alert('Erro ao contactar o servidor.');
       }
     }
 
