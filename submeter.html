@@ -73,12 +73,6 @@
       font-weight: bold;
     }
 
-    .acesso-negado {
-      text-align: center;
-      color: red;
-      font-weight: bold;
-    }
-
     @media (max-width: 600px) {
       form {
         width: 90%;
@@ -88,76 +82,58 @@
 </head>
 <body>
   <h1>Submissão de Obras</h1>
-  <div id="conteudo-protegido" style="display: none;">
-    <h2>Para Artistas Externos</h2>
-    <form id="formulario-obras">
-      <label for="nomeArtista">Nome do Artista</label>
-      <input type="text" id="nomeArtista" name="nomeArtista" required />
+  <h2>Para Artistas Externos</h2>
 
-      <label for="titulo">Título da Obra</label>
-      <input type="text" id="titulo" name="titulo" required />
+  <form id="formulario-obras">
+    <label for="nomeArtista">Nome do Artista</label>
+    <input type="text" id="nomeArtista" name="nomeArtista" required />
 
-      <label for="descricao">Descrição da Obra</label>
-      <textarea id="descricao" name="descricao" rows="4" required></textarea>
+    <label for="titulo">Título da Obra</label>
+    <input type="text" id="titulo" name="titulo" required />
 
-      <label for="estilo">Estilo da Obra</label>
-      <input type="text" id="estilo" name="estilo" required />
+    <label for="descricao">Descrição da Obra</label>
+    <textarea id="descricao" name="descricao" rows="4" required></textarea>
 
-      <label for="tecnica">Técnica Utilizada</label>
-      <input type="text" id="tecnica" name="tecnica" required />
+    <label for="estilo">Estilo da Obra</label>
+    <input type="text" id="estilo" name="estilo" required />
 
-      <label for="ano">Ano de Criação</label>
-      <input type="number" id="ano" name="ano" required />
+    <label for="tecnica">Técnica Utilizada</label>
+    <input type="text" id="tecnica" name="tecnica" required />
 
-      <label for="dimensoes">Dimensões</label>
-      <input type="text" id="dimensoes" name="dimensoes" required />
+    <label for="ano">Ano de Criação</label>
+    <input type="number" id="ano" name="ano" required />
 
-      <label for="materiais">Materiais Utilizados</label>
-      <input type="text" id="materiais" name="materiais" required />
+    <label for="dimensoes">Dimensões</label>
+    <input type="text" id="dimensoes" name="dimensoes" required />
 
-      <label for="local">Local de Criação</label>
-      <input type="text" id="local" name="local" required />
+    <label for="materiais">Materiais Utilizados</label>
+    <input type="text" id="materiais" name="materiais" required />
 
-      <label for="enderecowallet">Endereço da Wallet</label>
-      <input type="text" id="enderecowallet" name="enderecowallet" required />
+    <label for="local">Local de Criação</label>
+    <input type="text" id="local" name="local" required />
 
-      <label for="imagem">Imagem da Obra</label>
-      <input type="file" id="imagem" name="imagem" accept="image/*" required />
+    <label for="enderecowallet">Endereço da Wallet</label>
+    <input type="text" id="enderecowallet" name="enderecowallet" required />
 
-      <button type="submit">Submeter Obra para Avaliação</button>
-    </form>
+    <label for="imagem">Imagem da Obra</label>
+    <input type="file" id="imagem" name="imagem" accept="image/*" required />
 
-    <div class="loading" id="loading" style="display: none;">⏳ A enviar...</div>
-    <div id="mensagem"></div>
-    <div class="botoes-pos-envio" id="botoes-pos-envio" style="display:none;">
-      <a href="painel-aprovacao.html">📋 Ir para o Painel de Aprovação</a>
-    </div>
-  </div>
+    <button type="submit">Submeter Obra para Avaliação</button>
+  </form>
 
-  <div id="acesso-negado" class="acesso-negado" style="display: none;">
-    ⚠️ Acesso restrito. Token de acesso inválido.
+  <div class="loading" id="loading" style="display: none;">⏳ A enviar...</div>
+  <div id="mensagem"></div>
+  <div class="botoes-pos-envio" id="botoes-pos-envio" style="display:none;">
+    <a href="painel-aprovacao.html">📋 Ir para o Painel de Aprovação</a>
   </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const tokenValido = 'fernanda2025visao';
-
-    const conteudo = document.getElementById('conteudo-protegido');
-    const negado = document.getElementById('acesso-negado');
-
-    if (token === tokenValido) {
-      conteudo.style.display = 'block';
-    } else {
-      negado.style.display = 'block';
-    }
-
     const form = document.getElementById('formulario-obras');
     const mensagem = document.getElementById('mensagem');
     const loading = document.getElementById('loading');
     const botoes = document.getElementById('botoes-pos-envio');
 
-    form?.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       mensagem.textContent = '';
       botoes.style.display = 'none';
