@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel de Aprovação - NANdART</title>
+  <title>Painel de Aprovação</title>
   <style>
     body {
       font-family: Georgia, serif;
       background-color: #121212;
-      color: #ffffff;
+      color: #fff;
       padding: 20px;
       margin: 0;
     }
@@ -19,49 +19,55 @@
     }
 
     .contador {
+      color: #32cd32;
       text-align: center;
       margin-bottom: 20px;
-      font-size: 18px;
-      color: #32cd32;
     }
 
     .obra {
       border: 1px solid #d4af37;
       padding: 15px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       background-color: #1e1e1e;
     }
 
     .obra h3 {
-      color: #ffd700;
       margin: 0;
+      color: #ffd700;
+    }
+
+    .obra img {
+      max-width: 100%;
+      margin-top: 10px;
+      border: 1px solid #555;
+    }
+
+    .obra button {
+      background-color: #d4af37;
+      color: #000;
+      border: none;
+      padding: 8px 15px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-size: 14px;
     }
 
     .obra a {
       color: #d4af37;
       text-decoration: none;
-    }
-
-    .obra button {
-      margin-top: 10px;
-      background-color: #d4af37;
-      color: #000;
-      border: none;
-      padding: 8px 16px;
-      font-size: 14px;
-      cursor: pointer;
+      font-weight: bold;
     }
 
     @media (max-width: 600px) {
       .obra h3 {
-        font-size: 16px;
+        font-size: 18px;
       }
     }
   </style>
 </head>
 <body>
   <h1>Painel de Aprovação</h1>
-  <div class="contador" id="contador">A carregar...</div>
+  <div class="contador" id="contador">🔄 A carregar submissões...</div>
   <div id="lista-obras"></div>
 
   <script>
@@ -79,10 +85,16 @@
         const resposta = await fetch('https://nandart-api.vercel.app/api/submissoes');
         const dados = await resposta.json();
 
-        document.getElementById('contador').textContent = `Submissões pendentes: ${dados.total}`;
+        const contador = document.getElementById('contador');
+        contador.textContent = `🌿 Submissões pendentes: ${dados.total}`;
 
         const lista = document.getElementById('lista-obras');
         lista.innerHTML = '';
+
+        if (dados.total === 0) {
+          lista.innerHTML = '<p style="text-align: center; color: #aaa;">Não existem submissões pendentes.</p>';
+          return;
+        }
 
         dados.pendentes.forEach((obra) => {
           const div = document.createElement('div');
@@ -90,40 +102,41 @@
 
           div.innerHTML = `
             <h3>${obra.titulo}</h3>
-            <p><strong>Artista:</strong> ${obra.nomeArtista}</p>
-            <p><strong>Ano:</strong> ${obra.ano}</p>
-            <p><a href="${obra.url}" target="_blank">Ver submissão</a></p>
-            <button onclick="aprovarObra(${obra.id})">Aprovar Obra</button>
+            <p>👤 Artista: <strong>${obra.nomeArtista}</strong></p>
+            ${obra.imagem ? `<img src="${obra.imagem}" alt="Imagem da obra">` : ''}
+            <p>🔗 <a href="${obra.url}" target="_blank">Ver submissão original</a></p>
+            <button onclick="aprovarObra(${obra.id}, '${obra.titulo}', '${obra.nomeArtista}', '${obra.imagem}')">✅ Aprovar</button>
           `;
 
           lista.appendChild(div);
         });
-
       } catch (erro) {
-        document.getElementById('contador').textContent = 'Erro ao carregar submissões.';
-        console.error('Erro ao carregar obras:', erro);
+        console.error('Erro ao carregar submissões:', erro);
+        document.getElementById('contador').textContent = '❌ Erro ao carregar dados.';
       }
     }
 
-    async function aprovarObra(id) {
+    async function aprovarObra(id, titulo, nomeArtista, imagem) {
       try {
-        const resposta = await fetch(`https://nandart-api.vercel.app/api/aprovar?id=${id}`, {
+        const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ id, titulo, nomeArtista, imagem })
         });
 
         const resultado = await resposta.json();
 
         if (resposta.ok) {
-          alert('Obra aprovada com sucesso.');
+          alert('✅ Obra aprovada com sucesso!');
           carregarObras();
         } else {
-          alert('Erro ao aprovar: ' + resultado.message);
+          alert('❌ Erro: ' + resultado.message);
         }
-
       } catch (erro) {
-        alert('Erro ao contactar o servidor.');
         console.error('Erro ao aprovar obra:', erro);
+        alert('❌ Erro ao contactar o servidor.');
       }
     }
 
