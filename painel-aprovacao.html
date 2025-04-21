@@ -1,110 +1,128 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Painel de Aprovação</title>
   <style>
     body {
       font-family: Georgia, serif;
       background-color: #121212;
-      color: #ffffff;
-      margin: 0;
+      color: #fff;
       padding: 20px;
+      margin: 0;
     }
+
     h1 {
-      text-align: center;
       color: #d4af37;
-    }
-    .contador {
       text-align: center;
-      margin: 10px;
-      color: #aaffaa;
     }
+
+    .contador {
+      color: #32cd32;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
     .obra {
       border: 1px solid #d4af37;
-      padding: 15px;
-      margin: 10px auto;
-      max-width: 600px;
+      padding: 10px;
+      margin-bottom: 15px;
       background-color: #1e1e1e;
     }
+
     .obra h3 {
-      margin: 0 0 10px;
-      color: #d4af37;
+      margin: 0;
+      color: #ffd700;
     }
+
     .obra a {
       color: #d4af37;
       text-decoration: none;
     }
+
     .obra button {
       background-color: #d4af37;
       color: #000;
       border: none;
-      padding: 6px 12px;
-      margin-top: 10px;
+      padding: 5px 10px;
       cursor: pointer;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .obra h3 {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
 <body>
   <h1>Painel de Aprovação</h1>
-  <div class="contador" id="contador">🌿 Submissões pendentes: ...</div>
+  <div class="contador" id="contador"></div>
   <div id="lista-obras"></div>
 
   <script>
-    async function carregarSubmissoes() {
+    const tokenEsperado = 'fernanda2025visao';
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+
+    if (token !== tokenEsperado) {
+      document.body.innerHTML = '<h2 style="color: red; text-align: center">Acesso negado.</h2>';
+      throw new Error('Token inválido');
+    }
+
+    async function carregarObras() {
       try {
         const resposta = await fetch('https://nandart-api.vercel.app/api/submissoes');
         const dados = await resposta.json();
-        const lista = document.getElementById('lista-obras');
+
         const contador = document.getElementById('contador');
+        contador.textContent = `🌿 Submissões pendentes: ${dados.total}`;
 
-        contador.innerHTML = `🌿 Submissões pendentes: ${dados.total}`;
+        const lista = document.getElementById('lista-obras');
+        lista.innerHTML = '';
 
-        dados.pendentes.forEach(submissao => {
+        dados.pendentes.forEach((obra) => {
           const div = document.createElement('div');
           div.className = 'obra';
 
           div.innerHTML = `
-            <h3>${submissao.titulo}</h3>
-            <a href="${submissao.url}" target="_blank">🔗 Ver submissão</a><br>
-            <button onclick="aprovarObra(${submissao.id})">✅ Aprovar</button>
+            <h3>${obra.titulo}</h3>
+            <p>🔗 <a href="${obra.url}" target="_blank">Ver submissão</a></p>
+            <button onclick="aprovarObra(${obra.id})">✅ Aprovar</button>
           `;
 
           lista.appendChild(div);
         });
-      } catch (e) {
-        document.getElementById('contador').textContent = 'Erro ao carregar submissões';
-        console.error(e);
+      } catch (erro) {
+        console.error('Erro ao carregar obras:', erro);
       }
     }
 
     async function aprovarObra(id) {
-      const obra = await fetch(`https://nandart-api.vercel.app/api/submissao?id=${id}`).then(r => r.json());
-
       try {
-        const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
+        const resposta = await fetch(`https://nandart-api.vercel.app/api/aprovar?id=${id}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            nomeArtista: obra.nomeArtista,
-            titulo: obra.titulo,
-            imageUrl: obra.imageUrl
-          })
         });
 
-        const resultado = await resposta.json();
-        alert(resultado.message);
-        location.reload();
+        if (resposta.ok) {
+          alert('Obra aprovada com sucesso!');
+          carregarObras();
+        } else {
+          const dados = await resposta.json();
+          alert('Erro: ' + dados.message);
+        }
       } catch (erro) {
+        console.error('Erro ao aprovar obra:', erro);
         alert('Erro ao contactar o servidor.');
-        console.error(erro);
       }
     }
 
-    carregarSubmissoes();
+    carregarObras();
   </script>
 </body>
 </html>
