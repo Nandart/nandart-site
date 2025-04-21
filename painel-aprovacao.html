@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Aprovação - NANdART</title>
+  <title>Painel de Aprovação</title>
   <style>
     body {
       font-family: Georgia, serif;
@@ -21,103 +21,94 @@
     .contador {
       text-align: center;
       margin-bottom: 20px;
+      color: #d4af37;
     }
 
-    .obra {
+    .submissao {
       background-color: #1e1e1e;
       border: 1px solid #d4af37;
-      margin: 20px auto;
-      padding: 20px;
-      max-width: 700px;
+      padding: 15px;
+      margin-bottom: 10px;
     }
 
-    .obra img {
-      max-width: 100%;
-      display: block;
-      margin: 10px auto;
+    .submissao a {
+      color: #d4af37;
+      text-decoration: none;
     }
 
-    .botoes {
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .botoes button {
+    .aprovar {
       background-color: #d4af37;
       color: #000;
       border: none;
-      padding: 10px;
-      margin: 5px;
+      padding: 8px 15px;
       cursor: pointer;
-      font-size: 14px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .oculto {
+      display: none;
     }
   </style>
 </head>
 <body>
   <h1>Painel de Aprovação</h1>
-  <div class="contador" id="contador"></div>
-  <div id="obras"></div>
+  <div class="contador" id="contador">🌿 Submissões pendentes: a carregar...</div>
+  <div id="lista-submissoes"></div>
 
   <script>
-    const TOKEN = new URLSearchParams(window.location.search).get("token");
-    if (TOKEN !== "fernanda2025visao") {
-      document.body.innerHTML = '<h1 style="color:red; text-align:center">Acesso negado</h1>';
-      throw new Error("Token inválido");
-    }
-
-    const obrasDiv = document.getElementById("obras");
-    const contador = document.getElementById("contador");
-
     async function carregarSubmissoes() {
-      const res = await fetch("https://api.github.com/repos/Nandart/nandart-submissoes/issues?state=open&labels=submissão,pendente%20de%20revisão");
-      const issues = await res.json();
-      contador.innerText = `🕊️ Submissões pendentes: ${issues.length}`;
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
 
-      for (const issue of issues) {
-        const imgMatch = issue.body.match(/!\[.*?\]\((.*?)\)/);
-        const imagemUrl = imgMatch ? imgMatch[1] : "";
-        const descricaoMatch = issue.body.match(/\*\*📝 Descrição:\*\*\s+([\s\S]*?)\n\n/);
-        const descricao = descricaoMatch ? descricaoMatch[1].trim() : "(Sem descrição)";
+      if (token !== 'fernanda2025visao') {
+        document.body.innerHTML = '<h1 style="color: red; text-align: center;">Acesso negado</h1>';
+        return;
+      }
 
-        const div = document.createElement("div");
-        div.className = "obra";
-        div.innerHTML = `
-          <h3>${issue.title}</h3>
-          <p>${descricao.replace(/\n/g, '<br>')}</p>
-          <img src="${imagemUrl}" alt="Imagem da obra">
-          <div class="botoes">
-            <button onclick="aprovar(${issue.number})">✅ Aprovar</button>
-            <button onclick="rejeitar(${issue.number})">❌ Rejeitar</button>
-          </div>
-        `;
-        obrasDiv.appendChild(div);
+      try {
+        const resposta = await fetch('https://nandart-api.vercel.app/api/submissoes');
+        const dados = await resposta.json();
+
+        document.getElementById('contador').innerText = `🌿 Submissões pendentes: ${dados.total}`;
+
+        const lista = document.getElementById('lista-submissoes');
+        dados.pendentes.forEach((obra) => {
+          const div = document.createElement('div');
+          div.className = 'submissao';
+
+          div.innerHTML = `
+            <strong>${obra.titulo}</strong><br>
+            <a href="${obra.url}" target="_blank">🔗 Ver submissão</a><br>
+            <button class="aprovar" onclick="aprovar(${obra.id})">✅ Aprovar</button>
+          `;
+
+          lista.appendChild(div);
+        });
+
+      } catch (erro) {
+        document.getElementById('contador').innerText = 'Erro ao carregar submissões.';
       }
     }
 
-    async function aprovar(numero) {
-      await fetch(`https://api.github.com/repos/Nandart/nandart-submissoes/issues/${numero}/labels`, {
-        method: "POST",
-        headers: {
-          "Accept": "application/vnd.github+json",
-          "Authorization": `Bearer ghp_xxx`, // ← Substituir por GitHub token com permissões mínimas
-        },
-        body: JSON.stringify(["obra", "aprovada"])
-      });
-      alert("Obra aprovada. O Pull Request será criado automaticamente.");
-      location.reload();
-    }
+    async function aprovar(issueId) {
+      const confirmar = confirm("Deseja mesmo aprovar esta obra?");
+      if (!confirmar) return;
 
-    async function rejeitar(numero) {
-      await fetch(`https://api.github.com/repos/Nandart/nandart-submissoes/issues/${numero}`, {
-        method: "PATCH",
-        headers: {
-          "Accept": "application/vnd.github+json",
-          "Authorization": `Bearer ghp_xxx`, // ← Substituir por GitHub token com permissões mínimas
-        },
-        body: JSON.stringify({ state: "closed" })
-      });
-      alert("Obra rejeitada.");
-      location.reload();
+      try {
+        const resposta = await fetch(`https://nandart-api.vercel.app/api/aprovar?id=${issueId}`, {
+          method: 'POST'
+        });
+
+        if (resposta.ok) {
+          alert('Obra aprovada e PR criado com sucesso!');
+          location.reload();
+        } else {
+          alert('Erro ao aprovar a obra.');
+        }
+      } catch (erro) {
+        alert('Erro ao contactar o servidor.');
+      }
     }
 
     carregarSubmissoes();
