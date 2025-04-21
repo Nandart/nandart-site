@@ -72,10 +72,14 @@
       throw new Error('Token inválido');
     }
 
+    let obrasPendentes = [];
+
     async function carregarObras() {
       try {
         const resposta = await fetch('https://nandart-api.vercel.app/api/submissoes');
         const dados = await resposta.json();
+
+        obrasPendentes = dados.pendentes;
 
         const contador = document.getElementById('contador');
         contador.textContent = `🌿 Submissões pendentes: ${dados.total}`;
@@ -90,7 +94,7 @@
           div.innerHTML = `
             <h3>${obra.titulo}</h3>
             <p>🔗 <a href="${obra.url}" target="_blank">Ver submissão</a></p>
-            <button onclick='aprovarObra(${JSON.stringify(obra)})'>✅ Aprovar</button>
+            <button onclick="aprovarObra(${obra.id})">✅ Aprovar</button>
           `;
 
           lista.appendChild(div);
@@ -100,14 +104,26 @@
       }
     }
 
-    async function aprovarObra(obra) {
+    async function aprovarObra(id) {
+      const obra = obrasPendentes.find(o => o.id === id);
+
+      if (!obra) {
+        alert('Erro: obra não encontrada.');
+        return;
+      }
+
       try {
         const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(obra)
+          body: JSON.stringify({
+            id: obra.id,
+            titulo: obra.titulo.replace(/^🖼️\s*/, '').trim(),
+            nomeArtista: obra.titulo.match(/por (.+)$/)?.[1]?.trim() || 'Artista Desconhecido',
+            imagem: obra.imageUrl || ''  // este campo precisa ser preenchido com o URL da imagem se disponível
+          })
         });
 
         if (resposta.ok) {
