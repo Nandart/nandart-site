@@ -32,7 +32,7 @@
       font-weight: bold;
     }
 
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -124,7 +124,7 @@
   <div class="loading" id="loading" style="display: none;">⏳ A enviar...</div>
   <div id="mensagem"></div>
   <div class="botoes-pos-envio" id="botoes-pos-envio" style="display:none;">
-    <a href="painel-aprovacao.html?token=fernanda2025visao">📋 Ir para o Painel de Aprovação</a>
+    <a href="painel-aprovacao.html">Ir para o Painel de Aprovação</a>
   </div>
 
   <script>
@@ -136,8 +136,8 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       mensagem.textContent = '';
-      loading.style.display = 'block';
       botoes.style.display = 'none';
+      loading.style.display = 'block';
 
       const formData = new FormData(form);
 
@@ -152,17 +152,17 @@
 
         if (response.ok) {
           mensagem.style.color = '#32CD32';
-          mensagem.innerHTML = `✅ ${resultado.message}<br><a href="${resultado.imageUrl}" target="_blank" style="color:#d4af37">🖼️ Ver imagem submetida</a>`;
+          mensagem.innerHTML = `✅ ${resultado.message}<br><a href="${resultado.imageUrl}" target="_blank" style="color:#d4af37">Ver imagem submetida</a>`;
           botoes.style.display = 'block';
           form.reset();
         } else {
           mensagem.style.color = 'red';
-          mensagem.textContent = `❌ ${resultado.message}`;
+          mensagem.textContent = `Erro: ${resultado.message}`;
         }
       } catch (erro) {
         loading.style.display = 'none';
         mensagem.style.color = 'red';
-        mensagem.textContent = '❌ Erro ao contactar o servidor.';
+        mensagem.textContent = 'Erro ao contactar o servidor.';
       }
     });
   </script>
