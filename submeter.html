@@ -1,168 +1,158 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Submeter Obra - NANdART</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Submeter Obra</title>
   <style>
     body {
+      background-color: #111;
+      color: #fff;
       font-family: Georgia, serif;
-      background-color: #121212;
-      color: #ffffff;
-      margin: 0;
-      padding: 20px;
     }
 
-    h1, h2 {
+    h2 {
       text-align: center;
       color: #d4af37;
     }
 
     form {
+      max-width: 600px;
+      margin: auto;
       background-color: #1e1e1e;
       padding: 20px;
-      margin: 20px auto;
       border: 1px solid #d4af37;
-      max-width: 600px;
     }
 
     label {
       display: block;
-      margin-top: 15px;
+      margin-top: 10px;
       font-weight: bold;
     }
 
     input, textarea {
       width: 100%;
       padding: 8px;
-      margin-top: 5px;
-      background-color: #262626;
+      border: none;
+      background-color: #333;
       color: #fff;
-      border: 1px solid #555;
+    }
+
+    input[type="file"] {
+      background-color: transparent;
     }
 
     button {
-      background-color: #d4af37;
-      color: #000;
-      border: none;
-      padding: 10px 20px;
-      margin-top: 20px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    #mensagem {
-      margin-top: 20px;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .loading {
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .botoes-pos-envio {
-      text-align: center;
       margin-top: 15px;
+      padding: 10px 15px;
+      background-color: #d4af37;
+      border: none;
+      color: #000;
+      cursor: pointer;
     }
 
-    .botoes-pos-envio a {
-      color: #d4af37;
+    .mensagem {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .erro {
+      color: red;
+    }
+
+    .sucesso {
+      color: lime;
+    }
+
+    a {
+      color: #ffd700;
       text-decoration: none;
-      font-weight: bold;
-    }
-
-    @media (max-width: 600px) {
-      form {
-        width: 90%;
-      }
     }
   </style>
 </head>
 <body>
-  <h1>Submissão de Obras</h1>
-  <h2>Para Artistas Externos</h2>
+  <h2>Submissão de Obras</h2>
+  <h3 style="text-align: center;">Para Artistas Externos</h3>
 
-  <form id="formulario-obras">
-    <label for="nomeArtista">Nome do Artista</label>
-    <input type="text" id="nomeArtista" name="nomeArtista" required />
+  <form id="form-submissao">
+    <label>Nome do Artista</label>
+    <input type="text" name="nomeArtista" required>
 
-    <label for="titulo">Título da Obra</label>
-    <input type="text" id="titulo" name="titulo" required />
+    <label>Título da Obra</label>
+    <input type="text" name="titulo" required>
 
-    <label for="descricao">Descrição</label>
-    <textarea id="descricao" name="descricao" rows="4" required></textarea>
+    <label>Descrição</label>
+    <textarea name="descricao" rows="3" required></textarea>
 
-    <label for="estilo">Estilo</label>
-    <input type="text" id="estilo" name="estilo" required />
+    <label>Estilo</label>
+    <input type="text" name="estilo" required>
 
-    <label for="tecnica">Técnica</label>
-    <input type="text" id="tecnica" name="tecnica" required />
+    <label>Técnica</label>
+    <input type="text" name="tecnica" required>
 
-    <label for="ano">Ano de Criação</label>
-    <input type="number" id="ano" name="ano" required />
+    <label>Ano de Criação</label>
+    <input type="text" name="ano" required>
 
-    <label for="dimensoes">Dimensões</label>
-    <input type="text" id="dimensoes" name="dimensoes" required />
+    <label>Dimensões</label>
+    <input type="text" name="dimensoes" required>
 
-    <label for="materiais">Materiais</label>
-    <input type="text" id="materiais" name="materiais" required />
+    <label>Materiais</label>
+    <input type="text" name="materiais" required>
 
-    <label for="local">Local</label>
-    <input type="text" id="local" name="local" required />
+    <label>Local</label>
+    <input type="text" name="local" required>
 
-    <label for="enderecowallet">Endereço da Wallet</label>
-    <input type="text" id="enderecowallet" name="enderecowallet" required />
+    <label>Endereço da Wallet</label>
+    <input type="text" name="carteira" required>
 
-    <label for="imagem">Imagem</label>
-    <input type="file" id="imagem" name="imagem" accept="image/*" required />
+    <label>Imagem</label>
+    <input type="file" name="imagem" accept="image/*" required>
 
     <button type="submit">Submeter Obra</button>
+    <div class="mensagem erro" id="mensagem-erro" style="display: none;">❌ Erro ao contactar o servidor.</div>
+    <div class="mensagem sucesso" id="mensagem-sucesso" style="display: none;">
+      ✅ Submissão recebida com sucesso!<br />
+      <a id="ver-imagem" href="#" target="_blank">Ver imagem</a><br />
+      <span id="link-painel-aprovacao" style="display: none;">
+        <a href="painel-aprovacao.html?token=fernanda2025visao">Ir para o Painel de Aprovação</a>
+      </span>
+    </div>
   </form>
 
-  <div class="loading" id="loading" style="display: none;">⏳ A enviar...</div>
-  <div id="mensagem"></div>
-  <div class="botoes-pos-envio" id="botoes-pos-envio" style="display:none;">
-    <a href="painel-aprovacao.html?token=fernanda2025visao">Ir para o Painel de Aprovação</a>
-  </div>
-
   <script>
-    const form = document.getElementById('formulario-obras');
-    const mensagem = document.getElementById('mensagem');
-    const loading = document.getElementById('loading');
-    const botoes = document.getElementById('botoes-pos-envio');
-
-    form.addEventListener('submit', async (e) => {
+    document.getElementById('form-submissao').addEventListener('submit', async function(e) {
       e.preventDefault();
-      mensagem.textContent = '';
-      botoes.style.display = 'none';
-      loading.style.display = 'block';
-
+      const form = e.target;
       const formData = new FormData(form);
 
+      document.getElementById('mensagem-erro').style.display = 'none';
+      document.getElementById('mensagem-sucesso').style.display = 'none';
+
       try {
-        const response = await fetch('https://nandart-api.vercel.app/api/submit', {
+        const resposta = await fetch('https://nandart-api.vercel.app/api/submit', {
           method: 'POST',
           body: formData
         });
 
-        const resultado = await response.json();
-        loading.style.display = 'none';
+        const resultado = await resposta.json();
 
-        if (response.ok) {
-          mensagem.style.color = '#32CD32';
-          mensagem.innerHTML = `✅ ${resultado.message}<br><a href="${resultado.imageUrl}" target="_blank" style="color:#d4af37">Ver imagem</a>`;
-          botoes.style.display = 'block';
+        if (resposta.ok) {
+          document.getElementById('mensagem-sucesso').style.display = 'block';
+          document.getElementById('ver-imagem').href = resultado.imagemUrl;
+
+          const urlParams = new URLSearchParams(window.location.search);
+          if (urlParams.get('token') === 'fernanda2025visao') {
+            document.getElementById('link-painel-aprovacao').style.display = 'inline';
+          }
+
           form.reset();
         } else {
-          mensagem.style.color = 'red';
-          mensagem.textContent = `❌ ${resultado.message}`;
+          throw new Error(resultado.message || 'Erro desconhecido');
         }
       } catch (erro) {
-        loading.style.display = 'none';
-        mensagem.style.color = 'red';
-        mensagem.textContent = '❌ Erro ao contactar o servidor.';
+        console.error(erro);
+        document.getElementById('mensagem-erro').textContent = '❌ Erro ao contactar o servidor.';
+        document.getElementById('mensagem-erro').style.display = 'block';
       }
     });
   </script>
