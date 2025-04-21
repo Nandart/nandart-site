@@ -79,6 +79,22 @@
       }
     }
   </style>
+  <script>
+    // 🔐 Verificação de token na URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const TOKEN_ESPERADO = 'fernanda2025visao';
+
+    if (token !== TOKEN_ESPERADO) {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.innerHTML = `
+          <div style="color:#fff; background:#121212; text-align:center; margin-top:100px;">
+            <h2>🔒 Acesso restrito</h2>
+            <p>Este painel está protegido. Verifica o link ou pede autorização.</p>
+          </div>`;
+      });
+    }
+  </script>
 </head>
 <body>
   <h1>Submissão de Obras</h1>
