@@ -73,83 +73,89 @@
       font-weight: bold;
     }
 
+    .bloqueado {
+      text-align: center;
+      padding: 40px;
+      font-size: 18px;
+      color: #ccc;
+    }
+
     @media (max-width: 600px) {
       form {
         width: 90%;
       }
     }
   </style>
-  <script>
-    // 🔐 Verificação de token na URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const TOKEN_ESPERADO = 'fernanda2025visao';
-
-    if (token !== TOKEN_ESPERADO) {
-      document.addEventListener('DOMContentLoaded', () => {
-        document.body.innerHTML = `
-          <div style="color:#fff; background:#121212; text-align:center; margin-top:100px;">
-            <h2>🔒 Acesso restrito</h2>
-            <p>Este painel está protegido. Verifica o link ou pede autorização.</p>
-          </div>`;
-      });
-    }
-  </script>
 </head>
 <body>
-  <h1>Submissão de Obras</h1>
-  <h2>Para Artistas Externos</h2>
+  <div id="conteudo" style="display:none;">
+    <h1>Submissão de Obras</h1>
+    <h2>Para Artistas Externos</h2>
 
-  <form id="formulario-obras">
-    <label for="nomeArtista">Nome do Artista</label>
-    <input type="text" id="nomeArtista" name="nomeArtista" required />
+    <form id="formulario-obras">
+      <label for="nomeArtista">Nome do Artista</label>
+      <input type="text" id="nomeArtista" name="nomeArtista" required />
 
-    <label for="titulo">Título da Obra</label>
-    <input type="text" id="titulo" name="titulo" required />
+      <label for="titulo">Título da Obra</label>
+      <input type="text" id="titulo" name="titulo" required />
 
-    <label for="descricao">Descrição da Obra</label>
-    <textarea id="descricao" name="descricao" rows="4" required></textarea>
+      <label for="descricao">Descrição da Obra</label>
+      <textarea id="descricao" name="descricao" rows="4" required></textarea>
 
-    <label for="estilo">Estilo da Obra</label>
-    <input type="text" id="estilo" name="estilo" required />
+      <label for="estilo">Estilo da Obra</label>
+      <input type="text" id="estilo" name="estilo" required />
 
-    <label for="tecnica">Técnica Utilizada</label>
-    <input type="text" id="tecnica" name="tecnica" required />
+      <label for="tecnica">Técnica Utilizada</label>
+      <input type="text" id="tecnica" name="tecnica" required />
 
-    <label for="ano">Ano de Criação</label>
-    <input type="number" id="ano" name="ano" required />
+      <label for="ano">Ano de Criação</label>
+      <input type="number" id="ano" name="ano" required />
 
-    <label for="dimensoes">Dimensões</label>
-    <input type="text" id="dimensoes" name="dimensoes" required />
+      <label for="dimensoes">Dimensões</label>
+      <input type="text" id="dimensoes" name="dimensoes" required />
 
-    <label for="materiais">Materiais Utilizados</label>
-    <input type="text" id="materiais" name="materiais" required />
+      <label for="materiais">Materiais Utilizados</label>
+      <input type="text" id="materiais" name="materiais" required />
 
-    <label for="local">Local de Criação</label>
-    <input type="text" id="local" name="local" required />
+      <label for="local">Local de Criação</label>
+      <input type="text" id="local" name="local" required />
 
-    <label for="enderecowallet">Endereço da Wallet</label>
-    <input type="text" id="enderecowallet" name="enderecowallet" required />
+      <label for="enderecowallet">Endereço da Wallet</label>
+      <input type="text" id="enderecowallet" name="enderecowallet" required />
 
-    <label for="imagem">Imagem da Obra</label>
-    <input type="file" id="imagem" name="imagem" accept="image/*" required />
+      <label for="imagem">Imagem da Obra</label>
+      <input type="file" id="imagem" name="imagem" accept="image/*" required />
 
-    <button type="submit">Submeter Obra para Avaliação</button>
-  </form>
+      <button type="submit">Submeter Obra para Avaliação</button>
+    </form>
 
-  <div class="loading" id="loading" style="display: none;">⏳ A enviar...</div>
-  <div id="mensagem"></div>
-  <div class="botoes-pos-envio" id="botoes-pos-envio" style="display:none;">
-    <a href="painel-aprovacao.html">📋 Ir para o Painel de Aprovação</a>
+    <div class="loading" id="loading" style="display: none;">⏳ A enviar...</div>
+    <div id="mensagem"></div>
+    <div class="botoes-pos-envio" id="botoes-pos-envio" style="display:none;">
+      <a href="painel-aprovacao.html">📋 Ir para o Painel de Aprovação</a>
+    </div>
+  </div>
+
+  <div id="bloqueado" class="bloqueado" style="display:none;">
+    🔒 Acesso restrito. Introduz as tuas credenciais ou utiliza o token correto na URL.
   </div>
 
   <script>
+    const query = new URLSearchParams(window.location.search);
+    const token = query.get('token');
+
+    if (token === 'fernanda2025visao') {
+      document.getElementById('conteudo').style.display = 'block';
+    } else {
+      document.getElementById('bloqueado').style.display = 'block';
+    }
+
     const form = document.getElementById('formulario-obras');
     const mensagem = document.getElementById('mensagem');
     const loading = document.getElementById('loading');
     const botoes = document.getElementById('botoes-pos-envio');
 
-    form.addEventListener('submit', async (e) => {
+    form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       mensagem.textContent = '';
       botoes.style.display = 'none';
