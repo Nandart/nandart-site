@@ -26,70 +26,68 @@
       max-width: 600px;
     }
 
-    img {
-      max-width: 100%;
-      height: auto;
-      margin-top: 10px;
-      border: 1px solid #555;
+    .obra h2 {
+      color: #d4af37;
     }
 
-    button {
+    .obra img {
+      max-width: 100%;
+      border: 1px solid #d4af37;
+      margin-top: 10px;
+    }
+
+    .obra button {
       background-color: #d4af37;
       color: #000;
+      padding: 10px;
       border: none;
-      padding: 10px 20px;
-      margin-top: 20px;
       cursor: pointer;
       font-size: 16px;
+      margin-top: 15px;
     }
 
-    #feedback {
+    .mensagem {
+      margin-top: 10px;
+      font-size: 14px;
       text-align: center;
-      margin-top: 20px;
-      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h1>Painel de Aprovação de Obras</h1>
-
-  <div class="obra" id="obra">
-    <h2 id="titulo">Título da Obra</h2>
-    <p><strong>Artista:</strong> <span id="artista">Nome do Artista</span></p>
-    <img id="imagem" src="" alt="Imagem da obra" />
-    <button onclick="aprovarObra()">✅ Aprovar Obra</button>
-  </div>
-
-  <div id="feedback"></div>
+  <h1>Painel de Aprovação</h1>
+  <div id="lista-obras"></div>
 
   <script>
-    // Exemplo fictício de dados de obra
-    const obra = {
-      titulo: "Caminho do Infinito",
-      artista: "Leonor Silveira",
-      imagem: "https://res.cloudinary.com/demo/image/upload/sample.jpg",
-      dados: {
-        nomeArtista: "Leonor Silveira",
-        titulo: "Caminho do Infinito",
-        descricao: "Um caminho suspenso entre o real e o imaginado.",
-        estilo: "Surrealismo",
-        tecnica: "Óleo sobre tela",
-        ano: "2024",
-        dimensoes: "100x120cm",
-        materiais: "Óleo, tela, verniz",
-        local: "Lisboa",
-        enderecowallet: "0x1234567890ABCDEF",
-        imageUrl: "https://res.cloudinary.com/demo/image/upload/sample.jpg"
-      }
-    };
+    async function carregarObras() {
+      const response = await fetch('https://api.github.com/repos/Nandart/nandart-submissoes/issues?labels=submiss%C3%A3o');
+      const obras = await response.json();
 
-    document.getElementById('titulo').textContent = obra.titulo;
-    document.getElementById('artista').textContent = obra.artista;
-    document.getElementById('imagem').src = obra.imagem;
+      const container = document.getElementById('lista-obras');
 
-    async function aprovarObra() {
-      const feedback = document.getElementById('feedback');
-      feedback.textContent = '⏳ A aprovar...';
+      obras.forEach(obra => {
+        const div = document.createElement('div');
+        div.className = 'obra';
+
+        const titulo = obra.title;
+        const corpo = obra.body;
+        const imagemMatch = corpo.match(/!\[Obra\]\((.*?)\)/);
+        const imagemUrl = imagemMatch ? imagemMatch[1] : '';
+
+        div.innerHTML = `
+          <h2>${titulo}</h2>
+          <p>${corpo.replace(/\n/g, '<br>').replace(/!\[Obra\]\(.*?\)/, '')}</p>
+          ${imagemUrl ? `<img src="${imagemUrl}" alt="Imagem da obra">` : ''}
+          <button onclick="aprovar('${obra.number}', this)">✅ Aprovar Obra</button>
+          <div class="mensagem" id="mensagem-${obra.number}"></div>
+        `;
+
+        container.appendChild(div);
+      });
+    }
+
+    async function aprovar(issueNumber, botao) {
+      const mensagem = document.getElementById(`mensagem-${issueNumber}`);
+      mensagem.textContent = '⏳ A processar...';
 
       try {
         const response = await fetch('https://nandart-api.vercel.app/api/aprovar', {
@@ -97,20 +95,22 @@
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(obra.dados)
+          body: JSON.stringify({ issueNumber })
         });
 
         const resultado = await response.json();
-
         if (response.ok) {
-          feedback.innerHTML = `✅ Obra aprovada! <a href="${resultado.prUrl}" target="_blank" style="color: #d4af37;">Ver Pull Request</a>`;
+          mensagem.innerHTML = `✅ Obra aprovada! <a href="${resultado.prUrl}" target="_blank" style="color: #d4af37;">Ver PR</a>`;
+          botao.disabled = true;
         } else {
-          feedback.textContent = `❌ Erro: ${resultado.message}`;
+          mensagem.textContent = `❌ Erro: ${resultado.message}`;
         }
       } catch (erro) {
-        feedback.textContent = '❌ Erro ao contactar o servidor de aprovação.';
+        mensagem.textContent = '❌ Erro ao contactar a API.';
       }
     }
+
+    carregarObras();
   </script>
 </body>
 </html>
