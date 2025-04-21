@@ -73,11 +73,10 @@
       font-weight: bold;
     }
 
-    .bloqueado {
+    .acesso-negado {
       text-align: center;
-      padding: 40px;
-      font-size: 18px;
-      color: #ccc;
+      color: red;
+      font-weight: bold;
     }
 
     @media (max-width: 600px) {
@@ -88,10 +87,9 @@
   </style>
 </head>
 <body>
-  <div id="conteudo" style="display:none;">
-    <h1>Submissão de Obras</h1>
+  <h1>Submissão de Obras</h1>
+  <div id="conteudo-protegido" style="display: none;">
     <h2>Para Artistas Externos</h2>
-
     <form id="formulario-obras">
       <label for="nomeArtista">Nome do Artista</label>
       <input type="text" id="nomeArtista" name="nomeArtista" required />
@@ -136,18 +134,22 @@
     </div>
   </div>
 
-  <div id="bloqueado" class="bloqueado" style="display:none;">
-    🔒 Acesso restrito. Introduz as tuas credenciais ou utiliza o token correto na URL.
+  <div id="acesso-negado" class="acesso-negado" style="display: none;">
+    ⚠️ Acesso restrito. Token de acesso inválido.
   </div>
 
   <script>
-    const query = new URLSearchParams(window.location.search);
-    const token = query.get('token');
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const tokenValido = 'fernanda2025visao';
 
-    if (token === 'fernanda2025visao') {
-      document.getElementById('conteudo').style.display = 'block';
+    const conteudo = document.getElementById('conteudo-protegido');
+    const negado = document.getElementById('acesso-negado');
+
+    if (token === tokenValido) {
+      conteudo.style.display = 'block';
     } else {
-      document.getElementById('bloqueado').style.display = 'block';
+      negado.style.display = 'block';
     }
 
     const form = document.getElementById('formulario-obras');
