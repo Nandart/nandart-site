@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Aprovação</title>
+  <title>Painel de Aprovação - NANdART</title>
   <style>
     body {
       font-family: Georgia, serif;
@@ -18,74 +18,106 @@
       color: #d4af37;
     }
 
-    .obra {
-      background-color: #1e1e1e;
-      border: 1px solid #d4af37;
-      padding: 15px;
+    .contador {
+      text-align: center;
       margin-bottom: 20px;
     }
 
-    .obra h3 {
-      margin-top: 0;
-      color: #d4af37;
+    .obra {
+      background-color: #1e1e1e;
+      border: 1px solid #d4af37;
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 700px;
     }
 
     .obra img {
       max-width: 100%;
-      height: auto;
+      display: block;
+      margin: 10px auto;
+    }
+
+    .botoes {
+      text-align: center;
       margin-top: 10px;
     }
 
-    .contador {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #ccc;
+    .botoes button {
+      background-color: #d4af37;
+      color: #000;
+      border: none;
+      padding: 10px;
+      margin: 5px;
+      cursor: pointer;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
   <h1>Painel de Aprovação</h1>
-  <div class="contador" id="contador">A carregar...</div>
-  <div id="painel"></div>
+  <div class="contador" id="contador"></div>
+  <div id="obras"></div>
 
   <script>
-    const token = new URLSearchParams(window.location.search).get('token');
-    if (token !== 'fernanda2025visao') {
-      document.body.innerHTML = '<h1 style="color:red;text-align:center">Acesso negado</h1>';
-      throw new Error('Token inválido');
+    const TOKEN = new URLSearchParams(window.location.search).get("token");
+    if (TOKEN !== "fernanda2025visao") {
+      document.body.innerHTML = '<h1 style="color:red; text-align:center">Acesso negado</h1>';
+      throw new Error("Token inválido");
     }
 
+    const obrasDiv = document.getElementById("obras");
+    const contador = document.getElementById("contador");
+
     async function carregarSubmissoes() {
-      const response = await fetch('https://api.github.com/repos/Nandart/nandart-submissoes/issues');
-      const issues = await response.json();
+      const res = await fetch("https://api.github.com/repos/Nandart/nandart-submissoes/issues?state=open&labels=submissão,pendente%20de%20revisão");
+      const issues = await res.json();
+      contador.innerText = `🕊️ Submissões pendentes: ${issues.length}`;
 
-      const painel = document.getElementById('painel');
-      const pendentes = issues.filter(issue =>
-        issue.labels.some(l => l.name === 'submissão') &&
-        issue.labels.some(l => l.name === 'pendente de revisão')
-      );
-
-      document.getElementById('contador').textContent = `🖼️ Submissões pendentes: ${pendentes.length}`;
-
-      if (pendentes.length === 0) {
-        painel.innerHTML = '<p style="text-align:center;color:#ccc">Nenhuma submissão pendente.</p>';
-        return;
-      }
-
-      for (const issue of pendentes) {
-        const div = document.createElement('div');
-        div.className = 'obra';
+      for (const issue of issues) {
         const imgMatch = issue.body.match(/!\[.*?\]\((.*?)\)/);
-        const imagem = imgMatch ? `<img src="${imgMatch[1]}" alt="Obra">` : '';
+        const imagemUrl = imgMatch ? imgMatch[1] : "";
+        const descricaoMatch = issue.body.match(/\*\*📝 Descrição:\*\*\s+([\s\S]*?)\n\n/);
+        const descricao = descricaoMatch ? descricaoMatch[1].trim() : "(Sem descrição)";
 
+        const div = document.createElement("div");
+        div.className = "obra";
         div.innerHTML = `
           <h3>${issue.title}</h3>
-          <p><strong>Descrição:</strong><br>${issue.body.split('**📝 Descrição:**')[1]?.split('**👛')[0].trim() || 'Sem descrição'}</p>
-          ${imagem}
+          <p>${descricao.replace(/\n/g, '<br>')}</p>
+          <img src="${imagemUrl}" alt="Imagem da obra">
+          <div class="botoes">
+            <button onclick="aprovar(${issue.number})">✅ Aprovar</button>
+            <button onclick="rejeitar(${issue.number})">❌ Rejeitar</button>
+          </div>
         `;
-
-        painel.appendChild(div);
+        obrasDiv.appendChild(div);
       }
+    }
+
+    async function aprovar(numero) {
+      await fetch(`https://api.github.com/repos/Nandart/nandart-submissoes/issues/${numero}/labels`, {
+        method: "POST",
+        headers: {
+          "Accept": "application/vnd.github+json",
+          "Authorization": `Bearer ghp_xxx`, // ← Substituir por GitHub token com permissões mínimas
+        },
+        body: JSON.stringify(["obra", "aprovada"])
+      });
+      alert("Obra aprovada. O Pull Request será criado automaticamente.");
+      location.reload();
+    }
+
+    async function rejeitar(numero) {
+      await fetch(`https://api.github.com/repos/Nandart/nandart-submissoes/issues/${numero}`, {
+        method: "PATCH",
+        headers: {
+          "Accept": "application/vnd.github+json",
+          "Authorization": `Bearer ghp_xxx`, // ← Substituir por GitHub token com permissões mínimas
+        },
+        body: JSON.stringify({ state: "closed" })
+      });
+      alert("Obra rejeitada.");
+      location.reload();
     }
 
     carregarSubmissoes();
