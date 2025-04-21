@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Submeter Obra - NANdART</title>
   <style>
     body {
@@ -32,7 +32,7 @@
       font-weight: bold;
     }
 
-    input, textarea, select {
+    input, textarea {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -124,7 +124,7 @@
   <div class="loading" id="loading" style="display: none;">⏳ A enviar...</div>
   <div id="mensagem"></div>
   <div class="botoes-pos-envio" id="botoes-pos-envio" style="display:none;">
-    <a href="painel-aprovacao.html">📋 Ir para o Painel de Aprovação</a>
+    <a href="painel-aprovacao.html?token=fernanda2025visao">📋 Ir para o Painel de Aprovação</a>
   </div>
 
   <script>
@@ -136,8 +136,8 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       mensagem.textContent = '';
-      botoes.style.display = 'none';
       loading.style.display = 'block';
+      botoes.style.display = 'none';
 
       const formData = new FormData(form);
 
