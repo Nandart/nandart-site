@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Submeter Obra - NANdART</title>
   <style>
     body {
@@ -32,7 +32,7 @@
       font-weight: bold;
     }
 
-    input, textarea, select {
+    input, textarea {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -91,13 +91,13 @@
     <label for="titulo">Título da Obra</label>
     <input type="text" id="titulo" name="titulo" required />
 
-    <label for="descricao">Descrição da Obra</label>
+    <label for="descricao">Descrição</label>
     <textarea id="descricao" name="descricao" rows="4" required></textarea>
 
-    <label for="estilo">Estilo da Obra</label>
+    <label for="estilo">Estilo</label>
     <input type="text" id="estilo" name="estilo" required />
 
-    <label for="tecnica">Técnica Utilizada</label>
+    <label for="tecnica">Técnica</label>
     <input type="text" id="tecnica" name="tecnica" required />
 
     <label for="ano">Ano de Criação</label>
@@ -106,25 +106,25 @@
     <label for="dimensoes">Dimensões</label>
     <input type="text" id="dimensoes" name="dimensoes" required />
 
-    <label for="materiais">Materiais Utilizados</label>
+    <label for="materiais">Materiais</label>
     <input type="text" id="materiais" name="materiais" required />
 
-    <label for="local">Local de Criação</label>
+    <label for="local">Local</label>
     <input type="text" id="local" name="local" required />
 
     <label for="enderecowallet">Endereço da Wallet</label>
     <input type="text" id="enderecowallet" name="enderecowallet" required />
 
-    <label for="imagem">Imagem da Obra</label>
+    <label for="imagem">Imagem</label>
     <input type="file" id="imagem" name="imagem" accept="image/*" required />
 
-    <button type="submit">Submeter Obra para Avaliação</button>
+    <button type="submit">Submeter Obra</button>
   </form>
 
   <div class="loading" id="loading" style="display: none;">⏳ A enviar...</div>
   <div id="mensagem"></div>
   <div class="botoes-pos-envio" id="botoes-pos-envio" style="display:none;">
-    <a href="painel-aprovacao.html">Ir para o Painel de Aprovação</a>
+    <a href="painel-aprovacao.html?token=fernanda2025visao">Ir para o Painel de Aprovação</a>
   </div>
 
   <script>
@@ -152,17 +152,17 @@
 
         if (response.ok) {
           mensagem.style.color = '#32CD32';
-          mensagem.innerHTML = `✅ ${resultado.message}<br><a href="${resultado.imageUrl}" target="_blank" style="color:#d4af37">Ver imagem submetida</a>`;
+          mensagem.innerHTML = `✅ ${resultado.message}<br><a href="${resultado.imageUrl}" target="_blank" style="color:#d4af37">Ver imagem</a>`;
           botoes.style.display = 'block';
           form.reset();
         } else {
           mensagem.style.color = 'red';
-          mensagem.textContent = `Erro: ${resultado.message}`;
+          mensagem.textContent = `❌ ${resultado.message}`;
         }
       } catch (erro) {
         loading.style.display = 'none';
         mensagem.style.color = 'red';
-        mensagem.textContent = 'Erro ao contactar o servidor.';
+        mensagem.textContent = '❌ Erro ao contactar o servidor.';
       }
     });
   </script>
