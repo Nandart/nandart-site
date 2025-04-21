@@ -13,111 +13,123 @@
       padding: 20px;
     }
 
-    h1 {
+    h1, h2 {
       text-align: center;
       color: #d4af37;
-      margin-bottom: 30px;
     }
 
-    .obra-card {
-      background-color: #1e1e1e;
+    .obra {
       border: 1px solid #d4af37;
-      padding: 20px;
       margin: 20px auto;
-      max-width: 800px;
+      padding: 15px;
+      background-color: #1e1e1e;
+      max-width: 700px;
     }
 
-    .obra-card h2 {
-      margin-top: 0;
-      color: #d4af37;
-    }
-
-    .obra-card img {
+    .obra img {
       max-width: 100%;
       border: 1px solid #555;
       margin-top: 10px;
     }
 
-    .botoes {
-      margin-top: 15px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-    }
-
-    .botoes button {
+    button {
       background-color: #d4af37;
       color: #000;
       border: none;
       padding: 8px 16px;
+      margin: 10px 5px 0 0;
       cursor: pointer;
-      font-weight: bold;
+      font-size: 14px;
     }
 
     .contador {
       text-align: center;
-      margin-top: 20px;
-      font-size: 16px;
-      color: #aaa;
+      margin-top: 10px;
+      font-size: 18px;
+      color: #ccc;
     }
   </style>
 </head>
 <body>
   <h1>Painel de Aprovação de Obras</h1>
-  <div id="contador" class="contador">Carregando contador de obras...</div>
+  <div class="contador" id="contador">A carregar obras...</div>
   <div id="lista-obras"></div>
 
   <script>
-    async function carregarObras() {
+    async function carregarSubmissoes() {
       const lista = document.getElementById('lista-obras');
       const contador = document.getElementById('contador');
+      lista.innerHTML = '';
+      contador.textContent = '🔄 A carregar...';
 
       try {
-        const resposta = await fetch('https://api.github.com/repos/Nandart/nandart-submissoes/issues?labels=submiss%C3%A3o&state=open');
-        const issues = await resposta.json();
+        const res = await fetch('https://api.github.com/repos/Nandart/nandart-submissoes/issues?labels=submiss%C3%A3o');
+        const issues = await res.json();
 
-        contador.textContent = `📌 ${issues.length} obra(s) pendente(s) de aprovação.`;
-
-        if (issues.length === 0) {
-          lista.innerHTML = '<p style="text-align:center;">Nenhuma obra pendente no momento.</p>';
-          return;
-        }
+        contador.textContent = `🎨 ${issues.length} submissões pendentes`;
 
         issues.forEach(issue => {
-          const card = document.createElement('div');
-          card.className = 'obra-card';
-
-          const body = issue.body || '';
-          const imagem = (body.match(/!\[Obra\]\((.*?)\)/) || [])[1] || '';
-
-          card.innerHTML = `
-            <h2>${issue.title}</h2>
-            <p>${body.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}</p>
-            ${imagem ? `<img src="${imagem}" alt="Imagem da Obra" />` : ''}
-            <div class="botoes">
-              <button onclick="aprovarObra(${issue.number})">Aprovar</button>
-              <button onclick="rejeitarObra(${issue.number})">Rejeitar</button>
-            </div>
+          const div = document.createElement('div');
+          div.className = 'obra';
+          div.innerHTML = `
+            <h3>${issue.title}</h3>
+            <p><a href="${issue.html_url}" target="_blank">🔗 Ver no GitHub</a></p>
+            <button onclick="aprovarObra(${issue.number})">✅ Aprovar</button>
+            <button onclick="rejeitarObra(${issue.number})">❌ Rejeitar</button>
           `;
-
-          lista.appendChild(card);
+          lista.appendChild(div);
         });
-
-      } catch (e) {
-        contador.textContent = '❌ Erro ao carregar obras.';
-        console.error(e);
+      } catch (erro) {
+        contador.textContent = '❌ Erro ao carregar submissões';
+        console.error(erro);
       }
     }
 
     async function aprovarObra(numero) {
-      alert(`✅ Obra #${numero} marcada para aprovação. (Em desenvolvimento: PR automático será implementado)`);
+      const confirmacao = confirm('Queres aprovar esta obra e gerar um PR para a galeria pública?');
+      if (!confirmacao) return;
+
+      try {
+        const resposta = await fetch(`https://nandart-api.vercel.app/api/aprovar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ issueNumber: numero })
+        });
+
+        const resultado = await resposta.json();
+        alert(resultado.message);
+        carregarSubmissoes();
+      } catch (erro) {
+        console.error(erro);
+        alert('❌ Erro ao aprovar a obra.');
+      }
     }
 
     async function rejeitarObra(numero) {
-      alert(`🚫 Obra #${numero} marcada como rejeitada. (Em desenvolvimento)`);
+      const confirmacao = confirm('Tens a certeza que queres rejeitar esta obra e fechar a issue?');
+      if (!confirmacao) return;
+
+      try {
+        await fetch(`https://api.github.com/repos/Nandart/nandart-submissoes/issues/${numero}`, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': 'Bearer GITHUB_TOKEN_AQUI',
+            'Accept': 'application/vnd.github+json'
+          },
+          body: JSON.stringify({
+            state: 'closed',
+            labels: ['rejeitada']
+          })
+        });
+        alert('❌ Submissão rejeitada e encerrada com sucesso.');
+        carregarSubmissoes();
+      } catch (erro) {
+        console.error(erro);
+        alert('❌ Erro ao rejeitar a submissão.');
+      }
     }
 
-    window.onload = carregarObras;
+    carregarSubmissoes();
   </script>
 </body>
 </html>
