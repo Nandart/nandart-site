@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Painel de Aprovação</title>
   <style>
     body {
@@ -59,7 +59,7 @@
 </head>
 <body>
   <h1>Painel de Aprovação</h1>
-  <div class="contador" id="contador"></div>
+  <div class="contador" id="contador">Submissões pendentes: ...</div>
   <div id="lista-obras"></div>
 
   <script>
@@ -88,27 +88,31 @@
           div.className = 'obra';
 
           div.innerHTML = `
-            <h3>🖼️ Nova Submissão: "${obra.titulo}" por ${obra.nomeArtista}</h3>
+            <h3>🎨 Nova Submissão: "${obra.titulo}" por ${obra.nomeArtista}</h3>
             <p>🔗 <a href="${obra.url}" target="_blank">Ver submissão</a></p>
-            <button onclick="aprovarObra(${obra.id}, '${obra.titulo}', '${obra.nomeArtista}', '${obra.imagem}')">✅ Aprovar</button>
+            <button onclick='aprovarObra(${JSON.stringify(obra)})'>✅ Aprovar</button>
           `;
 
           lista.appendChild(div);
         });
       } catch (erro) {
         console.error('Erro ao carregar obras:', erro);
-        alert('Erro ao contactar o servidor para carregar as submissões.');
       }
     }
 
-    async function aprovarObra(id, titulo, nomeArtista, imagem) {
+    async function aprovarObra(obra) {
       try {
         const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ id, titulo, nomeArtista, imagem })
+          body: JSON.stringify({
+            id: obra.id,
+            titulo: obra.titulo,
+            nomeArtista: obra.nomeArtista,
+            imagem: obra.imagem
+          })
         });
 
         if (resposta.ok) {
