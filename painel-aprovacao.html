@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel de Aprovação - NANdART</title>
+  <title>Painel de Aprovação</title>
   <style>
     body {
       font-family: Georgia, serif;
       background-color: #121212;
-      color: #ffffff;
-      margin: 0;
+      color: #fff;
       padding: 20px;
+      margin: 0;
     }
 
     h1 {
-      text-align: center;
       color: #d4af37;
+      text-align: center;
     }
 
     .contador {
@@ -26,19 +26,14 @@
 
     .obra {
       border: 1px solid #d4af37;
-      background-color: #1e1e1e;
-      padding: 15px;
+      padding: 10px;
       margin-bottom: 15px;
+      background-color: #1e1e1e;
     }
 
     .obra h3 {
-      margin-top: 0;
+      margin: 0;
       color: #ffd700;
-    }
-
-    .obra p, .obra a {
-      color: #ccc;
-      margin: 5px 0;
     }
 
     .obra a {
@@ -46,13 +41,12 @@
       text-decoration: none;
     }
 
-    button {
+    .obra button {
       background-color: #d4af37;
       color: #000;
       border: none;
-      padding: 10px 15px;
+      padding: 5px 10px;
       cursor: pointer;
-      font-weight: bold;
       margin-top: 10px;
     }
 
@@ -65,7 +59,7 @@
 </head>
 <body>
   <h1>Painel de Aprovação</h1>
-  <div class="contador" id="contador"></div>
+  <div class="contador" id="contador">🌿 A carregar submissões...</div>
   <div id="lista-obras"></div>
 
   <script>
@@ -74,7 +68,7 @@
     const token = params.get('token');
 
     if (token !== tokenEsperado) {
-      document.body.innerHTML = '<h2 style="color: red; text-align: center">🔒 Acesso negado.</h2>';
+      document.body.innerHTML = '<h2 style="color: red; text-align: center">Acesso negado.</h2>';
       throw new Error('Token inválido');
     }
 
@@ -84,60 +78,58 @@
         const dados = await resposta.json();
 
         const contador = document.getElementById('contador');
-        contador.textContent = `🌿 Submissões pendentes: ${dados.pendentes.length}`;
+        contador.textContent = `🌿 Submissões pendentes: ${dados.total}`;
 
         const lista = document.getElementById('lista-obras');
         lista.innerHTML = '';
-
-        if (!dados.pendentes.length) {
-          lista.innerHTML = '<p style="text-align: center; color: #999;">Nenhuma submissão pendente.</p>';
-          return;
-        }
 
         dados.pendentes.forEach((obra) => {
           const div = document.createElement('div');
           div.className = 'obra';
 
           div.innerHTML = `
-            <h3>${obra.titulo}</h3>
-            <p><strong>Artista:</strong> ${obra.nomeArtista}</p>
-            <p><strong>Ano:</strong> ${obra.ano}</p>
-            <p><strong>Estilo:</strong> ${obra.estilo}</p>
-            <p><strong>Imagem:</strong> <a href="${obra.imagem}" target="_blank">Visualizar</a></p>
+            <h3>Nova Submissão: "${obra.titulo}" por ${obra.nomeArtista}</h3>
+            <p>🔗 <a href="${obra.url}" target="_blank">Ver submissão</a></p>
             <button onclick="aprovarObra(${obra.id})">✅ Aprovar</button>
           `;
 
           lista.appendChild(div);
         });
       } catch (erro) {
-        console.error('Erro ao carregar submissões:', erro);
-        document.getElementById('lista-obras').innerHTML =
-          '<p style="color: red; text-align: center;">Erro ao obter as submissões.</p>';
+        console.error('Erro ao carregar obras:', erro);
+        document.getElementById('contador').textContent = 'Erro ao carregar submissões.';
       }
     }
 
     async function aprovarObra(id) {
-      const confirmar = confirm('Deseja aprovar esta obra e integrá-la na galeria?');
-      if (!confirmar) return;
-
       try {
-        const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
+        const respostaSub = await fetch(`https://nandart-api.vercel.app/api/submissoes?id=${id}`);
+        const dadosSub = await respostaSub.json();
+
+        const resposta = await fetch(`https://nandart-api.vercel.app/api/aprovar`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id })
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id: id,
+            titulo: dadosSub.titulo,
+            nomeArtista: dadosSub.nomeArtista,
+            imagem: dadosSub.imagem
+          })
         });
 
-        const resultado = await resposta.json();
+        const dados = await resposta.json();
 
         if (resposta.ok) {
-          alert('✅ Obra aprovada com sucesso! Um Pull Request foi criado.');
+          alert('Obra aprovada com sucesso!');
           carregarObras();
         } else {
-          alert('❌ Erro: ' + resultado.message);
+          alert('Erro: ' + dados.message);
         }
       } catch (erro) {
         console.error('Erro ao aprovar obra:', erro);
-        alert('❌ Erro ao contactar o servidor.');
+        alert('Erro ao contactar o servidor.');
       }
     }
 
