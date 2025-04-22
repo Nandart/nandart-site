@@ -2,164 +2,167 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Submissão de Obras</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submeter Obra - NANdART</title>
   <style>
     body {
-      background-color: #121212;
-      color: #fff;
       font-family: Georgia, serif;
+      background-color: #121212;
+      color: #ffffff;
+      margin: 0;
       padding: 20px;
     }
 
-    h1 {
-      color: #d4af37;
+    h1, h2 {
       text-align: center;
+      color: #d4af37;
     }
 
     form {
-      background: #1e1e1e;
+      background-color: #1e1e1e;
       padding: 20px;
+      margin: 20px auto;
       border: 1px solid #d4af37;
       max-width: 600px;
-      margin: auto;
     }
 
     label {
       display: block;
-      margin-top: 10px;
+      margin-top: 15px;
       font-weight: bold;
     }
 
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 8px;
-      margin-top: 4px;
-      background: #eee;
-      color: #000;
-      border: none;
+      margin-top: 5px;
+      background-color: #262626;
+      color: #fff;
+      border: 1px solid #555;
     }
 
     button {
       background-color: #d4af37;
       color: #000;
       border: none;
-      padding: 10px 15px;
-      margin-top: 15px;
-      cursor: pointer;
-    }
-
-    .mensagem {
-      text-align: center;
+      padding: 10px 20px;
       margin-top: 20px;
+      cursor: pointer;
+      font-size: 16px;
     }
 
-    .erro {
-      color: red;
+    #mensagem {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
     }
 
-    .sucesso {
-      color: #32cd32;
+    .loading {
+      text-align: center;
+      margin-top: 10px;
     }
 
-    a {
+    .botoes-pos-envio {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .botoes-pos-envio a {
       color: #d4af37;
       text-decoration: none;
+      font-weight: bold;
     }
 
+    @media (max-width: 600px) {
+      form {
+        width: 90%;
+      }
+    }
   </style>
 </head>
 <body>
   <h1>Submissão de Obras</h1>
-  <h3 style="text-align:center">Para Artistas Externos</h3>
+  <h2>Para Artistas Externos</h2>
 
-  <form id="form-submissao">
-    <label>Nome do Artista</label>
-    <input type="text" name="nomeArtista" required>
+  <form id="formulario-obras">
+    <label for="nomeArtista">Nome do Artista</label>
+    <input type="text" id="nomeArtista" name="nomeArtista" required />
 
-    <label>Título da Obra</label>
-    <input type="text" name="titulo" required>
+    <label for="titulo">Título da Obra</label>
+    <input type="text" id="titulo" name="titulo" required />
 
-    <label>Descrição</label>
-    <textarea name="descricao" required></textarea>
+    <label for="descricao">Descrição da Obra</label>
+    <textarea id="descricao" name="descricao" rows="4" required></textarea>
 
-    <label>Estilo</label>
-    <input type="text" name="estilo" required>
+    <label for="estilo">Estilo da Obra</label>
+    <input type="text" id="estilo" name="estilo" required />
 
-    <label>Técnica</label>
-    <input type="text" name="tecnica" required>
+    <label for="tecnica">Técnica Utilizada</label>
+    <input type="text" id="tecnica" name="tecnica" required />
 
-    <label>Ano de Criação</label>
-    <input type="text" name="ano" required>
+    <label for="ano">Ano de Criação</label>
+    <input type="number" id="ano" name="ano" required />
 
-    <label>Dimensões</label>
-    <input type="text" name="dimensoes" required>
+    <label for="dimensoes">Dimensões</label>
+    <input type="text" id="dimensoes" name="dimensoes" required />
 
-    <label>Materiais</label>
-    <input type="text" name="materiais" required>
+    <label for="materiais">Materiais Utilizados</label>
+    <input type="text" id="materiais" name="materiais" required />
 
-    <label>Local</label>
-    <input type="text" name="local" required>
+    <label for="local">Local de Criação</label>
+    <input type="text" id="local" name="local" required />
 
-    <label>Endereço da Wallet</label>
-    <input type="text" name="carteira" required>
+    <label for="wallet">Endereço da Wallet</label>
+    <input type="text" id="wallet" name="wallet" required />
 
-    <label>Imagem</label>
-    <input type="file" name="imagem" accept="image/*" required>
+    <label for="imagem">Imagem da Obra</label>
+    <input type="file" id="imagem" name="imagem" accept="image/*" required />
 
-    <button type="submit">Submeter Obra</button>
-
-    <div class="mensagem" id="mensagem"></div>
+    <button type="submit">Submeter Obra para Avaliação</button>
   </form>
 
-  <script>
-    document.getElementById('form-submissao').addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const mensagem = document.getElementById('mensagem');
-      mensagem.textContent = '';
-      mensagem.className = '';
+  <div class="loading" id="loading" style="display: none;">⏳ A enviar...</div>
+  <div id="mensagem"></div>
+  <div class="botoes-pos-envio" id="botoes-pos-envio" style="display:none;">
+    <a href="painel-aprovacao.html?token=fernanda2025visao">📋 Ir para o Painel de Aprovação</a>
+  </div>
 
-      const form = e.target;
+  <script>
+    const form = document.getElementById('formulario-obras');
+    const mensagem = document.getElementById('mensagem');
+    const loading = document.getElementById('loading');
+    const botoes = document.getElementById('botoes-pos-envio');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      mensagem.textContent = '';
+      loading.style.display = 'block';
+      botoes.style.display = 'none';
+
       const formData = new FormData(form);
 
       try {
-        const resposta = await fetch('https://nandart-api.vercel.app/api/submit', {
+        const response = await fetch('https://nandart-api.vercel.app/api/submit', {
           method: 'POST',
-          body: formData,
+          body: formData
         });
 
-        const dados = await resposta.json();
-        if (resposta.ok) {
-          mensagem.textContent = '✅ Submissão recebida com sucesso!';
-          mensagem.className = 'sucesso';
+        const resultado = await response.json();
+        loading.style.display = 'none';
 
-          const imagem = formData.get('imagem');
-          if (imagem) {
-            const img = document.createElement('p');
-            const reader = new FileReader();
-            reader.onload = function (e) {
-              const link = document.createElement('a');
-              link.href = e.target.result;
-              link.textContent = '📁 Ver imagem';
-              link.target = '_blank';
-              mensagem.appendChild(link);
-            };
-            reader.readAsDataURL(imagem);
-          }
-
-          const linkPainel = document.createElement('p');
-          linkPainel.innerHTML = `<a href="/painel-aprovacao.html?token=fernanda2025visao">Ir para o Painel de Aprovação</a>`;
-          mensagem.appendChild(linkPainel);
-
+        if (response.ok) {
+          mensagem.style.color = '#32CD32';
+          mensagem.innerHTML = `✅ ${resultado.message}`;
+          botoes.style.display = 'block';
           form.reset();
         } else {
-          mensagem.textContent = '❌ Erro: ' + dados.message;
-          mensagem.className = 'erro';
+          mensagem.style.color = 'red';
+          mensagem.textContent = `❌ ${resultado.message}`;
         }
       } catch (erro) {
-        console.error('Erro:', erro);
+        loading.style.display = 'none';
+        mensagem.style.color = 'red';
         mensagem.textContent = '❌ Erro ao contactar o servidor.';
-        mensagem.className = 'erro';
       }
     });
   </script>
