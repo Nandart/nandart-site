@@ -8,7 +8,7 @@
     body {
       font-family: Georgia, serif;
       background-color: #121212;
-      color: #ffffff;
+      color: #fff;
       padding: 20px;
       margin: 0;
     }
@@ -20,7 +20,7 @@
 
     .contador {
       text-align: center;
-      margin-bottom: 20px;
+      margin: 15px 0;
       color: #32cd32;
     }
 
@@ -28,108 +28,102 @@
       background-color: #1e1e1e;
       border: 1px solid #d4af37;
       padding: 15px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .obra h3 {
-      margin: 0;
+      margin-top: 0;
       color: #ffd700;
     }
 
-    .obra a {
-      color: #d4af37;
-      text-decoration: none;
+    .obra img {
+      max-width: 100%;
+      margin-top: 10px;
+      border: 1px solid #444;
     }
 
     .obra button {
-      margin-top: 10px;
       background-color: #d4af37;
       color: #000;
-      padding: 6px 12px;
       border: none;
+      padding: 8px 16px;
       cursor: pointer;
-    }
-
-    .erro {
-      color: red;
-      text-align: center;
-    }
-
-    @media (max-width: 600px) {
-      .obra h3 {
-        font-size: 18px;
-      }
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
   <h1>Painel de Aprovação de Obras</h1>
-  <div id="mensagem" class="erro"></div>
   <div class="contador" id="contador"></div>
   <div id="lista-obras"></div>
 
   <script>
-    const TOKEN_ESPERADO = "fernanda2025visao";
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
+    const tokenEsperado = 'fernanda2025visao';
+    const tokenRecebido = new URLSearchParams(window.location.search).get('token');
 
-    if (token !== TOKEN_ESPERADO) {
-      document.body.innerHTML = '<h2 class="erro">🚫 Acesso negado. Token inválido.</h2>';
-      throw new Error("Token inválido");
+    if (tokenRecebido !== tokenEsperado) {
+      document.body.innerHTML = '<h2 style="color:red; text-align:center">⛔ Acesso negado.</h2>';
+      throw new Error('Token inválido');
     }
 
     async function carregarObras() {
       try {
-        const resposta = await fetch("https://nandart-api.vercel.app/api/submissoes");
+        const resposta = await fetch('https://nandart-api.vercel.app/api/submissoes');
         const dados = await resposta.json();
 
-        const contador = document.getElementById("contador");
-        contador.textContent = `📌 Submissões pendentes: ${dados.total}`;
+        const contador = document.getElementById('contador');
+        contador.textContent = `🌿 Submissões pendentes: ${dados.total}`;
 
-        const lista = document.getElementById("lista-obras");
-        lista.innerHTML = "";
+        const lista = document.getElementById('lista-obras');
+        lista.innerHTML = '';
 
         dados.pendentes.forEach((obra) => {
-          const div = document.createElement("div");
-          div.className = "obra";
+          const div = document.createElement('div');
+          div.className = 'obra';
 
           div.innerHTML = `
             <h3>${obra.titulo}</h3>
             <p><strong>Artista:</strong> ${obra.nomeArtista}</p>
-            <p><a href="${obra.url}" target="_blank">🔗 Ver submissão completa</a></p>
-            <button onclick="aprovarObra(${obra.id})">✅ Aprovar Obra</button>
+            <p><strong>Estilo:</strong> ${obra.estilo}</p>
+            <img src="${obra.imagem}" alt="Imagem da obra" />
+            <p><strong>Descrição:</strong> ${obra.descricao}</p>
+            <button onclick='aprovarObra(${JSON.stringify(obra)})'>✅ Aprovar</button>
           `;
 
           lista.appendChild(div);
         });
-
-        if (dados.total === 0) {
-          lista.innerHTML = '<p style="text-align: center; color: gray;">Nenhuma submissão pendente.</p>';
-        }
-
       } catch (erro) {
-        document.getElementById("mensagem").textContent = "Erro ao carregar obras. Verifique a API.";
-        console.error("Erro ao carregar submissões:", erro);
+        console.error('[ERRO] Ao carregar obras:', erro);
+        document.getElementById('contador').textContent = '⚠️ Erro ao carregar obras.';
       }
     }
 
-    async function aprovarObra(id) {
-      const resposta = await fetch("https://nandart-api.vercel.app/api/aprovar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ id })
-      });
+    async function aprovarObra(obra) {
+      try {
+        const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id: obra.id,
+            titulo: obra.titulo,
+            nomeArtista: obra.nomeArtista,
+            imagem: obra.imagem
+          })
+        });
 
-      const resultado = await resposta.json();
+        const resultado = await resposta.json();
 
-      if (resposta.ok) {
-        alert("Obra aprovada com sucesso!");
-        carregarObras();
-      } else {
-        alert("Erro ao aprovar: " + resultado.message);
-        console.error("Erro ao aprovar:", resultado);
+        if (resposta.ok) {
+          alert('✅ Obra aprovada com sucesso!');
+          carregarObras();
+        } else {
+          alert(`❌ Erro: ${resultado.message}`);
+        }
+      } catch (erro) {
+        console.error('[ERRO] Ao aprovar obra:', erro);
+        alert('❌ Erro ao contactar o servidor.');
       }
     }
 
