@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel de Aprovação</title>
+  <title>Painel de Aprovação - NANdART</title>
   <style>
     body {
       font-family: Georgia, serif;
       background-color: #121212;
-      color: #fff;
+      color: #ffffff;
       padding: 20px;
       margin: 0;
     }
@@ -19,16 +19,16 @@
     }
 
     .contador {
-      color: #32cd32;
       text-align: center;
       margin-bottom: 20px;
+      color: #32cd32;
     }
 
     .obra {
-      border: 1px solid #d4af37;
-      padding: 10px;
-      margin-bottom: 15px;
       background-color: #1e1e1e;
+      border: 1px solid #d4af37;
+      padding: 15px;
+      margin-bottom: 20px;
     }
 
     .obra h3 {
@@ -42,12 +42,17 @@
     }
 
     .obra button {
+      margin-top: 10px;
       background-color: #d4af37;
       color: #000;
+      padding: 6px 12px;
       border: none;
-      padding: 5px 10px;
       cursor: pointer;
-      margin-top: 10px;
+    }
+
+    .erro {
+      color: red;
+      text-align: center;
     }
 
     @media (max-width: 600px) {
@@ -58,69 +63,73 @@
   </style>
 </head>
 <body>
-  <h1>Painel de Aprovação</h1>
+  <h1>Painel de Aprovação de Obras</h1>
+  <div id="mensagem" class="erro"></div>
   <div class="contador" id="contador"></div>
   <div id="lista-obras"></div>
 
   <script>
-    const tokenEsperado = 'fernanda2025visao';
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
+    const TOKEN_ESPERADO = "fernanda2025visao";
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get("token");
 
-    if (token !== tokenEsperado) {
-      document.body.innerHTML = '<h2 style="color: red; text-align: center">Acesso negado.</h2>';
-      throw new Error('Token inválido');
+    if (token !== TOKEN_ESPERADO) {
+      document.body.innerHTML = '<h2 class="erro">🚫 Acesso negado. Token inválido.</h2>';
+      throw new Error("Token inválido");
     }
 
     async function carregarObras() {
       try {
-        const resposta = await fetch('https://nandart-api.vercel.app/api/submissoes');
+        const resposta = await fetch("https://nandart-api.vercel.app/api/submissoes");
         const dados = await resposta.json();
 
-        const contador = document.getElementById('contador');
-        contador.textContent = `🌿 Submissões pendentes: ${dados.total}`;
+        const contador = document.getElementById("contador");
+        contador.textContent = `📌 Submissões pendentes: ${dados.total}`;
 
-        const lista = document.getElementById('lista-obras');
-        lista.innerHTML = '';
+        const lista = document.getElementById("lista-obras");
+        lista.innerHTML = "";
 
         dados.pendentes.forEach((obra) => {
-          const div = document.createElement('div');
-          div.className = 'obra';
+          const div = document.createElement("div");
+          div.className = "obra";
 
           div.innerHTML = `
-            <h3>🖼️ Nova Submissão: "${obra.titulo}" por ${obra.nomeArtista}</h3>
-            <p>🔗 <a href="${obra.url}" target="_blank">Ver submissão</a></p>
-            <button onclick="aprovarObra(${obra.id}, \`${obra.titulo}\`, \`${obra.nomeArtista}\`, \`${obra.imagem}\`)">✅ Aprovar</button>
+            <h3>${obra.titulo}</h3>
+            <p><strong>Artista:</strong> ${obra.nomeArtista}</p>
+            <p><a href="${obra.url}" target="_blank">🔗 Ver submissão completa</a></p>
+            <button onclick="aprovarObra(${obra.id})">✅ Aprovar Obra</button>
           `;
 
           lista.appendChild(div);
         });
+
+        if (dados.total === 0) {
+          lista.innerHTML = '<p style="text-align: center; color: gray;">Nenhuma submissão pendente.</p>';
+        }
+
       } catch (erro) {
-        console.error('Erro ao carregar obras:', erro);
+        document.getElementById("mensagem").textContent = "Erro ao carregar obras. Verifique a API.";
+        console.error("Erro ao carregar submissões:", erro);
       }
     }
 
-    async function aprovarObra(id, titulo, nomeArtista, imagem) {
-      try {
-        const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ id, titulo, nomeArtista, imagem })
-        });
+    async function aprovarObra(id) {
+      const resposta = await fetch("https://nandart-api.vercel.app/api/aprovar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ id })
+      });
 
-        const dados = await resposta.json();
+      const resultado = await resposta.json();
 
-        if (resposta.ok) {
-          alert('Obra aprovada com sucesso!');
-          carregarObras();
-        } else {
-          alert('Erro: ' + dados.message);
-        }
-      } catch (erro) {
-        console.error('Erro ao aprovar obra:', erro);
-        alert('Erro ao contactar o servidor.');
+      if (resposta.ok) {
+        alert("Obra aprovada com sucesso!");
+        carregarObras();
+      } else {
+        alert("Erro ao aprovar: " + resultado.message);
+        console.error("Erro ao aprovar:", resultado);
       }
     }
 
