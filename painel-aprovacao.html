@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel de Aprovação - NANdART</title>
+  <title>Painel de Aprovação</title>
   <style>
     body {
       font-family: Georgia, serif;
@@ -19,50 +19,56 @@
     }
 
     .contador {
-      text-align: center;
-      margin: 15px 0;
       color: #32cd32;
+      text-align: center;
+      margin-bottom: 20px;
     }
 
     .obra {
-      background-color: #1e1e1e;
       border: 1px solid #d4af37;
-      padding: 15px;
+      padding: 10px;
       margin-bottom: 15px;
+      background-color: #1e1e1e;
     }
 
     .obra h3 {
-      margin-top: 0;
+      margin: 0;
       color: #ffd700;
     }
 
-    .obra img {
-      max-width: 100%;
-      margin-top: 10px;
-      border: 1px solid #444;
+    .obra a {
+      color: #d4af37;
+      text-decoration: none;
     }
 
     .obra button {
       background-color: #d4af37;
       color: #000;
       border: none;
-      padding: 8px 16px;
+      padding: 5px 10px;
       cursor: pointer;
       margin-top: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .obra h3 {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Painel de Aprovação de Obras</h1>
+  <h1>Painel de Aprovação</h1>
   <div class="contador" id="contador"></div>
   <div id="lista-obras"></div>
 
   <script>
     const tokenEsperado = 'fernanda2025visao';
-    const tokenRecebido = new URLSearchParams(window.location.search).get('token');
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
 
-    if (tokenRecebido !== tokenEsperado) {
-      document.body.innerHTML = '<h2 style="color:red; text-align:center">⛔ Acesso negado.</h2>';
+    if (token !== tokenEsperado) {
+      document.body.innerHTML = '<h2 style="color: red; text-align: center">Acesso negado.</h2>';
       throw new Error('Token inválido');
     }
 
@@ -82,48 +88,38 @@
           div.className = 'obra';
 
           div.innerHTML = `
-            <h3>${obra.titulo}</h3>
-            <p><strong>Artista:</strong> ${obra.nomeArtista}</p>
-            <p><strong>Estilo:</strong> ${obra.estilo}</p>
-            <img src="${obra.imagem}" alt="Imagem da obra" />
-            <p><strong>Descrição:</strong> ${obra.descricao}</p>
-            <button onclick='aprovarObra(${JSON.stringify(obra)})'>✅ Aprovar</button>
+            <h3>Nova Submissão: "${obra.titulo}" por ${obra.nomeArtista}</h3>
+            <p>🔗 <a href="${obra.url}" target="_blank">Ver submissão</a></p>
+            <button onclick="aprovarObra(${obra.id}, '${obra.titulo}', '${obra.nomeArtista}', '${obra.imagem}')">✅ Aprovar</button>
           `;
 
           lista.appendChild(div);
         });
       } catch (erro) {
-        console.error('[ERRO] Ao carregar obras:', erro);
-        document.getElementById('contador').textContent = '⚠️ Erro ao carregar obras.';
+        console.error('Erro ao carregar obras:', erro);
       }
     }
 
-    async function aprovarObra(obra) {
+    async function aprovarObra(id, titulo, nomeArtista, imagem) {
       try {
         const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            id: obra.id,
-            titulo: obra.titulo,
-            nomeArtista: obra.nomeArtista,
-            imagem: obra.imagem
-          })
+          body: JSON.stringify({ id, titulo, nomeArtista, imagem })
         });
 
-        const resultado = await resposta.json();
-
         if (resposta.ok) {
-          alert('✅ Obra aprovada com sucesso!');
+          alert('Obra aprovada com sucesso!');
           carregarObras();
         } else {
-          alert(`❌ Erro: ${resultado.message}`);
+          const dados = await resposta.json();
+          alert('Erro: ' + dados.message);
         }
       } catch (erro) {
-        console.error('[ERRO] Ao aprovar obra:', erro);
-        alert('❌ Erro ao contactar o servidor.');
+        console.error('Erro ao aprovar obra:', erro);
+        alert('Erro ao contactar o servidor.');
       }
     }
 
