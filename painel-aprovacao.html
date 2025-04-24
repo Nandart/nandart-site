@@ -88,11 +88,9 @@
           div.className = 'obra';
 
           div.innerHTML = `
-            <h3>${obra.titulo}</h3>
-            <p>👤 Artista: ${obra.nomeArtista}</p>
-            <p>🔗 <a href="${obra.url}" target="_blank">Ver submissão</a></p>
-            <img src="${obra.imagem}" alt="Imagem da Obra" style="max-width:100%; margin-top:10px;">
-            <button onclick="aprovarObra(${obra.id}, '${obra.titulo}', '${obra.nomeArtista}', '${obra.imagem}')">✅ Aprovar</button>
+            <h3>"${obra.titulo}" por ${obra.nomeArtista}</h3>
+            <p><a href="${obra.url}" target="_blank">🔗 Ver submissão</a></p>
+            <button onclick="aprovarObra(${obra.id}, '${obra.titulo.replace(/'/g, "\\'")}', '${obra.nomeArtista.replace(/'/g, "\\'")}', '${obra.imagem}')">✅ Aprovar</button>
           `;
 
           lista.appendChild(div);
@@ -117,7 +115,7 @@
           carregarObras();
         } else {
           const dados = await resposta.json();
-          alert('Erro ao aprovar: ' + dados.message);
+          alert('Erro: ' + dados.message);
         }
       } catch (erro) {
         console.error('Erro ao aprovar obra:', erro);
