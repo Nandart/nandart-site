@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel de Aprovação</title>
+  <title>Painel de Aprovação - NANdART</title>
   <style>
     body {
       font-family: Georgia, serif;
       background-color: #121212;
-      color: #fff;
+      color: #ffffff;
       padding: 20px;
       margin: 0;
     }
@@ -22,18 +22,23 @@
       color: #32cd32;
       text-align: center;
       margin-bottom: 20px;
+      font-weight: bold;
     }
 
     .obra {
       border: 1px solid #d4af37;
-      padding: 10px;
-      margin-bottom: 15px;
+      padding: 15px;
+      margin-bottom: 20px;
       background-color: #1e1e1e;
     }
 
     .obra h3 {
-      margin: 0;
       color: #ffd700;
+      margin-bottom: 10px;
+    }
+
+    .obra p {
+      margin: 5px 0;
     }
 
     .obra a {
@@ -45,9 +50,14 @@
       background-color: #d4af37;
       color: #000;
       border: none;
-      padding: 5px 10px;
+      padding: 8px 16px;
       cursor: pointer;
       margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .obra button:hover {
+      background-color: #e6c343;
     }
 
     @media (max-width: 600px) {
@@ -77,19 +87,19 @@
         const resposta = await fetch('https://nandart-api.vercel.app/api/submissoes');
         const dados = await resposta.json();
 
-        const contador = document.getElementById('contador');
-        contador.textContent = `🌿 Submissões pendentes: ${dados.total}`;
-
+        document.getElementById('contador').textContent = `🌿 Submissões pendentes: ${dados.total}`;
         const lista = document.getElementById('lista-obras');
         lista.innerHTML = '';
 
-        dados.pendentes.forEach((obra) => {
+        dados.pendentes.forEach(obra => {
           const div = document.createElement('div');
           div.className = 'obra';
 
           div.innerHTML = `
-            <h3>"${obra.titulo}" por ${obra.nomeArtista}</h3>
-            <p><a href="${obra.url}" target="_blank">🔗 Ver submissão</a></p>
+            <h3>${obra.titulo}</h3>
+            <p><strong>Artista:</strong> ${obra.nomeArtista}</p>
+            <p>🔗 <a href="${obra.url}" target="_blank">Ver Submissão</a></p>
+            <p><img src="${obra.imagem}" alt="Imagem da Obra" style="max-width: 100%; margin-top: 10px;"></p>
             <button onclick="aprovarObra(${obra.id}, '${obra.titulo.replace(/'/g, "\\'")}', '${obra.nomeArtista.replace(/'/g, "\\'")}', '${obra.imagem}')">✅ Aprovar</button>
           `;
 
@@ -97,6 +107,7 @@
         });
       } catch (erro) {
         console.error('Erro ao carregar obras:', erro);
+        document.getElementById('lista-obras').innerHTML = '<p style="color: red;">Erro ao carregar submissões.</p>';
       }
     }
 
@@ -110,12 +121,13 @@
           body: JSON.stringify({ id, titulo, nomeArtista, imagem })
         });
 
+        const resultado = await resposta.json();
+
         if (resposta.ok) {
           alert('Obra aprovada com sucesso!');
           carregarObras();
         } else {
-          const dados = await resposta.json();
-          alert('Erro: ' + dados.message);
+          alert('Erro: ' + resultado.message);
         }
       } catch (erro) {
         console.error('Erro ao aprovar obra:', erro);
