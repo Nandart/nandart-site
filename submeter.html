@@ -6,94 +6,67 @@
   <title>Submissão de Obras</title>
   <style>
     body {
-      font-family: Georgia, serif;
       background-color: #121212;
       color: #fff;
+      font-family: Georgia, serif;
       padding: 20px;
     }
 
     h1 {
-      color: #d4af37;
       text-align: center;
+      color: #d4af37;
     }
 
     form {
+      background-color: #1e1e1e;
+      border: 1px solid #d4af37;
+      padding: 20px;
       max-width: 600px;
       margin: 0 auto;
-      padding: 20px;
-      border: 1px solid #d4af37;
-      background-color: #1e1e1e;
     }
 
     label {
       display: block;
-      margin: 10px 0 4px;
+      margin-top: 10px;
       font-weight: bold;
     }
 
-    input[type="text"],
-    input[type="number"],
-    textarea {
+    input, textarea {
       width: 100%;
       padding: 6px;
-      background-color: #e6ecf5;
-      border: none;
-      color: #000;
-    }
-
-    textarea {
-      resize: vertical;
-      height: 80px;
-    }
-
-    input[type="file"] {
-      width: 100%;
-      margin-top: 5px;
+      margin-top: 4px;
+      background-color: #2b2b2b;
+      color: #fff;
+      border: 1px solid #d4af37;
     }
 
     button {
       margin-top: 15px;
-      padding: 10px 20px;
+      padding: 10px 15px;
       background-color: #d4af37;
-      border: none;
       color: #000;
-      font-weight: bold;
+      border: none;
       cursor: pointer;
     }
 
-    .loading {
-      color: #ffa500;
+    .mensagem {
       text-align: center;
-      margin-top: 10px;
+      margin-top: 20px;
     }
 
-    #mensagem {
-      margin-top: 15px;
-      text-align: center;
-    }
-
-    .botoes-pos-envio {
-      text-align: center;
-      margin-top: 15px;
-    }
-
-    .botoes-pos-envio a {
+    .sucesso {
       color: #32cd32;
-      display: block;
-      margin-top: 5px;
-      text-decoration: none;
     }
 
-    .botoes-pos-envio a:hover {
-      text-decoration: underline;
+    .erro {
+      color: red;
     }
   </style>
 </head>
 <body>
   <h1>Submissão de Obras</h1>
-  <h2 style="text-align:center;">Para Artistas Externos</h2>
 
-  <form id="formulario-obras">
+  <form id="formulario" enctype="multipart/form-data">
     <label>Nome do Artista</label>
     <input type="text" name="nomeArtista" required />
 
@@ -101,7 +74,7 @@
     <input type="text" name="titulo" required />
 
     <label>Descrição da Obra</label>
-    <textarea name="descricao" required></textarea>
+    <textarea name="descricao" rows="4" required></textarea>
 
     <label>Estilo da Obra</label>
     <input type="text" name="estilo" required />
@@ -110,7 +83,7 @@
     <input type="text" name="tecnica" required />
 
     <label>Ano de Criação</label>
-    <input type="number" name="ano" required />
+    <input type="text" name="ano" required />
 
     <label>Dimensões</label>
     <input type="text" name="dimensoes" required />
@@ -122,7 +95,7 @@
     <input type="text" name="local" required />
 
     <label>Endereço da Wallet</label>
-    <input type="text" name="carteira" required />
+    <input type="text" name="enderecowallet" required />
 
     <label>Imagem da Obra</label>
     <input type="file" name="imagem" accept="image/*" required />
@@ -130,59 +103,57 @@
     <button type="submit">Submeter Obra para Avaliação</button>
   </form>
 
-  <div class="loading" id="loading" style="display: none;">⏳ A enviar...</div>
-  <div id="mensagem"></div>
-  <div class="botoes-pos-envio" id="botoes-pos-envio" style="display:none;">
-    <a id="linkImagem" href="#" target="_blank" style="color:#d4af37">🖼️ Ver imagem submetida</a>
-    <a id="linkPainel" href="painel-aprovacao.html?token=fernanda2025visao" style="display:none;">📋 Ir para o Painel de Aprovação</a>
-  </div>
+  <div class="mensagem" id="mensagem"></div>
 
   <script>
-    const form = document.getElementById('formulario-obras');
-    const mensagem = document.getElementById('mensagem');
-    const loading = document.getElementById('loading');
-    const botoes = document.getElementById('botoes-pos-envio');
-    const linkImagem = document.getElementById('linkImagem');
-    const linkPainel = document.getElementById('linkPainel');
-
-    form.addEventListener('submit', async (e) => {
+    document.getElementById('formulario').addEventListener('submit', async (e) => {
       e.preventDefault();
-      mensagem.textContent = '';
-      botoes.style.display = 'none';
-      loading.style.display = 'block';
 
-      const formData = new FormData(form);
+      const form = e.target;
+      const dados = new FormData(form);
+      const mensagem = document.getElementById('mensagem');
+
+      mensagem.textContent = '';
+      mensagem.className = '';
 
       try {
-        const response = await fetch('https://nandart-api.vercel.app/api/submit', {
+        const resposta = await fetch('https://nandart-api.vercel.app/api/submit', {
           method: 'POST',
-          body: formData
+          body: dados
         });
 
-        const resultado = await response.json();
-        loading.style.display = 'none';
+        const resultado = await resposta.json();
 
-        if (response.ok) {
-          mensagem.style.color = '#32CD32';
-          mensagem.innerHTML = `✅ Submissão recebida com sucesso!`;
+        if (resposta.ok) {
+          mensagem.textContent = '✅ Submissão recebida com sucesso!';
+          mensagem.className = 'mensagem sucesso';
+
+          const linkImagem = document.createElement('a');
           linkImagem.href = resultado.imageUrl;
-          linkImagem.style.display = 'inline-block';
+          linkImagem.textContent = '🖼️ Ver imagem submetida';
+          linkImagem.target = '_blank';
+          mensagem.appendChild(document.createElement('br'));
+          mensagem.appendChild(linkImagem);
 
-          const urlParams = new URLSearchParams(window.location.search);
-          if (urlParams.get('token') === 'fernanda2025visao') {
-            linkPainel.style.display = 'inline-block';
+          const params = new URLSearchParams(window.location.search);
+          if (params.get('token') === 'fernanda2025visao') {
+            const painelLink = document.createElement('a');
+            painelLink.href = 'painel-aprovacao.html?token=fernanda2025visao';
+            painelLink.textContent = '🗂️ Ir para o Painel de Aprovação';
+            painelLink.style.display = 'block';
+            painelLink.style.marginTop = '10px';
+            mensagem.appendChild(painelLink);
           }
 
-          botoes.style.display = 'block';
           form.reset();
         } else {
-          mensagem.style.color = 'red';
-          mensagem.textContent = `❌ ${resultado.message}`;
+          mensagem.textContent = '❌ ' + resultado.message;
+          mensagem.className = 'mensagem erro';
         }
       } catch (erro) {
-        loading.style.display = 'none';
-        mensagem.style.color = 'red';
         mensagem.textContent = '❌ Erro ao contactar o servidor.';
+        mensagem.className = 'mensagem erro';
+        console.error('Erro:', erro);
       }
     });
   </script>
