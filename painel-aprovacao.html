@@ -88,16 +88,17 @@
           div.className = 'obra';
 
           div.innerHTML = `
-            <h3>"${obra.titulo}" por ${obra.nomeArtista}</h3>
-            <p>🔗 <a href="${obra.url}" target="_blank">Ver submissão</a></p>
-            <img src="${obra.imagem}" alt="Imagem da Obra" style="max-width:100%; margin-top: 10px;" />
-            <button onclick="aprovarObra(${obra.id}, '${obra.titulo}', '${obra.nomeArtista}', '${obra.imagem}')">✅ Aprovar</button>
+            <h3>${obra.titulo} por ${obra.nomeArtista}</h3>
+            <p><a href="${obra.url}" target="_blank">🔗 Ver submissão no GitHub</a></p>
+            <p><img src="${obra.imagem}" alt="Imagem da obra" style="max-width:100%; border:1px solid #555; margin-top:10px;"></p>
+            <button onclick="aprovarObra(${obra.id}, \`${obra.titulo}\`, \`${obra.nomeArtista}\`, \`${obra.imagem}\`)">✅ Aprovar</button>
           `;
 
           lista.appendChild(div);
         });
       } catch (erro) {
         console.error('Erro ao carregar obras:', erro);
+        document.getElementById('lista-obras').innerHTML = '<p style="color:red; text-align:center">Erro ao carregar submissões.</p>';
       }
     }
 
@@ -105,19 +106,16 @@
       try {
         const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id, titulo, nomeArtista, imagem })
         });
-
-        const resultado = await resposta.json();
 
         if (resposta.ok) {
           alert('Obra aprovada com sucesso!');
           carregarObras();
         } else {
-          alert('Erro: ' + resultado.message);
+          const dados = await resposta.json();
+          alert('Erro: ' + dados.message);
         }
       } catch (erro) {
         console.error('Erro ao aprovar obra:', erro);
