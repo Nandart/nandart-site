@@ -45,16 +45,27 @@
       background-color: #d4af37;
       color: #000;
       border: none;
-      padding: 5px 10px;
+      padding: 6px 12px;
       cursor: pointer;
       margin-top: 10px;
     }
 
-    .obra img {
+    .obra button:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+
+    .mensagem {
       margin-top: 10px;
-      max-width: 100%;
-      height: auto;
-      border: 1px solid #444;
+      font-size: 14px;
+    }
+
+    .mensagem.sucesso {
+      color: #32cd32;
+    }
+
+    .mensagem.erro {
+      color: #ff4d4d;
     }
 
     @media (max-width: 600px) {
@@ -94,39 +105,60 @@
           const div = document.createElement('div');
           div.className = 'obra';
 
+          const msgId = `mensagem-${obra.id}`;
+          const btnId = `btn-${obra.id}`;
+
           div.innerHTML = `
-            <h3>"${obra.titulo}" por ${obra.nomeArtista}</h3>
-            <p><a href="${obra.url}" target="_blank">🔗 Ver submissão no GitHub</a></p>
-            <img src="${obra.imagem}" alt="Imagem da obra">
-            <br/>
-            <button onclick="aprovarObra(${obra.id}, '${obra.titulo.replace(/'/g, "\\'")}', '${obra.nomeArtista.replace(/'/g, "\\'")}', '${obra.imagem}')">✅ Aprovar</button>
+            <h3>Nova Submissão: "${obra.titulo}" por ${obra.nomeArtista}</h3>
+            <p>🔗 <a href="${obra.url}" target="_blank">Ver submissão</a></p>
+            <button id="${btnId}" onclick="aprovarObra(${obra.id}, '${obra.titulo}', '${obra.nomeArtista}', '${obra.imagem}', '${btnId}', '${msgId}')">✅ Aprovar</button>
+            <div id="${msgId}" class="mensagem"></div>
           `;
 
           lista.appendChild(div);
         });
       } catch (erro) {
         console.error('Erro ao carregar obras:', erro);
+        document.getElementById('contador').innerText = 'Erro ao carregar submissões.';
       }
     }
 
-    async function aprovarObra(id, titulo, nomeArtista, imagem) {
+    async function aprovarObra(id, titulo, nomeArtista, imagem, btnId, msgId) {
+      const botao = document.getElementById(btnId);
+      const mensagem = document.getElementById(msgId);
+
+      botao.disabled = true;
+      botao.textContent = '⏳ A processar...';
+      mensagem.textContent = '';
+      mensagem.className = 'mensagem';
+
       try {
         const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json'
+          },
           body: JSON.stringify({ id, titulo, nomeArtista, imagem })
         });
 
+        const dados = await resposta.json();
+
         if (resposta.ok) {
-          alert('Obra aprovada com sucesso!');
-          carregarObras();
+          mensagem.textContent = '✅ Obra aprovada com sucesso!';
+          mensagem.classList.add('sucesso');
+          setTimeout(() => carregarObras(), 1500);
         } else {
-          const dados = await resposta.json();
-          alert('Erro: ' + dados.message);
+          mensagem.textContent = `❌ Erro: ${dados.message}`;
+          mensagem.classList.add('erro');
+          botao.disabled = false;
+          botao.textContent = '✅ Aprovar';
         }
       } catch (erro) {
         console.error('Erro ao aprovar obra:', erro);
-        alert('Erro ao contactar o servidor.');
+        mensagem.textContent = '❌ Erro ao contactar o servidor.';
+        mensagem.classList.add('erro');
+        botao.disabled = false;
+        botao.textContent = '✅ Aprovar';
       }
     }
 
