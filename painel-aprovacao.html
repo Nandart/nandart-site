@@ -87,16 +87,20 @@
           const div = document.createElement('div');
           div.className = 'obra';
 
+          const botao = document.createElement('button');
+          botao.textContent = '✅ Aprovar';
+          botao.onclick = () => aprovarObra(obra.id, obra.titulo, obra.nomeArtista, obra.imagem);
+
           div.innerHTML = `
             <h3>Nova Submissão: "${obra.titulo}" por ${obra.nomeArtista}</h3>
             <p>🔗 <a href="${obra.url}" target="_blank">Ver submissão</a></p>
-            <button onclick="aprovarObra(${obra.id}, '${obra.titulo}', '${obra.nomeArtista}', '${obra.imagem}')">✅ Aprovar</button>
           `;
-
+          div.appendChild(botao);
           lista.appendChild(div);
         });
       } catch (erro) {
         console.error('Erro ao carregar obras:', erro);
+        document.getElementById('contador').textContent = '❌ Erro ao carregar submissões.';
       }
     }
 
@@ -110,16 +114,17 @@
           body: JSON.stringify({ id, titulo, nomeArtista, imagem })
         });
 
+        const resultado = await resposta.json();
+
         if (resposta.ok) {
-          alert('Obra aprovada com sucesso!');
+          alert('✅ Obra aprovada com sucesso!');
           carregarObras();
         } else {
-          const dados = await resposta.json();
-          alert('Erro: ' + dados.message);
+          alert('❌ Erro: ' + resultado.message);
         }
       } catch (erro) {
         console.error('Erro ao aprovar obra:', erro);
-        alert('Erro ao contactar o servidor.');
+        alert('❌ Erro ao contactar o servidor.');
       }
     }
 
