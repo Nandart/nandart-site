@@ -72,18 +72,18 @@ body {
   overflow: hidden;
 }
 
-/* Obras a girar */
 .circulo {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 400px;
-  height: 400px;
-  margin: -200px 0 0 -200px;
+  width: 500px;
+  height: 500px;
+  margin: -250px 0 0 -250px;
   animation: girar 60s linear infinite;
   transform-origin: center center;
 }
 
+/* Obras a orbitar */
 .obra-circulo {
   position: absolute;
   width: 100px;
@@ -91,6 +91,8 @@ body {
   overflow: hidden;
   border: 2px solid #FFD700;
   border-radius: 8px;
+  transition: transform 0.3s ease;
+  transform-origin: center center;
 }
 
 .obra-circulo img {
@@ -167,4 +169,21 @@ body {
 
 .comprar-obra:hover {
   background-color: #D4AF37;
+}
+
+/* Ícone Casa */
+#voltar-inicio {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 24px;
+  color: #FFD700;
+  opacity: 0.6;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+  z-index: 999;
+}
+
+#voltar-inicio:hover {
+  opacity: 1;
 }
