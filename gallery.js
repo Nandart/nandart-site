@@ -1,4 +1,6 @@
-// Definir a lista de obras (podes adicionar mais!)
+// gallery.js completo
+
+// Lista de obras (podes adicionar mais!)
 const obras = [
   {
     titulo: "Fragmentos do Infinito",
@@ -64,10 +66,9 @@ obras.forEach((obra, index) => {
   }
 });
 
-// Variável para obra atual
+// Modal e Comprar
 let obraAtual = null;
 
-// Abrir Modal
 function abrirModal(index) {
   obraAtual = obras[index];
   document.getElementById('imagem-modal').src = obraAtual.imagem;
@@ -81,12 +82,10 @@ function abrirModal(index) {
   document.getElementById('modal-obra').style.display = 'flex';
 }
 
-// Fechar Modal
 function fecharModal() {
   document.getElementById('modal-obra').style.display = 'none';
 }
 
-// Comprar
 function comprarObra() {
   if (obraAtual.nftContractAddress) {
     if (typeof window.ethereum !== 'undefined') {
@@ -98,3 +97,35 @@ function comprarObra() {
     window.location.href = `mailto:info@nandart.art?subject=Compra de Obra: ${encodeURIComponent(obraAtual.titulo)}`;
   }
 }
+
+// Motor de órbita com pulso de profundidade
+const radius = 250; // raio da órbita
+const speed = 0.002; // velocidade de rotação
+const scaleAmount = 0.3; // intensidade do efeito de profundidade
+let angle = 0;
+
+function animateGallery() {
+  const artworks = document.querySelectorAll('.artwork:not(.premium-highlight)');
+
+  angle += speed;
+
+  artworks.forEach((artwork, index) => {
+    const total = artworks.length;
+    const currentAngle = angle + (index * (2 * Math.PI / total));
+
+    const x = radius * Math.cos(currentAngle);
+    const y = radius * Math.sin(currentAngle) * 0.5; // achatado para criar efeito 3D
+
+    artwork.style.transform = `translate(${x}px, ${y}px) rotate(${currentAngle}rad)`;
+
+    // Pulso de profundidade
+    const scale = 1 + scaleAmount * (1 - Math.cos(currentAngle));
+    artwork.style.zIndex = Math.floor(scale * 100);
+    artwork.style.transform += ` scale(${scale})`;
+  });
+
+  requestAnimationFrame(animateGallery);
+}
+
+// Iniciar a animação
+animateGallery();
