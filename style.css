@@ -7,7 +7,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Suspensão dos Premium */
+/* Área Premium */
 #destaque-premium {
   display: flex;
   justify-content: center;
@@ -17,26 +17,24 @@ body {
   z-index: 10;
 }
 
-/* Obra Premium */
-.obra-premium {
+/* Obras Premium */
+.premium-highlight {
   position: relative;
   width: 180px;
   height: 260px;
   overflow: hidden;
   border: 2px solid #FFD700;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
   transition: transform 0.3s ease;
 }
 
-/* Parallax Premium */
-.obra-premium img {
+.premium-highlight img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* Selo Premium */
 .selo-premium {
   position: absolute;
   top: 10px;
@@ -50,7 +48,6 @@ body {
   animation: brilho 3s infinite;
 }
 
-/* Selo Coleção NANdART */
 .selo-nandart {
   position: absolute;
   bottom: 10px;
@@ -63,28 +60,25 @@ body {
   font-weight: bold;
 }
 
-/* Área do Círculo */
+/* Área Normal */
 #galeria-normal {
   position: relative;
   width: 100%;
-  height: 500px;
-  margin-top: 80px;
+  height: 600px;
   overflow: hidden;
 }
 
-.circulo {
+#gallery {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 500px;
-  height: 500px;
-  margin: -250px 0 0 -250px;
-  animation: girar 60s linear infinite;
-  transform-origin: center center;
+  width: 0;
+  height: 0;
+  transform: translate(-50%, -50%);
 }
 
-/* Obras a orbitar */
-.obra-circulo {
+/* Obras Normais */
+.artwork {
   position: absolute;
   width: 100px;
   height: 140px;
@@ -95,24 +89,19 @@ body {
   transform-origin: center center;
 }
 
-.obra-circulo img {
+.artwork img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 /* Animações */
-@keyframes girar {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
 @keyframes brilho {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.7; }
 }
 
-/* Modal de Obra */
+/* Modal da Obra */
 #modal-obra {
   position: fixed;
   top: 0;
@@ -171,7 +160,7 @@ body {
   background-color: #D4AF37;
 }
 
-/* Ícone Casa */
+/* Ícone "Casa" */
 #voltar-inicio {
   position: fixed;
   bottom: 20px;
