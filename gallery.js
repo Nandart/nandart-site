@@ -1,4 +1,4 @@
-// Lista de obras (Exemplo inicial — podes adicionar mais depois)
+// Lista de obras (Exemplo inicial — podes adicionar mais obras depois)
 const obras = [
   {
     titulo: "Fragmentos do Infinito",
@@ -51,7 +51,7 @@ obras.forEach((obra, index) => {
       <div class="selo-premium">⭐ Destaque NANdART</div>
       ${obra.isNandartObra ? `<div class="selo-nandart">Coleção NANdART</div>` : ``}
     `;
-    div.onclick = () => abrirModal(index);
+    div.onclick = () => animarEClicar(div, index);
     destaquePremium.appendChild(div);
 
     premiumAtivos.push(div);
@@ -62,14 +62,23 @@ obras.forEach((obra, index) => {
 
     const div = document.createElement('div');
     div.className = 'obra-circulo';
-    div.style.top = `${200 + 180 * Math.sin(radianos)}px`;
-    div.style.left = `${200 + 180 * Math.cos(radianos)}px`;
+    div.style.top = `${250 + 200 * Math.sin(radianos)}px`;
+    div.style.left = `${250 + 200 * Math.cos(radianos)}px`;
     div.innerHTML = `<img src="${obra.imagem}" alt="${obra.titulo}">`;
-    div.onclick = () => abrirModal(index);
+    div.onclick = () => animarEClicar(div, index);
 
     circuloObras.appendChild(div);
   }
 });
+
+// Função para aplicar zoom suave e depois abrir Modal
+function animarEClicar(elemento, index) {
+  elemento.style.transform = "scale(1.1)";
+  setTimeout(() => {
+    elemento.style.transform = "scale(1)";
+    abrirModal(index);
+  }, 200);
+}
 
 // Função abrir Modal
 let obraAtual = null;
@@ -95,7 +104,6 @@ function fecharModal() {
 // Função Comprar
 function comprarObra() {
   if (obraAtual.nftContractAddress) {
-    // Preparar ligação Web3 futura
     if (typeof window.ethereum !== 'undefined') {
       alert('Ligação Web3 em desenvolvimento.');
     } else {
