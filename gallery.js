@@ -1,40 +1,63 @@
-// gallery.js
+document.addEventListener("DOMContentLoaded", () => {
+  const gallery = document.getElementById('gallery');
+  let angle = 0;
+  const radius = 250;
+  const speed = 0.002; // Velocidade de rotação
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2 + 50; // ligeiramente mais abaixo
+  let obras = [];
 
-const obras = document.querySelectorAll('.obra');
-let angulos = [];
-const raio = 250; // Distância do centro (ajusta conforme quiseres)
-const centroX = window.innerWidth / 2;
-const centroY = window.innerHeight / 2 + 100; // Ligeiramente mais para baixo
-
-// Inicializar ângulos igualmente espaçados
-for (let i = 0; i < obras.length; i++) {
-  angulos.push((i / obras.length) * 2 * Math.PI);
-}
-
-function animateGallery() {
-  for (let i = 0; i < obras.length; i++) {
-    const obra = obras[i];
-    const angulo = angulos[i];
-
-    // Cálculo da posição circular
-    const x = centroX + raio * Math.cos(angulo) - obra.offsetWidth / 2;
-    const y = centroY + raio * Math.sin(angulo) - obra.offsetHeight / 2;
-
-    obra.style.left = `${x}px`;
-    obra.style.top = `${y}px`;
-    obra.style.transform = `rotate(${angulo + Math.PI / 2}rad)`; // Rodar a imagem para "olhar para fora"
-
-    // Atualizar ângulo para movimento no sentido dos ponteiros do relógio
-    angulos[i] += 0.005; // Velocidade de rotação (podes ajustar)
+  async function loadObras() {
+    try {
+      const response = await fetch('galeria/obras/obras_aprovadas.json');
+      obras = await response.json();
+      criarObras();
+      animateGallery();
+    } catch (error) {
+      console.error("Erro ao carregar obras:", error);
+    }
   }
 
-  requestAnimationFrame(animateGallery);
-}
+  function criarObras() {
+    obras.forEach((obra, index) => {
+      const div = document.createElement('div');
+      div.className = obra.premium ? 'obra premium' : 'obra';
 
-// Iniciar animação
-animateGallery();
+      const img = document.createElement('img');
+      img.src = obra.imagem;
+      img.alt = obra.titulo;
 
-// Tornar responsivo ao redimensionar janela
-window.addEventListener('resize', () => {
-  location.reload();
+      const label = document.createElement('div');
+      label.className = 'label';
+      label.innerText = obra.titulo;
+
+      div.appendChild(img);
+      div.appendChild(label);
+      gallery.appendChild(div);
+    });
+  }
+
+  function animateGallery() {
+    const obrasElements = document.querySelectorAll('.obra');
+    function animate() {
+      angle += speed;
+      obrasElements.forEach((el, i) => {
+        const theta = (i * (2 * Math.PI) / obrasElements.length) + angle;
+        const x = centerX + radius * Math.cos(theta) - el.offsetWidth / 2;
+        const y = centerY + radius * Math.sin(theta) - el.offsetHeight / 2;
+
+        el.style.transform = `translate(${x}px, ${y}px) rotate(${theta}rad)`;
+
+        // efeito de profundidade para premium
+        if (el.classList.contains('premium')) {
+          const scale = 1.1 + 0.1 * Math.sin(theta * 2);
+          el.style.transform += ` scale(${scale})`;
+        }
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  }
+
+  loadObras();
 });
