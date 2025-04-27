@@ -1,1 +1,10 @@
-
+<nav class="menu-lateral">
+  <ul>
+    <li><a href="index.html">Início</a></li>
+    <li><a href="#galeria">Galeria</a></li>
+    <li><a href="artistas.html">Artistas</a></li>
+    <li><a href="web3.html">Web3</a></li>
+    <li><a href="contacto.html">Contacto</a></li>
+    <li><a href="clausulas.html">Cláusulas</a></li>
+  </ul>
+</nav>
