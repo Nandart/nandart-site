@@ -3,53 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NANdART - Galeria Web3</title>
+  <title>NANdART — Galeria Imersiva</title>
   <link rel="stylesheet" href="style.css">
-  <script src="gallery.js" defer></script>
+  <link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body>
 
   <!-- Ícones de navegação -->
-  <div class="top-icons">
-    <div class="menu-icon" id="menuToggle">&#9776;</div> <!-- Três Barras -->
-    <div class="info-icon" id="infoLink">+</div> <!-- Ícone Info -->
+  <div class="menu-icons">
+    <img src="menu-icon.png" id="menu-button" alt="Menu">
+    <img src="plus-icon.png" id="plus-button" alt="Mais">
   </div>
 
-  <!-- Título central -->
-  <h1 class="titulo-nandart">NANdART</h1>
+  <!-- Título no topo -->
+  <header>
+    <h1 class="titulo-nandart">NANdART</h1>
+  </header>
 
-  <!-- Obra Central -->
-  <div class="obra-central">
-    <img src="obra.png" alt="Obra Principal">
+  <!-- Sala tridimensional -->
+  <main class="sala">
+    <div class="circulo">
+      <!-- Obras normais serão geradas dinamicamente aqui -->
+    </div>
+    <div class="obras-premium">
+      <!-- Obras premium serão geradas dinamicamente aqui -->
+    </div>
+  </main>
+
+  <!-- Modal de Obra -->
+  <div id="modal-obra" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <img id="imagem-obra" src="" alt="Obra">
+      <h2 id="titulo-obra"></h2>
+      <div class="contador-visualizacoes">
+        <img src="eye-icon.png" alt="Visualizações">
+        <span id="visualizacoes">0</span>
+      </div>
+      <button id="botao-comprar">Comprar Obra</button>
+    </div>
   </div>
 
-  <!-- Círculo no chão -->
-  <div class="circulo-chao"></div>
-
-  <!-- Galeria orbitante -->
-  <div id="galeria"></div>
-
-  <!-- Menu Dropdown -->
-  <div class="menu-dropdown" id="menuDropdown">
-    <a href="#sobre">Sobre</a>
-    <a href="#artistas">Artistas</a>
-    <a href="#web3">Web3</a>
-    <a href="#contacto">Contacto</a>
-    <a href="clausulas.html">Cláusulas</a>
-  </div>
-
-  <script>
-    // Abrir/Fechar Menu
-    document.getElementById('menuToggle').addEventListener('click', () => {
-      const menu = document.getElementById('menuDropdown');
-      menu.classList.toggle('ativo');
-    });
-
-    // Redirecionar para Info
-    document.getElementById('infoLink').addEventListener('click', () => {
-      window.location.href = "info.html";
-    });
-  </script>
+  <!-- Scripts -->
+  <script src="gallery.js"></script>
 
 </body>
 </html>
