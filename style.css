@@ -1,200 +1,221 @@
-/* Estilo Base */
+/* Estilo Geral */
 body {
   margin: 0;
-  font-family: 'Georgia', serif;
-  background-color: #121212;
+  padding: 0;
+  background: #000;
   color: #D4AF37;
-  text-align: center;
+  font-family: 'Georgia', serif;
   overflow-x: hidden;
-  overflow-y: hidden;
 }
 
-h1, h2, h3 {
-  margin-bottom: 20px;
-}
-
-p {
-  margin: 10px 0 20px;
-  color: #cccccc;
-}
-
-/* Cabeçalho */
-header {
+.header {
+  text-align: center;
+  padding: 20px;
   background-color: #000;
-  padding: 30px 20px 10px;
 }
 
-header h1 {
-  color: #D4AF37;
+.titulo {
   font-size: 36px;
-  font-family: 'Georgia', serif;
+  margin-bottom: 10px;
+  color: #D4AF37;
 }
 
-/* Navegação */
-nav {
-  margin-top: 20px;
-}
-
-nav a {
-  margin: 0 15px;
+.menu a {
   color: #ffffff;
+  margin: 0 10px;
   text-decoration: none;
   font-weight: bold;
-  font-size: 18px;
-  transition: color 0.3s ease;
 }
 
-nav a:hover {
+.menu a:hover {
   color: #D4AF37;
 }
 
-/* Galeria */
-#gallery {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  overflow: hidden;
+/* Conteúdo Principal */
+.conteudo-principal {
+  text-align: center;
+  padding: 30px 20px;
 }
 
-.obra {
-  position: absolute;
-  width: 120px;
-  height: 180px;
-  border: 2px solid #D4AF37;
-  border-radius: 8px;
-  overflow: hidden;
-  background: #000;
-  transition: transform 0.5s, box-shadow 0.5s, opacity 1.5s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+.conteudo-principal h2 {
+  font-size: 28px;
+  color: #ffffff;
 }
 
-.obra img {
+.descricao-inicio {
+  color: #ccc;
+  margin-top: 10px;
+}
+
+.imagem-inicial {
+  margin: 20px 0;
+}
+
+.imagem-principal {
   max-width: 100%;
-  max-height: 80%;
-  object-fit: cover;
-  transition: opacity 1.5s ease;
+  border: 4px solid #D4AF37;
+  border-radius: 10px;
 }
 
-.premium {
-  width: 150px;
-  height: 220px;
-  border: 3px solid gold;
-  box-shadow: 0 0 25px gold;
-  animation: pulse 2s infinite alternate, float 3s ease-in-out infinite;
-  z-index: 1000;
+.botao-explorar {
+  display: inline-block;
+  margin-top: 20px;
+  background-color: #D4AF37;
+  color: #000;
+  padding: 12px 25px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background 0.3s ease;
 }
 
-@keyframes pulse {
-  0% { box-shadow: 0 0 15px gold; transform: scale(1); }
-  100% { box-shadow: 0 0 30px gold; transform: scale(1.05); }
+.botao-explorar:hover {
+  background-color: #c29b30;
 }
 
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+/* Footer */
+.footer {
+  background: #000;
+  text-align: center;
+  padding: 20px;
+  color: #aaa;
+  font-size: 14px;
+}
+
+/* --- Galeria Especial --- */
+.galeria-body {
+  background: #000;
+  overflow: hidden;
+  position: relative;
+  height: 100vh;
+}
+
+#titulo-nandart {
+  font-size: 32px;
+  text-align: center;
+  margin-top: 20px;
+  color: #D4AF37;
 }
 
 #home-button {
   position: fixed;
   top: 20px;
   left: 20px;
+  text-decoration: none;
+  font-size: 24px;
   background: none;
+  color: #D4AF37;
   border: none;
-  cursor: pointer;
-  z-index: 3000;
 }
 
-#home-button img {
-  width: 30px;
-  height: 30px;
-  filter: brightness(0) saturate(100%) invert(70%) sepia(45%) saturate(750%) hue-rotate(5deg) brightness(95%) contrast(90%);
+#galeria-container {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 100px);
+  margin-top: 30px;
+}
+
+.obra {
+  position: absolute;
+  width: 90px;
+  height: 130px;
+  border: 2px solid #D4AF37;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #000;
+  transition: transform 0.5s, opacity 1s;
+}
+
+.obra img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Estilo Premium */
+.premium {
+  border: 3px solid gold;
+  box-shadow: 0 0 20px gold;
+  width: 110px;
+  height: 160px;
+  z-index: 999;
+}
+
+.estrela-premium {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: gold;
+  color: #000;
+  border-radius: 50%;
+  padding: 5px;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 /* Modal */
 .modal {
   display: none;
   position: fixed;
-  z-index: 5000;
+  z-index: 9999;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.8);
-  align-items: center;
+  background-color: rgba(0,0,0,0.8);
   justify-content: center;
-  animation: fadeIn 0.5s;
+  align-items: center;
 }
 
-.modal-content {
-  background-color: #000;
+.modal-conteudo {
+  background: #000;
   border: 2px solid #D4AF37;
-  border-radius: 8px;
   padding: 20px;
-  max-width: 500px;
-  width: 90%;
+  border-radius: 8px;
   text-align: center;
-  color: #D4AF37;
-  position: relative;
-  animation: zoomIn 0.5s;
+  width: 80%;
+  max-width: 400px;
 }
 
-.modal-image {
-  max-width: 100%;
-  height: auto;
-  border-radius: 5px;
-  margin-bottom: 15px;
+.modal-conteudo img {
+  width: 100%;
+  border-radius: 8px;
 }
 
-.close-button {
+#fechar-modal {
   position: absolute;
-  top: 10px;
-  right: 15px;
+  top: 15px;
+  right: 25px;
+  font-size: 30px;
   color: #D4AF37;
-  font-size: 28px;
   cursor: pointer;
 }
 
-button#modal-buy {
+.botao-comprar {
+  display: inline-block;
   margin-top: 15px;
   padding: 10px 20px;
   background: #D4AF37;
   color: #000;
-  border: none;
+  font-weight: bold;
+  text-decoration: none;
   border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s;
 }
 
-button#modal-buy:hover {
-  background: #bfa334;
+.botao-comprar:hover {
+  background: #c29b30;
 }
 
-/* Animações */
-@keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
-
-@keyframes zoomIn {
-  from {transform: scale(0.8);}
-  to {transform: scale(1);}
-}
-
-/* Responsividade */
+/* Responsivo */
 @media (max-width: 768px) {
   .obra {
-    width: 80px;
-    height: 120px;
+    width: 60px;
+    height: 90px;
   }
-
   .premium {
-    width: 110px;
-    height: 160px;
+    width: 80px;
+    height: 110px;
   }
 }
