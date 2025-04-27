@@ -1,27 +1,28 @@
-[
-  {
-    "titulo": "Ecos do Tempo",
-    "imagem": "obra1.jpg",
-    "premium": false
-  },
-  {
-    "titulo": "Alvorecer Digital",
-    "imagem": "obra2.jpg",
-    "premium": false
-  },
-  {
-    "titulo": "Horizonte Perdido",
-    "imagem": "obra3.jpg",
-    "premium": false
-  },
-  {
-    "titulo": "Luz Imutável",
-    "imagem": "obra4.jpg",
-    "premium": false
-  },
-  {
-    "titulo": "Coleção NANdART",
-    "imagem": "obra.jpg",
-    "premium": true
-  }
-]
+{
+  "obras": [
+    {
+      "titulo": "Alvorecer Digital",
+      "autor": "Coleção NANdART",
+      "imagem": "galeria/obras/imagem1.png",
+      "premium": true
+    },
+    {
+      "titulo": "Ecos do Tempo",
+      "autor": "Coleção NANdART",
+      "imagem": "galeria/obras/imagem2.png",
+      "premium": false
+    },
+    {
+      "titulo": "Fragmentos Eternos",
+      "autor": "Coleção NANdART",
+      "imagem": "galeria/obras/imagem3.png",
+      "premium": false
+    },
+    {
+      "titulo": "Horizonte Imutável",
+      "autor": "Coleção NANdART",
+      "imagem": "galeria/obras/imagem4.png",
+      "premium": false
+    }
+  ]
+}
