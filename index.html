@@ -1,39 +1,55 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="pt">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NANdART - Onde a arte encontra a eternidade</title>
+  <title>NANdART - Galeria Web3</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/png" href="favicon.ico">
+  <script src="gallery.js" defer></script>
 </head>
 <body>
-  <header class="header">
-    <h1 class="titulo">NANdART</h1>
-    <nav class="menu">
-      <a href="sobre.html">Sobre</a>
-      <a href="obra.html">Obra</a>
-      <a href="artistas.html">Artistas</a>
-      <a href="galeria.html">Galeria</a>
-      <a href="web3.html">Web3</a>
-      <a href="contactos.html">Contacto</a>
-    </nav>
-  </header>
 
-  <main class="conteudo-principal">
-    <h2>Onde a arte encontra a eternidade.</h2>
-    <p class="descricao-inicio">
-      A NANdART é um santuário etéreo de arte, onde cada criação transcende o tempo.<br>
-      Impressa na blockchain. Animada pelo sopro da alma artística.
-    </p>
-    <div class="imagem-inicial">
-      <img src="obra.jpg" alt="Obra destaque NANdART" class="imagem-principal">
-    </div>
-  </main>
+  <!-- Ícones de navegação -->
+  <div class="top-icons">
+    <div class="menu-icon" id="menuToggle">&#9776;</div> <!-- Três Barras -->
+    <div class="info-icon" id="infoLink">+</div> <!-- Ícone Info -->
+  </div>
 
-  <footer class="footer">
-    <p>© 2025 NANdART. Todos os direitos reservados.<br>
-    <a href="#">Política de Privacidade</a> | <a href="#">Termos de Utilização</a></p>
-  </footer>
+  <!-- Título central -->
+  <h1 class="titulo-nandart">NANdART</h1>
+
+  <!-- Obra Central -->
+  <div class="obra-central">
+    <img src="obra.png" alt="Obra Principal">
+  </div>
+
+  <!-- Círculo no chão -->
+  <div class="circulo-chao"></div>
+
+  <!-- Galeria orbitante -->
+  <div id="galeria"></div>
+
+  <!-- Menu Dropdown -->
+  <div class="menu-dropdown" id="menuDropdown">
+    <a href="#sobre">Sobre</a>
+    <a href="#artistas">Artistas</a>
+    <a href="#web3">Web3</a>
+    <a href="#contacto">Contacto</a>
+    <a href="clausulas.html">Cláusulas</a>
+  </div>
+
+  <script>
+    // Abrir/Fechar Menu
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      const menu = document.getElementById('menuDropdown');
+      menu.classList.toggle('ativo');
+    });
+
+    // Redirecionar para Info
+    document.getElementById('infoLink').addEventListener('click', () => {
+      window.location.href = "info.html";
+    });
+  </script>
+
 </body>
 </html>
