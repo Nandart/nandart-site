@@ -1,0 +1,32 @@
+[
+  {
+    "titulo": "Fragmentos do Infinito",
+    "artista": "Renner Nunes",
+    "imagem": "obra.jpg",
+    "descricao": "Uma reflexão sobre o eterno e o efémero.",
+    "nftContractAddress": null,
+    "isPremium": true,
+    "isNandartObra": true,
+    "dataInicioPremium": "2025-04-26"
+  },
+  {
+    "titulo": "Ecos do Tempo",
+    "artista": "Ana Marques",
+    "imagem": "https://via.placeholder.com/150",
+    "descricao": "Viagem pelas memórias esquecidas.",
+    "nftContractAddress": "0xABCDEF123456",
+    "isPremium": false,
+    "isNandartObra": false,
+    "dataInicioPremium": null
+  },
+  {
+    "titulo": "Alvorecer Digital",
+    "artista": "Miguel Vieira",
+    "imagem": "https://via.placeholder.com/150",
+    "descricao": "O despertar da alma tecnológica.",
+    "nftContractAddress": null,
+    "isPremium": false,
+    "isNandartObra": false,
+    "dataInicioPremium": null
+  }
+]
