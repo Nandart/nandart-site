@@ -8,12 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalBuyButton = document.getElementById('modal-buy');
   const closeModalBtn = document.getElementById('close-modal');
 
-  const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight / 2 + 50;
-  const radius = 350;
-  const rotationSpeed = 0.002; // velocidade de rotação
-  let angleOffset = 0;
   let obras = [];
+  const radius = Math.min(window.innerWidth, window.innerHeight) / 2.2;
+  const rotationSpeed = 0.002;
+  let angleOffset = 0;
 
   async function carregarObras() {
     try {
@@ -29,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function desenharObras() {
     obras.forEach((obra, index) => {
       const obraDiv = document.createElement('div');
-      obraDiv.className = obra.premium ? 'obra premium' : 'obra';
+      obraDiv.className = obra.premium ? 'obra premium' : 'obra normal';
 
       const imagem = document.createElement('img');
       imagem.src = obra.imagem;
@@ -38,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         imagem.style.opacity = 1;
         imagem.style.transition = 'opacity 1.5s';
-      }, index * 200);
+      }, index * 150);
 
       obraDiv.appendChild(imagem);
 
@@ -50,25 +48,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function animarGaleria() {
-    const obrasElements = document.querySelectorAll('.obra');
+    const obrasElements = document.querySelectorAll('.obra.normal');
+    const premiumElements = document.querySelectorAll('.obra.premium');
+
     function animar() {
       angleOffset += rotationSpeed;
       obrasElements.forEach((el, i) => {
-        const isPremium = el.classList.contains('premium');
-        if (!isPremium) {
-          const angle = (i * (2 * Math.PI) / obrasElements.length) + angleOffset;
-          const x = centerX + radius * Math.cos(angle) - el.offsetWidth / 2;
-          const y = centerY + radius * Math.sin(angle) - el.offsetHeight / 2;
-          el.style.transform = `translate(${x}px, ${y}px)`;
-        } else {
-          // Premium: manter suspensa com flutuação
-          const floatY = centerY - 250 + Math.sin(Date.now() / 500) * 10;
-          const floatX = centerX - el.offsetWidth / 2;
-          el.style.transform = `translate(${floatX}px, ${floatY}px)`;
-        }
+        const angle = (i * (2 * Math.PI) / obrasElements.length) + angleOffset;
+        const x = (window.innerWidth / 2) + radius * Math.cos(angle) - el.offsetWidth / 2;
+        const y = (window.innerHeight / 2) + (radius * 0.4) * Math.sin(angle) - el.offsetHeight / 2;
+        const scale = 1 + 0.2 * Math.sin(angle);
+
+        el.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+        el.style.zIndex = Math.floor(100 + 100 * Math.sin(angle));
       });
+
+      premiumElements.forEach((el) => {
+        const floatY = (window.innerHeight / 2) - 260 + Math.sin(Date.now() / 500) * 10;
+        const floatX = (window.innerWidth / 2) - (el.offsetWidth / 2);
+        el.style.transform = `translate(${floatX}px, ${floatY}px)`;
+      });
+
       requestAnimationFrame(animar);
     }
+
     animar();
   }
 
@@ -81,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (obra.nft === true) {
       modalBuyButton.innerText = "Comprar NFT";
       modalBuyButton.onclick = () => {
-        alert("Integração Web3 em breve! ✨");
+        alert("Integração Web3 em breve!");
       };
     } else {
       modalBuyButton.innerText = "Comprar Obra";
@@ -90,7 +93,6 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     }
 
-    // Animação de abertura
     modal.style.display = 'flex';
     modal.classList.add('modal-animar');
     setTimeout(() => {
@@ -104,4 +106,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
   carregarObras();
 });
-
