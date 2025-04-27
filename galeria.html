@@ -1,28 +1,38 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Galeria NANdART</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="gallery.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria NANdART</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="gallery.js" defer></script>
 </head>
-<body class="galeria-body">
-  <div id="titulo-nandart">NANdART</div>
-  <a href="index.html" id="home-button" title="Voltar à Página Inicial">🏠</a>
+<body>
+    <header>
+        <a href="index.html" class="home-icon">
+            <img src="casa-icon.png" alt="Home">
+        </a>
+        <h1 class="titulo-nandart">NANdART</h1>
+    </header>
 
-  <div id="galeria-premiums"></div> <!-- Área de Premiums -->
-  <div id="galeria-container"></div> <!-- Área de Obras normais -->
+    <main class="galeria-container">
+        <div id="galeria">
+            <!-- As obras serão geradas dinamicamente aqui -->
+        </div>
 
-  <!-- Modal de Obra -->
-  <div id="modal-obra" class="modal">
-    <div class="modal-conteudo">
-      <span id="fechar-modal">&times;</span>
-      <img id="modal-imagem" alt="Obra em destaque">
-      <h2 id="modal-titulo"></h2>
-      <p id="modal-descricao"></p>
-      <a id="botao-comprar" href="#" class="botao-comprar" target="_blank">Comprar Obra</a>
-    </div>
-  </div>
+        <!-- Círculo central -->
+        <div class="circulo-chao"></div>
+
+        <!-- Modal para ver obra -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span id="fecharModal" class="fechar">&times;</span>
+                <img id="imagemModal" src="" alt="Obra" class="imagem-modal">
+                <h2 id="tituloModal"></h2>
+                <p id="descricaoModal"></p>
+                <a id="botaoCompra" class="botao-compra" href="#" target="_blank">Comprar Obra</a>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
