@@ -57,23 +57,6 @@ body {
   border-radius: 10px;
 }
 
-.botao-explorar {
-  display: inline-block;
-  margin-top: 20px;
-  background-color: #D4AF37;
-  color: #000;
-  padding: 12px 25px;
-  text-decoration: none;
-  font-weight: bold;
-  border-radius: 8px;
-  transition: background 0.3s ease;
-}
-
-.botao-explorar:hover {
-  background-color: #c29b30;
-}
-
-/* Footer */
 .footer {
   background: #000;
   text-align: center;
@@ -82,7 +65,7 @@ body {
   font-size: 14px;
 }
 
-/* --- Galeria Especial --- */
+/* Galeria Especial */
 .galeria-body {
   background: #000;
   overflow: hidden;
@@ -108,13 +91,47 @@ body {
   border: none;
 }
 
+#galeria-premiums {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 200;
+}
+
+.premium {
+  width: 100px;
+  height: 140px;
+  border: 2px solid gold;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.6);
+  background: #000;
+  cursor: pointer;
+  animation: flutuar 4s ease-in-out infinite;
+}
+
+.premium img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes flutuar {
+  0% { transform: translate(-50%, 0px); }
+  50% { transform: translate(-50%, -10px); }
+  100% { transform: translate(-50%, 0px); }
+}
+
 #galeria-container {
   position: relative;
   width: 100%;
-  height: calc(100vh - 100px);
-  margin-top: 30px;
+  height: 100%;
 }
 
+/* Obras normais */
 .obra {
   position: absolute;
   width: 90px;
@@ -124,34 +141,13 @@ body {
   overflow: hidden;
   cursor: pointer;
   background: #000;
-  transition: transform 0.5s, opacity 1s;
+  transition: transform 0.5s, opacity 0.8s;
 }
 
 .obra img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-/* Estilo Premium */
-.premium {
-  border: 3px solid gold;
-  box-shadow: 0 0 20px gold;
-  width: 110px;
-  height: 160px;
-  z-index: 999;
-}
-
-.estrela-premium {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  background: gold;
-  color: #000;
-  border-radius: 50%;
-  padding: 5px;
-  font-size: 12px;
-  font-weight: bold;
 }
 
 /* Modal */
@@ -163,7 +159,7 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(0,0,0,0.85);
   justify-content: center;
   align-items: center;
 }
@@ -176,6 +172,12 @@ body {
   text-align: center;
   width: 80%;
   max-width: 400px;
+  animation: aparecerModal 0.5s ease;
+}
+
+@keyframes aparecerModal {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .modal-conteudo img {
