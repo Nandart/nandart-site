@@ -1,4 +1,4 @@
-/* Estilos Gerais */
+/* Estilos gerais */
 body {
   margin: 0;
   padding: 0;
@@ -6,38 +6,63 @@ body {
   font-family: 'Georgia', serif;
   color: gold;
   overflow-x: hidden;
-}
-
-/* Header */
-header {
-  text-align: center;
-  padding: 20px 0;
+  height: 100vh;
   position: relative;
 }
 
+/* Título Central */
 .titulo-nandart {
-  font-size: 2.5rem;
-  margin: 0;
+  text-align: center;
+  font-size: 3rem;
+  margin-top: 60px;
   color: gold;
+  letter-spacing: 2px;
 }
 
-.home-icon img {
+/* Ícones do topo */
+.top-icons {
   position: absolute;
   top: 20px;
-  left: 20px;
-  width: 28px;
-  height: 28px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
-/* Galeria */
-.galeria-container {
-  position: relative;
-  width: 100%;
-  height: calc(100vh - 100px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.menu-icon, .info-icon {
+  font-size: 28px;
+  color: gold;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+.menu-icon:hover, .info-icon:hover {
+  color: #ffd700;
+}
+
+/* Obra central */
+.obra-central {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 400px;
+  background: black;
+  border: 2px solid gold;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.obra-central img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Círculo no chão */
@@ -45,13 +70,16 @@ header {
   position: absolute;
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, rgba(255,215,0,0) 70%);
+  background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, rgba(255,215,0,0) 70%);
   border: 2px solid gold;
   border-radius: 50%;
-  z-index: 1;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
 }
 
-/* Obras */
+/* Galeria orbitante */
 #galeria {
   position: absolute;
   top: 50%;
@@ -59,126 +87,52 @@ header {
   transform: translate(-50%, -50%);
   width: 0;
   height: 0;
-  z-index: 2;
+  z-index: 1;
 }
 
-.obra {
+/* Menu Dropdown */
+.menu-dropdown {
   position: absolute;
-  width: 120px;
-  height: 160px;
-  background: #111;
-  border: 2px solid gold;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: transform 0.5s ease, opacity 0.5s ease;
-  cursor: pointer;
-}
-
-.obra img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Obras Premium */
-.premium {
-  animation: flutuar 4s ease-in-out infinite alternate;
-}
-
-.icone-premium {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  font-size: 20px;
-  color: gold;
-  animation: brilhar 2s infinite alternate;
-}
-
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.85);
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.modal.mostrar {
-  display: flex;
-  opacity: 1;
-}
-
-.modal-content {
-  background: #111;
-  border: 2px solid gold;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  color: gold;
-  max-width: 400px;
-  width: 90%;
-  animation: zoomIn 0.5s ease;
-  position: relative;
-}
-
-.modal-content img.imagem-modal {
-  width: 100%;
+  top: 70px;
+  left: 20px;
+  background-color: rgba(10, 10, 10, 0.9);
+  border: 1px solid gold;
+  padding: 10px;
   border-radius: 8px;
-  margin-bottom: 20px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999;
 }
 
-.fechar {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 30px;
-  cursor: pointer;
+.menu-dropdown a {
   color: gold;
-}
-
-.botao-compra {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 10px 20px;
-  background: gold;
-  color: black;
-  border-radius: 5px;
   text-decoration: none;
-  font-weight: bold;
+  font-size: 16px;
+  transition: color 0.3s;
 }
 
-/* Animações */
-@keyframes flutuar {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-10px); }
+.menu-dropdown a:hover {
+  color: #ffd700;
 }
 
-@keyframes brilhar {
-  0% { opacity: 0.6; }
-  100% { opacity: 1; }
-}
-
-@keyframes zoomIn {
-  0% { transform: scale(0.8); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+.menu-dropdown.ativo {
+  display: flex;
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
-  .circulo-chao {
-    width: 250px;
-    height: 250px;
+  .obra-central {
+    width: 200px;
+    height: 270px;
   }
 
-  .obra {
-    width: 80px;
-    height: 110px;
+  .titulo-nandart {
+    font-size: 2rem;
+    margin-top: 50px;
+  }
+
+  .menu-icon, .info-icon {
+    font-size: 24px;
   }
 }
