@@ -1,22 +1,37 @@
 [
   {
     "titulo": "Eco do Tempo",
+    "artista": "Artista A",
     "imagem": "galeria/obras/imagem1.png",
+    "descricao": "Reflexão sobre a passagem do tempo.",
     "premium": false
   },
   {
     "titulo": "Aurora Digital",
+    "artista": "Artista B",
     "imagem": "galeria/obras/imagem2.png",
+    "descricao": "Representação da era digital moderna.",
     "premium": false
   },
   {
     "titulo": "Memórias Ancestrais",
+    "artista": "Artista C",
     "imagem": "galeria/obras/imagem3.png",
+    "descricao": "Homenagem às raízes culturais.",
     "premium": true
   },
   {
     "titulo": "Fragmentos Eternos",
+    "artista": "Artista D",
     "imagem": "galeria/obras/imagem4.png",
+    "descricao": "Fragmentos da história preservados para sempre.",
     "premium": false
+  },
+  {
+    "titulo": "Horizontes Invisíveis",
+    "artista": "Coleção NANdART",
+    "imagem": "galeria/obras/imagem5.png",
+    "descricao": "Exploração do invisível através da arte.",
+    "premium": true
   }
 ]
