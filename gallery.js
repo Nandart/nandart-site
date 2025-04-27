@@ -1,100 +1,40 @@
-// gallery.js atualizado para carregar obras_aprovadas.json
+// gallery.js
 
-async function carregarObras() {
-  const response = await fetch('obras_aprovadas.json');
-  const obras = await response.json();
-  gerarObras(obras);
+const obras = document.querySelectorAll('.obra');
+let angulos = [];
+const raio = 250; // Distância do centro (ajusta conforme quiseres)
+const centroX = window.innerWidth / 2;
+const centroY = window.innerHeight / 2 + 100; // Ligeiramente mais para baixo
+
+// Inicializar ângulos igualmente espaçados
+for (let i = 0; i < obras.length; i++) {
+  angulos.push((i / obras.length) * 2 * Math.PI);
 }
-
-function gerarObras(obras) {
-  const gallery = document.getElementById('gallery');
-  const premiumHighlight = document.getElementById('destaque-premium');
-
-  obras.forEach((obra, index) => {
-    const hoje = new Date();
-    const inicioPremium = obra.dataInicioPremium ? new Date(obra.dataInicioPremium) : null;
-    const aindaPremium = inicioPremium ? ((hoje - inicioPremium) / (1000 * 60 * 60 * 24)) < 30 : false;
-
-    if (obra.isPremium && (obra.isNandartObra || aindaPremium)) {
-      const div = document.createElement('div');
-      div.className = 'artwork premium-highlight';
-      div.innerHTML = `
-        <img src="${obra.imagem}" alt="${obra.titulo}">
-        <div class="selo-premium">⭐ Destaque NANdART</div>
-        ${obra.isNandartObra ? `<div class="selo-nandart">Coleção NANdART</div>` : ``}
-      `;
-      div.onclick = () => abrirModal(obra);
-      premiumHighlight.appendChild(div);
-    } else {
-      const div = document.createElement('div');
-      div.className = 'artwork';
-      div.innerHTML = `<img src="${obra.imagem}" alt="${obra.titulo}">`;
-      div.onclick = () => abrirModal(obra);
-      gallery.appendChild(div);
-    }
-  });
-
-  animateGallery();
-}
-
-let obraAtual = null;
-
-function abrirModal(obra) {
-  obraAtual = obra;
-  document.getElementById('imagem-modal').src = obra.imagem;
-  document.getElementById('titulo-modal').textContent = obra.titulo;
-  document.getElementById('artista-modal').textContent = "Artista: " + obra.artista;
-  document.getElementById('descricao-modal').textContent = obra.descricao || "";
-
-  const botaoComprar = document.getElementById('botao-comprar');
-  botaoComprar.textContent = obra.nftContractAddress ? "Comprar NFT" : "Comprar Obra";
-
-  document.getElementById('modal-obra').style.display = 'flex';
-}
-
-function fecharModal() {
-  document.getElementById('modal-obra').style.display = 'none';
-}
-
-function comprarObra() {
-  if (obraAtual.nftContractAddress) {
-    if (typeof window.ethereum !== 'undefined') {
-      alert('Ligação Web3 em desenvolvimento.');
-    } else {
-      alert('Carteira Web3 não detectada.');
-    }
-  } else {
-    window.location.href = `mailto:info@nandart.art?subject=Compra de Obra: ${encodeURIComponent(obraAtual.titulo)}`;
-  }
-}
-
-// Motor de órbita
-const radius = 250;
-const speed = 0.002;
-const scaleAmount = 0.3;
-let angle = 0;
 
 function animateGallery() {
-  const artworks = document.querySelectorAll('.artwork:not(.premium-highlight)');
+  for (let i = 0; i < obras.length; i++) {
+    const obra = obras[i];
+    const angulo = angulos[i];
 
-  angle += speed;
+    // Cálculo da posição circular
+    const x = centroX + raio * Math.cos(angulo) - obra.offsetWidth / 2;
+    const y = centroY + raio * Math.sin(angulo) - obra.offsetHeight / 2;
 
-  artworks.forEach((artwork, index) => {
-    const total = artworks.length;
-    const currentAngle = angle + (index * (2 * Math.PI / total));
+    obra.style.left = `${x}px`;
+    obra.style.top = `${y}px`;
+    obra.style.transform = `rotate(${angulo + Math.PI / 2}rad)`; // Rodar a imagem para "olhar para fora"
 
-    const x = radius * Math.cos(currentAngle);
-    const y = radius * Math.sin(currentAngle) * 0.5;
-
-    artwork.style.transform = `translate(${x}px, ${y}px) rotate(${currentAngle}rad)`;
-
-    const scale = 1 + scaleAmount * (1 - Math.cos(currentAngle));
-    artwork.style.zIndex = Math.floor(scale * 100);
-    artwork.style.transform += ` scale(${scale})`;
-  });
+    // Atualizar ângulo para movimento no sentido dos ponteiros do relógio
+    angulos[i] += 0.005; // Velocidade de rotação (podes ajustar)
+  }
 
   requestAnimationFrame(animateGallery);
 }
 
-// Iniciar carregamento
-carregarObras();
+// Iniciar animação
+animateGallery();
+
+// Tornar responsivo ao redimensionar janela
+window.addEventListener('resize', () => {
+  location.reload();
+});
