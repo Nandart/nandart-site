@@ -1,124 +1,96 @@
-const container = document.getElementById('galeria-container');
-const premiumContainer = document.getElementById('galeria-premiums');
-const modal = document.getElementById('modal-obra');
-const fecharModal = document.getElementById('fechar-modal');
-const modalImagem = document.getElementById('modal-imagem');
-const modalTitulo = document.getElementById('modal-titulo');
-const modalDescricao = document.getElementById('modal-descricao');
-const botaoComprar = document.getElementById('botao-comprar');
+document.addEventListener('DOMContentLoaded', async () => {
+    const galeria = document.getElementById('galeria');
+    const modal = document.getElementById('modal');
+    const imagemModal = document.getElementById('imagemModal');
+    const tituloModal = document.getElementById('tituloModal');
+    const descricaoModal = document.getElementById('descricaoModal');
+    const botaoCompra = document.getElementById('botaoCompra');
+    const fecharModal = document.getElementById('fecharModal');
 
-let obras = [];
+    let obras = [];
 
-async function carregarObras() {
-  const resposta = await fetch('galeria/obras/obras_aprovadas.json');
-  obras = await resposta.json();
-  criarGaleria();
-}
-
-function criarGaleria() {
-  const raio = Math.min(window.innerWidth, window.innerHeight) / 2.5;
-  const centroX = window.innerWidth / 2;
-  const centroY = window.innerHeight / 2 + 50;
-  const numObras = obras.filter(obra => !obra.premium).length;
-  const anguloInicial = Math.PI / 2;
-
-  let indexObraNormal = 0;
-
-  obras.forEach((obra) => {
-    if (obra.premium) {
-      criarPremium(obra);
-    } else {
-      const obraElem = document.createElement('div');
-      obraElem.className = 'obra';
-
-      const img = document.createElement('img');
-      img.src = obra.imagem;
-      img.alt = obra.titulo;
-      obraElem.appendChild(img);
-
-      obraElem.addEventListener('click', () => abrirModal(obra));
-
-      container.appendChild(obraElem);
-
-      obraElem.dataset.index = indexObraNormal;
-      indexObraNormal++;
+    try {
+        const resposta = await fetch('galeria/obras/obras_aprovadas.json');
+        obras = await resposta.json();
+        criarObras();
+    } catch (erro) {
+        console.error('Erro ao carregar as obras:', erro);
     }
-  });
 
-  animarGaleria();
-}
+    function criarObras() {
+        obras.forEach((obra, index) => {
+            const obraDiv = document.createElement('div');
+            obraDiv.classList.add('obra');
 
-function criarPremium(obra) {
-  const premium = document.createElement('div');
-  premium.className = 'obra premium';
+            const img = document.createElement('img');
+            img.src = obra.imagem;
+            img.alt = obra.titulo;
 
-  const img = document.createElement('img');
-  img.src = obra.imagem;
-  img.alt = obra.titulo;
-  premium.appendChild(img);
+            // Adiciona ícone de premium se for premium
+            if (obra.premium) {
+                const estrela = document.createElement('span');
+                estrela.classList.add('icone-premium');
+                estrela.innerHTML = '⭐';
+                obraDiv.appendChild(estrela);
+                obraDiv.classList.add('premium');
+            }
 
-  premium.addEventListener('click', () => abrirModal(obra));
+            obraDiv.appendChild(img);
+            galeria.appendChild(obraDiv);
 
-  premiumContainer.appendChild(premium);
-}
+            // Clique para abrir Modal
+            obraDiv.addEventListener('click', () => {
+                abrirModal(obra);
+            });
+        });
 
-function abrirModal(obra) {
-  modalImagem.src = obra.imagem;
-  modalTitulo.textContent = obra.titulo;
-  modalDescricao.textContent = obra.descricao || "Esta obra é única, eterna.";
-  if (obra.nft) {
-    botaoComprar.textContent = "Comprar NFT";
-  } else {
-    botaoComprar.textContent = "Comprar Obra";
-  }
-  botaoComprar.href = obra.nft ? "#" : `mailto:info@nandart.art?subject=Compra de obra ${obra.titulo}`;
-  modal.style.display = 'flex';
-}
+        animarObras();
+    }
 
-fecharModal.addEventListener('click', () => {
-  modal.style.display = 'none';
+    function abrirModal(obra) {
+        imagemModal.src = obra.imagem;
+        tituloModal.textContent = obra.titulo;
+        descricaoModal.textContent = obra.descricao || '';
+        if (obra.nft) {
+            botaoCompra.textContent = 'Comprar NFT';
+            botaoCompra.href = `https://polygonscan.com/address/${obra.nft}`;
+        } else {
+            botaoCompra.textContent = 'Comprar Obra';
+            botaoCompra.href = `mailto:info@nandart.art?subject=Compra de Obra: ${encodeURIComponent(obra.titulo)}`;
+        }
+        modal.style.display = 'block';
+        setTimeout(() => {
+            modal.classList.add('mostrar');
+        }, 10);
+    }
+
+    fecharModal.addEventListener('click', () => {
+        modal.classList.remove('mostrar');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    });
+
+    function animarObras() {
+        const obrasElementos = document.querySelectorAll('.obra');
+        let angulo = 0;
+        const raio = 200;
+
+        function atualizarPosicoes() {
+            obrasElementos.forEach((obra, index) => {
+                const anguloObra = angulo + (index * (360 / obrasElementos.length));
+                const radianos = anguloObra * (Math.PI / 180);
+                const x = Math.cos(radianos) * raio;
+                const y = Math.sin(radianos) * raio * 0.6;
+
+                obra.style.transform = `translate(${x}px, ${y}px)`;
+                obra.style.zIndex = Math.round(1000 - Math.abs(y));
+            });
+
+            angulo += 0.3; // Velocidade de rotação
+            requestAnimationFrame(atualizarPosicoes);
+        }
+
+        atualizarPosicoes();
+    }
 });
-
-function animarGaleria() {
-  let angulo = 0;
-  setInterval(() => {
-    const obrasNormais = document.querySelectorAll('#galeria-container .obra');
-    const numObras = obrasNormais.length;
-    const raio = Math.min(window.innerWidth, window.innerHeight) / 2.5;
-    const centroX = window.innerWidth / 2;
-    const centroY = window.innerHeight / 2 + 50;
-
-    obrasNormais.forEach((obra, index) => {
-      const x = centroX + raio * Math.cos(angulo - (index * (2 * Math.PI / numObras))) - 50;
-      const y = centroY + raio * Math.sin(angulo - (index * (2 * Math.PI / numObras))) - 50;
-      obra.style.left = `${x}px`;
-      obra.style.top = `${y}px`;
-
-      const profundidade = (Math.sin(angulo - (index * (2 * Math.PI / numObras))) + 1) / 2;
-      const escala = 0.7 + profundidade * 0.5;
-      obra.style.transform = `scale(${escala})`;
-      obra.style.zIndex = Math.floor(profundidade * 100);
-      obra.style.opacity = 0.5 + profundidade * 0.5;
-    });
-
-    angulo += 0.01;
-  }, 30);
-
-  animarPremiums();
-}
-
-function animarPremiums() {
-  const premiums = document.querySelectorAll('#galeria-premiums .premium');
-  premiums.forEach(premium => {
-    premium.animate([
-      { transform: 'translateY(0px)' },
-      { transform: 'translateY(-10px)' },
-      { transform: 'translateY(0px)' }
-    ], {
-      duration: 4000,
-      iterations: Infinity
-    });
-  });
-}
-
-carregarObras();
