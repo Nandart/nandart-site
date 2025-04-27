@@ -93,6 +93,17 @@
   <a href="index.html">Voltar à Página Inicial</a>
 
   <script>
+    // Proteção simples por palavra-passe
+    (function() {
+      const senhaCorreta = "NANDART2025"; // <<< Define aqui a tua palavra-passe secreta
+      const tentativa = prompt("Área restrita. Introduza a palavra-passe:");
+
+      if (tentativa !== senhaCorreta) {
+        alert("Acesso negado. Vai ser redirecionado para a página inicial.");
+        window.location.href = "index.html";
+      }
+    })();
+
     function carregarSubmissoes() {
       const tabela = document.getElementById('tabelaSubmissoes').querySelector('tbody');
       const obrasSubmetidas = JSON.parse(localStorage.getItem('obrasSubmetidas')) || [];
