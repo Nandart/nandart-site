@@ -1,11 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const galeria = document.getElementById('galeria');
-    const modal = document.getElementById('modal');
-    const imagemModal = document.getElementById('imagemModal');
-    const tituloModal = document.getElementById('tituloModal');
-    const descricaoModal = document.getElementById('descricaoModal');
-    const botaoCompra = document.getElementById('botaoCompra');
-    const fecharModal = document.getElementById('fecharModal');
 
     let obras = [];
 
@@ -26,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             img.src = obra.imagem;
             img.alt = obra.titulo;
 
-            // Adiciona ícone de premium se for premium
+            // Marcar obra premium
             if (obra.premium) {
                 const estrela = document.createElement('span');
                 estrela.classList.add('icone-premium');
@@ -37,57 +31,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             obraDiv.appendChild(img);
             galeria.appendChild(obraDiv);
-
-            // Clique para abrir Modal
-            obraDiv.addEventListener('click', () => {
-                abrirModal(obra);
-            });
         });
 
         animarObras();
     }
 
-    function abrirModal(obra) {
-        imagemModal.src = obra.imagem;
-        tituloModal.textContent = obra.titulo;
-        descricaoModal.textContent = obra.descricao || '';
-        if (obra.nft) {
-            botaoCompra.textContent = 'Comprar NFT';
-            botaoCompra.href = `https://polygonscan.com/address/${obra.nft}`;
-        } else {
-            botaoCompra.textContent = 'Comprar Obra';
-            botaoCompra.href = `mailto:info@nandart.art?subject=Compra de Obra: ${encodeURIComponent(obra.titulo)}`;
-        }
-        modal.style.display = 'block';
-        setTimeout(() => {
-            modal.classList.add('mostrar');
-        }, 10);
-    }
-
-    fecharModal.addEventListener('click', () => {
-        modal.classList.remove('mostrar');
-        setTimeout(() => {
-            modal.style.display = 'none';
-        }, 300);
-    });
-
     function animarObras() {
         const obrasElementos = document.querySelectorAll('.obra');
         let angulo = 0;
-        const raio = 200;
+        const raio = 250;
 
         function atualizarPosicoes() {
             obrasElementos.forEach((obra, index) => {
                 const anguloObra = angulo + (index * (360 / obrasElementos.length));
                 const radianos = anguloObra * (Math.PI / 180);
                 const x = Math.cos(radianos) * raio;
-                const y = Math.sin(radianos) * raio * 0.6;
+                const y = Math.sin(radianos) * raio * 0.5; // achatado para dar profundidade
 
                 obra.style.transform = `translate(${x}px, ${y}px)`;
                 obra.style.zIndex = Math.round(1000 - Math.abs(y));
             });
 
-            angulo += 0.3; // Velocidade de rotação
+            angulo += 0.25; // Velocidade de rotação (ajustada para ser mais suave)
             requestAnimationFrame(atualizarPosicoes);
         }
 
