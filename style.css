@@ -1,138 +1,163 @@
-/* Estilos gerais */
+/* Estilo geral */
 body {
   margin: 0;
   padding: 0;
-  background-color: #0a0a0a;
+  background: linear-gradient(to bottom, #000000, #1a1a1a);
   font-family: 'Georgia', serif;
-  color: gold;
+  color: #D4AF37;
   overflow-x: hidden;
   height: 100vh;
-  position: relative;
 }
 
-/* Título Central */
-.titulo-nandart {
+/* Ícones de navegação */
+.menu-icons {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.menu-icons img {
+  width: 32px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+/* Título */
+header {
   text-align: center;
-  font-size: 3rem;
-  margin-top: 60px;
-  color: gold;
+  padding: 20px;
+}
+
+.titulo-nandart {
+  font-size: 36px;
+  color: #D4AF37;
   letter-spacing: 2px;
 }
 
-/* Ícones do topo */
-.top-icons {
-  position: absolute;
-  top: 20px;
+/* Sala principal */
+.sala {
+  position: relative;
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 20px;
-  box-sizing: border-box;
-}
-
-.menu-icon, .info-icon {
-  font-size: 28px;
-  color: gold;
-  cursor: pointer;
-  user-select: none;
-  transition: color 0.3s ease;
-}
-
-.menu-icon:hover, .info-icon:hover {
-  color: #ffd700;
-}
-
-/* Obra central */
-.obra-central {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: 400px;
-  background: black;
-  border: 2px solid gold;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  height: calc(100vh - 120px);
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.obra-central img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 /* Círculo no chão */
-.circulo-chao {
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, rgba(255,215,0,0) 70%);
-  border: 2px solid gold;
-  border-radius: 50%;
-  top: 80%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 0;
-}
-
-/* Galeria orbitante */
-#galeria {
+.circulo {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 0;
-  height: 0;
-  z-index: 1;
+  width: 500px;
+  height: 500px;
+  margin-top: -250px;
+  margin-left: -250px;
+  border: 2px solid rgba(212, 175, 55, 0.5);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 70%);
 }
 
-/* Menu Dropdown */
-.menu-dropdown {
+/* Obras normais */
+.circulo img {
   position: absolute;
-  top: 70px;
-  left: 20px;
-  background-color: rgba(10, 10, 10, 0.9);
-  border: 1px solid gold;
-  padding: 10px;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 2px solid #D4AF37;
   border-radius: 8px;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+  transition: transform 0.5s, box-shadow 0.5s;
+  cursor: pointer;
+}
+
+/* Obras premium */
+.obras-premium img {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border: 3px solid #FFD700;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #FFD700;
+  animation: flutuar 3s infinite ease-in-out;
+}
+
+/* Animação de flutuação premium */
+@keyframes flutuar {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -15px); }
+}
+
+/* Modal */
+.modal {
   display: none;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 999;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
 }
 
-.menu-dropdown a {
-  color: gold;
-  text-decoration: none;
-  font-size: 16px;
-  transition: color 0.3s;
+.modal-content {
+  background-color: #1a1a1a;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #D4AF37;
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+  color: #D4AF37;
+  border-radius: 10px;
 }
 
-.menu-dropdown a:hover {
-  color: #ffd700;
+.modal-content img {
+  width: 100%;
+  border-radius: 8px;
 }
 
-.menu-dropdown.ativo {
+.close-modal {
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  color: #D4AF37;
+  cursor: pointer;
+}
+
+.close-modal:hover {
+  color: #ffffff;
+}
+
+/* Contador de visualizações */
+.contador-visualizacoes {
+  margin-top: 10px;
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-  .obra-central {
-    width: 200px;
-    height: 270px;
-  }
+.contador-visualizacoes img {
+  width: 20px;
+  margin-right: 8px;
+}
 
-  .titulo-nandart {
-    font-size: 2rem;
-    margin-top: 50px;
-  }
+#botao-comprar {
+  background-color: #D4AF37;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 15px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
 
-  .menu-icon, .info-icon {
-    font-size: 24px;
-  }
+#botao-comprar:hover {
+  background-color: #fff;
+  color: #000;
 }
