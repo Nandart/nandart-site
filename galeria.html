@@ -5,37 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galeria NANdART</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script src="gallery.js" defer></script>
 </head>
+<body class="galeria-body">
+  <div id="titulo-nandart">NANdART</div>
+  <a href="index.html" id="home-button" title="Voltar à Página Inicial">🏠</a>
 
-<body>
+  <div id="galeria-container"></div>
 
-<header>
-  <h1>NANdART</h1>
-</header>
-
-<!-- Botão Casa -->
-<button id="home-button" onclick="window.location.href='index.html'">
-  <img src="casa-icon.png" alt="Início">
-</button>
-
-<!-- Área da Galeria -->
-<div id="gallery"></div>
-
-<!-- Modal para Visualizar Obras -->
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <span id="close-modal" class="close-button">&times;</span>
-    <img id="modal-image" src="" alt="Imagem da Obra" class="modal-image">
-    <h2 id="modal-title">Título da Obra</h2>
-    <h3 id="modal-artist">Nome do Artista</h3>
-    <p id="modal-description">Descrição breve da obra.</p>
-    <button id="modal-buy">Comprar Obra</button>
+  <!-- Modal de Obra -->
+  <div id="modal-obra" class="modal">
+    <div class="modal-conteudo">
+      <span id="fechar-modal">&times;</span>
+      <img id="modal-imagem" alt="Obra em destaque">
+      <h2 id="modal-titulo"></h2>
+      <p id="modal-descricao"></p>
+      <a id="botao-comprar" href="#" class="botao-comprar" target="_blank">Comprar Obra</a>
+    </div>
   </div>
-</div>
-
-<!-- Script da Galeria -->
-<script src="gallery.js"></script>
-
 </body>
 </html>
