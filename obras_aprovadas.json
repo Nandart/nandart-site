@@ -1,32 +1,27 @@
 [
   {
-    "titulo": "Fragmentos do Infinito",
-    "artista": "Renner Nunes",
-    "imagem": "obra.jpg",
-    "descricao": "Uma reflexão sobre o eterno e o efémero.",
-    "nftContractAddress": null,
-    "isPremium": true,
-    "isNandartObra": true,
-    "dataInicioPremium": "2025-04-26"
-  },
-  {
     "titulo": "Ecos do Tempo",
-    "artista": "Ana Marques",
-    "imagem": "https://via.placeholder.com/150",
-    "descricao": "Viagem pelas memórias esquecidas.",
-    "nftContractAddress": "0xABCDEF123456",
-    "isPremium": false,
-    "isNandartObra": false,
-    "dataInicioPremium": null
+    "imagem": "obra1.jpg",
+    "premium": false
   },
   {
     "titulo": "Alvorecer Digital",
-    "artista": "Miguel Vieira",
-    "imagem": "https://via.placeholder.com/150",
-    "descricao": "O despertar da alma tecnológica.",
-    "nftContractAddress": null,
-    "isPremium": false,
-    "isNandartObra": false,
-    "dataInicioPremium": null
+    "imagem": "obra2.jpg",
+    "premium": false
+  },
+  {
+    "titulo": "Horizonte Perdido",
+    "imagem": "obra3.jpg",
+    "premium": false
+  },
+  {
+    "titulo": "Luz Imutável",
+    "imagem": "obra4.jpg",
+    "premium": false
+  },
+  {
+    "titulo": "Coleção NANdART",
+    "imagem": "obra.jpg",
+    "premium": true
   }
 ]
