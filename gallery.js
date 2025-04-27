@@ -1,7 +1,7 @@
-// gallery.js com carregamento automático
+// gallery.js atualizado para carregar obras_aprovadas.json
 
 async function carregarObras() {
-  const response = await fetch('obras.json');
+  const response = await fetch('obras_aprovadas.json');
   const obras = await response.json();
   gerarObras(obras);
 }
