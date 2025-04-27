@@ -1,4 +1,5 @@
 const container = document.getElementById('galeria-container');
+const premiumContainer = document.getElementById('galeria-premiums');
 const modal = document.getElementById('modal-obra');
 const fecharModal = document.getElementById('fechar-modal');
 const modalImagem = document.getElementById('modal-imagem');
@@ -15,44 +16,50 @@ async function carregarObras() {
 }
 
 function criarGaleria() {
-  const raio = window.innerWidth < 768 ? 100 : 250;
+  const raio = Math.min(window.innerWidth, window.innerHeight) / 2.5;
   const centroX = window.innerWidth / 2;
   const centroY = window.innerHeight / 2 + 50;
-  const numObras = obras.length;
+  const numObras = obras.filter(obra => !obra.premium).length;
   const anguloInicial = Math.PI / 2;
 
-  obras.forEach((obra, index) => {
-    const obraElem = document.createElement('div');
-    obraElem.className = 'obra';
+  let indexObraNormal = 0;
 
-    const img = document.createElement('img');
-    img.src = obra.imagem;
-    img.alt = obra.titulo;
-
-    const titulo = document.createElement('div');
-    titulo.className = 'obra-titulo';
-    titulo.textContent = obra.titulo;
-
-    obraElem.appendChild(img);
-    obraElem.appendChild(titulo);
-
+  obras.forEach((obra) => {
     if (obra.premium) {
-      obraElem.classList.add('premium');
-      const estrela = document.createElement('div');
-      estrela.className = 'estrela-premium';
-      estrela.textContent = '⭐';
-      obraElem.appendChild(estrela);
+      criarPremium(obra);
+    } else {
+      const obraElem = document.createElement('div');
+      obraElem.className = 'obra';
+
+      const img = document.createElement('img');
+      img.src = obra.imagem;
+      img.alt = obra.titulo;
+      obraElem.appendChild(img);
+
+      obraElem.addEventListener('click', () => abrirModal(obra));
+
+      container.appendChild(obraElem);
+
+      obraElem.dataset.index = indexObraNormal;
+      indexObraNormal++;
     }
-
-    container.appendChild(obraElem);
-
-    obraElem.style.left = `${centroX + raio * Math.cos(anguloInicial - (index * (2 * Math.PI / numObras))) - 50}px`;
-    obraElem.style.top = `${centroY + raio * Math.sin(anguloInicial - (index * (2 * Math.PI / numObras))) - 50}px`;
-
-    obraElem.addEventListener('click', () => abrirModal(obra));
   });
 
   animarGaleria();
+}
+
+function criarPremium(obra) {
+  const premium = document.createElement('div');
+  premium.className = 'obra premium';
+
+  const img = document.createElement('img');
+  img.src = obra.imagem;
+  img.alt = obra.titulo;
+  premium.appendChild(img);
+
+  premium.addEventListener('click', () => abrirModal(obra));
+
+  premiumContainer.appendChild(premium);
 }
 
 function abrirModal(obra) {
@@ -75,19 +82,43 @@ fecharModal.addEventListener('click', () => {
 function animarGaleria() {
   let angulo = 0;
   setInterval(() => {
-    const obras = document.querySelectorAll('.obra');
-    obras.forEach((obra, index) => {
-      const raio = window.innerWidth < 768 ? 100 : 250;
-      const centroX = window.innerWidth / 2;
-      const centroY = window.innerHeight / 2 + 50;
-      const numObras = obras.length;
+    const obrasNormais = document.querySelectorAll('#galeria-container .obra');
+    const numObras = obrasNormais.length;
+    const raio = Math.min(window.innerWidth, window.innerHeight) / 2.5;
+    const centroX = window.innerWidth / 2;
+    const centroY = window.innerHeight / 2 + 50;
+
+    obrasNormais.forEach((obra, index) => {
       const x = centroX + raio * Math.cos(angulo - (index * (2 * Math.PI / numObras))) - 50;
       const y = centroY + raio * Math.sin(angulo - (index * (2 * Math.PI / numObras))) - 50;
       obra.style.left = `${x}px`;
       obra.style.top = `${y}px`;
+
+      const profundidade = (Math.sin(angulo - (index * (2 * Math.PI / numObras))) + 1) / 2;
+      const escala = 0.7 + profundidade * 0.5;
+      obra.style.transform = `scale(${escala})`;
+      obra.style.zIndex = Math.floor(profundidade * 100);
+      obra.style.opacity = 0.5 + profundidade * 0.5;
     });
+
     angulo += 0.01;
   }, 30);
+
+  animarPremiums();
+}
+
+function animarPremiums() {
+  const premiums = document.querySelectorAll('#galeria-premiums .premium');
+  premiums.forEach(premium => {
+    premium.animate([
+      { transform: 'translateY(0px)' },
+      { transform: 'translateY(-10px)' },
+      { transform: 'translateY(0px)' }
+    ], {
+      duration: 4000,
+      iterations: Infinity
+    });
+  });
 }
 
 carregarObras();
