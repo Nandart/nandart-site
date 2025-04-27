@@ -1,63 +1,56 @@
 document.addEventListener("DOMContentLoaded", () => {
   const gallery = document.getElementById('gallery');
-  let angle = 0;
-  const radius = 250;
-  const speed = 0.002; // Velocidade de rotação
   const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight / 2 + 50; // ligeiramente mais abaixo
+  const centerY = window.innerHeight / 2;
+  const radius = 250;
+  const rotationSpeed = 0.003; // velocidade da rotação
+  let angleOffset = 0;
   let obras = [];
 
-  async function loadObras() {
+  async function carregarObras() {
     try {
       const response = await fetch('galeria/obras/obras_aprovadas.json');
       obras = await response.json();
-      criarObras();
-      animateGallery();
+      desenharObras();
+      animarGaleria();
     } catch (error) {
-      console.error("Erro ao carregar obras:", error);
+      console.error("Erro ao carregar as obras:", error);
     }
   }
 
-  function criarObras() {
-    obras.forEach((obra, index) => {
-      const div = document.createElement('div');
-      div.className = obra.premium ? 'obra premium' : 'obra';
+  function desenharObras() {
+    obras.forEach((obra) => {
+      const obraDiv = document.createElement('div');
+      obraDiv.className = obra.premium ? 'obra premium' : 'obra';
 
-      const img = document.createElement('img');
-      img.src = obra.imagem;
-      img.alt = obra.titulo;
+      const imagem = document.createElement('img');
+      imagem.src = obra.imagem;
+      imagem.alt = obra.titulo;
 
-      const label = document.createElement('div');
-      label.className = 'label';
-      label.innerText = obra.titulo;
+      const titulo = document.createElement('div');
+      titulo.textContent = obra.titulo;
 
-      div.appendChild(img);
-      div.appendChild(label);
-      gallery.appendChild(div);
+      obraDiv.appendChild(imagem);
+      obraDiv.appendChild(titulo);
+      gallery.appendChild(obraDiv);
     });
   }
 
-  function animateGallery() {
+  function animarGaleria() {
     const obrasElements = document.querySelectorAll('.obra');
-    function animate() {
-      angle += speed;
+    function animar() {
+      angleOffset += rotationSpeed;
       obrasElements.forEach((el, i) => {
-        const theta = (i * (2 * Math.PI) / obrasElements.length) + angle;
-        const x = centerX + radius * Math.cos(theta) - el.offsetWidth / 2;
-        const y = centerY + radius * Math.sin(theta) - el.offsetHeight / 2;
+        const angle = (i * (2 * Math.PI) / obrasElements.length) + angleOffset;
+        const x = centerX + radius * Math.cos(angle) - el.offsetWidth / 2;
+        const y = centerY + radius * Math.sin(angle) - el.offsetHeight / 2;
 
-        el.style.transform = `translate(${x}px, ${y}px) rotate(${theta}rad)`;
-
-        // efeito de profundidade para premium
-        if (el.classList.contains('premium')) {
-          const scale = 1.1 + 0.1 * Math.sin(theta * 2);
-          el.style.transform += ` scale(${scale})`;
-        }
+        el.style.transform = `translate(${x}px, ${y}px)`;
       });
-      requestAnimationFrame(animate);
+      requestAnimationFrame(animar);
     }
-    animate();
+    animar();
   }
 
-  loadObras();
+  carregarObras();
 });
