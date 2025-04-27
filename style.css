@@ -1,11 +1,11 @@
-/* Estilos Gerais */
+/* Estilo Base */
 body {
   margin: 0;
   font-family: 'Georgia', serif;
   background-color: #121212;
   color: #D4AF37;
-  line-height: 1.6;
   text-align: center;
+  overflow-x: hidden;
 }
 
 h1, h2, h3 {
@@ -17,7 +17,7 @@ p {
   color: #cccccc;
 }
 
-/* Selector de Idiomas */
+/* Selector de Idioma */
 .language-selector {
   text-align: right;
   padding: 10px 40px 0 0;
@@ -37,9 +37,9 @@ header {
   padding: 30px 20px 10px;
 }
 
-header h1 {
-  font-size: 36px;
+header h1, header {
   color: #D4AF37;
+  font-size: 36px;
 }
 
 /* Navegação */
@@ -60,7 +60,7 @@ nav a:hover {
   color: #D4AF37;
 }
 
-/* Secção Hero */
+/* Hero Section */
 .hero {
   padding: 50px 20px;
   max-width: 900px;
@@ -90,7 +90,7 @@ nav a:hover {
   transform: scale(1.03);
 }
 
-/* Botão Principal */
+/* Botões */
 button {
   background-color: #D4AF37;
   color: #000;
@@ -115,5 +115,136 @@ footer {
   padding: 20px;
   font-size: 14px;
   color: #aaa;
-  margin-top: 40px;
+}
+
+/* Estilos Galeria */
+#gallery {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+.obra {
+  position: absolute;
+  width: 120px;
+  height: 180px;
+  border: 2px solid #D4AF37;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+  transition: transform 0.5s, box-shadow 0.5s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #D4AF37;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.obra img {
+  max-width: 100%;
+  max-height: 80%;
+  object-fit: cover;
+  transition: opacity 1.5s ease;
+}
+
+.premium {
+  width: 150px;
+  height: 220px;
+  border: 3px solid gold;
+  box-shadow: 0 0 20px gold;
+  animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 10px gold; transform: scale(1); }
+  100% { box-shadow: 0 0 25px gold; transform: scale(1.05); }
+}
+
+#home-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+#home-button img {
+  width: 30px;
+  height: 30px;
+  filter: brightness(0) saturate(100%) invert(70%) sepia(45%) saturate(750%) hue-rotate(5deg) brightness(95%) contrast(90%);
+}
+
+/* Estilos Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.5s;
+}
+
+.modal-content {
+  background-color: #000;
+  border: 2px solid #D4AF37;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  color: #D4AF37;
+  position: relative;
+  animation: zoomIn 0.5s;
+}
+
+.modal-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: #D4AF37;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+button#modal-buy {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #D4AF37;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button#modal-buy:hover {
+  background: #bfa334;
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes zoomIn {
+  from {transform: scale(0.8);}
+  to {transform: scale(1);}
 }
