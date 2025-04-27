@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestão de Submissões - NANdART</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background-color: #121212;
+      color: #FFD700;
+      font-family: Georgia, serif;
+      text-align: center;
+      padding: 40px;
+    }
+    table {
+      width: 90%;
+      margin: 20px auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #FFD700;
+      padding: 10px;
+    }
+    th {
+      background-color: #FFD700;
+      color: #000;
+    }
+    td img {
+      max-width: 80px;
+      border-radius: 8px;
+    }
+    button {
+      background-color: #FFD700;
+      color: #000;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 2px;
+    }
+    button:hover {
+      background-color: #D4AF37;
+    }
+    a {
+      color: #FFD700;
+      text-decoration: underline;
+      margin-top: 20px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Gestão de Submissões - NANdART</h1>
+
+  <h2>Obras Submetidas</h2>
+  <table id="tabelaSubmissoes">
+    <thead>
+      <tr>
+        <th>Título</th>
+        <th>Artista</th>
+        <th>Imagem</th>
+        <th>Premium</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Submissões serão inseridas aqui -->
+    </tbody>
+  </table>
+
+  <h2>Obras Aprovadas</h2>
+  <table id="tabelaAprovadas">
+    <thead>
+      <tr>
+        <th>Título</th>
+        <th>Artista</th>
+        <th>Imagem</th>
+        <th>Premium</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Aprovadas serão inseridas aqui -->
+    </tbody>
+  </table>
+
+  <button onclick="exportarAprovadas()" style="margin-top: 30px;">Exportar Obras Aprovadas para JSON</button>
+
+  <p id="mensagem" style="margin-top: 20px;"></p>
+
+  <a href="index.html">Voltar à Página Inicial</a>
+
+  <script>
+    function carregarSubmissoes() {
+      const tabela = document.getElementById('tabelaSubmissoes').querySelector('tbody');
+      const obrasSubmetidas = JSON.parse(localStorage.getItem('obrasSubmetidas')) || [];
+
+      if (obrasSubmetidas.length === 0) {
+        document.getElementById('mensagem').textContent = "Nenhuma obra submetida ainda.";
+        return;
+      }
+
+      obrasSubmetidas.forEach((obra, index) => {
+        const linha = document.createElement('tr');
+
+        linha.innerHTML = `
+          <td>${obra.titulo}</td>
+          <td>${obra.artista}</td>
+          <td><img src="${obra.imagem}" alt="${obra.titulo}"></td>
+          <td>${obra.isPremium ? '⭐ Sim' : 'Não'}</td>
+          <td>
+            <button onclick="aprovarObra(${index})">Aprovar</button>
+            <button onclick="rejeitarObra(${index})">Rejeitar</button>
+          </td>
+        `;
+
+        tabela.appendChild(linha);
+      });
+    }
+
+    function aprovarObra(index) {
+      const obrasSubmetidas = JSON.parse(localStorage.getItem('obrasSubmetidas')) || [];
+      const obrasAprovadas = JSON.parse(localStorage.getItem('obrasAprovadas')) || [];
+
+      const obra = obrasSubmetidas.splice(index, 1)[0];
+      obrasAprovadas.push(obra);
+
+      localStorage.setItem('obrasSubmetidas', JSON.stringify(obrasSubmetidas));
+      localStorage.setItem('obrasAprovadas', JSON.stringify(obrasAprovadas));
+
+      location.reload();
+    }
+
+    function rejeitarObra(index) {
+      const obrasSubmetidas = JSON.parse(localStorage.getItem('obrasSubmetidas')) || [];
+      obrasSubmetidas.splice(index, 1);
+
+      localStorage.setItem('obrasSubmetidas', JSON.stringify(obrasSubmetidas));
+      location.reload();
+    }
+
+    function carregarAprovadas() {
+      const tabela = document.getElementById('tabelaAprovadas').querySelector('tbody');
+      const obrasAprovadas = JSON.parse(localStorage.getItem('obrasAprovadas')) || [];
+
+      obrasAprovadas.forEach((obra) => {
+        const linha = document.createElement('tr');
+
+        linha.innerHTML = `
+          <td>${obra.titulo}</td>
+          <td>${obra.artista}</td>
+          <td><img src="${obra.imagem}" alt="${obra.titulo}"></td>
+          <td>${obra.isPremium ? '⭐ Sim' : 'Não'}</td>
+        `;
+
+        tabela.appendChild(linha);
+      });
+    }
+
+    function exportarAprovadas() {
+      const obrasAprovadas = JSON.parse(localStorage.getItem('obrasAprovadas')) || [];
+
+      if (obrasAprovadas.length === 0) {
+        alert('Não há obras aprovadas para exportar.');
+        return;
+      }
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(obrasAprovadas, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "obras_aprovadas.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    window.onload = function() {
+      carregarSubmissoes();
+      carregarAprovadas();
+    };
+  </script>
+
+</body>
+</html>
