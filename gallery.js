@@ -13,14 +13,14 @@ scene.add(ambientLight);
 
 // Carregar Texturas das Obras
 const obras = [
-  { url: 'obra1.jpg', titulo: 'Título 1', artista: 'Artista 1', premium: false, colecaoNandart: false },
-  { url: 'obra2.jpg', titulo: 'Título 2', artista: 'Artista 2', premium: true, colecaoNandart: false },
-  { url: 'obra3.jpg', titulo: 'Título 3', artista: 'Artista 3', premium: false, colecaoNandart: false },
-  { url: 'obra4.jpg', titulo: 'Título 4', artista: 'Artista 4', premium: false, colecaoNandart: false },
-  { url: 'obra5.jpg', titulo: 'Título 5', artista: 'Artista 5', premium: true, colecaoNandart: false },
-  { url: 'obra6.jpg', titulo: 'Título 6', artista: 'Artista 6', premium: false, colecaoNandart: false },
-  { url: 'obra7.jpg', titulo: 'Título 7', artista: 'Artista 7', premium: false, colecaoNandart: true },
-  { url: 'obra8.jpg', titulo: 'Título 8', artista: 'Artista 8', premium: false, colecaoNandart: true },
+  { url: 'imagens/obra5.jpg', titulo: 'Título 1', artista: 'Artista 1', premium: false, colecaoNandart: false },
+  { url: 'imagens/premium1.jpg', titulo: 'Título 2', artista: 'Artista 2', premium: true, colecaoNandart: false },
+  { url: 'imagens/obra3.jpg', titulo: 'Título 3', artista: 'Artista 3', premium: false, colecaoNandart: false },
+  { url: 'imagens/obra4.jpg', titulo: 'Título 4', artista: 'Artista 4', premium: false, colecaoNandart: false },
+  { url: 'imagens/premium2.jpg', titulo: 'Título 5', artista: 'Artista 5', premium: true, colecaoNandart: false },
+  { url: 'imagens/obra6.jpg', titulo: 'Título 6', artista: 'Artista 6', premium: false, colecaoNandart: false },
+  { url: 'imagens/obra7.jpg', titulo: 'Título 7', artista: 'Artista 7', premium: false, colecaoNandart: true },
+  { url: 'imagens/obra8.jpg', titulo: 'Título 8', artista: 'Artista 8', premium: false, colecaoNandart: true },
 ];
 
 const loader = new THREE.TextureLoader();
