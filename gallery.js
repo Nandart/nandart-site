@@ -1,99 +1,132 @@
-// gallery.js
+// Configuração Básica Three.js
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 10;
 
-// Array de obras normais
-const obrasNormais = [
-  { src: 'galeria/obras/obra1.jpg', titulo: 'Obra 1', artista: 'Artista 1', premium: false },
-  { src: 'galeria/obras/obra2.jpg', titulo: 'Obra 2', artista: 'Artista 2', premium: false },
-  { src: 'galeria/obras/obra3.jpg', titulo: 'Obra 3', artista: 'Artista 3', premium: false },
-  { src: 'galeria/obras/obra4.jpg', titulo: 'Obra 4', artista: 'Artista 4', premium: false },
-  { src: 'galeria/obras/obra5.jpg', titulo: 'Obra 5', artista: 'Artista 5', premium: false }
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.getElementById('scene-container').appendChild(renderer.domElement);
+
+// Iluminação quente
+const ambientLight = new THREE.AmbientLight(0xffd7a3, 1.2);
+scene.add(ambientLight);
+
+// Carregar Texturas das Obras
+const obras = [
+  { url: 'obra1.jpg', titulo: 'Título 1', artista: 'Artista 1', premium: false, colecaoNandart: false },
+  { url: 'obra2.jpg', titulo: 'Título 2', artista: 'Artista 2', premium: true, colecaoNandart: false },
+  { url: 'obra3.jpg', titulo: 'Título 3', artista: 'Artista 3', premium: false, colecaoNandart: false },
+  { url: 'obra4.jpg', titulo: 'Título 4', artista: 'Artista 4', premium: false, colecaoNandart: false },
+  { url: 'obra5.jpg', titulo: 'Título 5', artista: 'Artista 5', premium: true, colecaoNandart: false },
+  { url: 'obra6.jpg', titulo: 'Título 6', artista: 'Artista 6', premium: false, colecaoNandart: false },
+  { url: 'obra7.jpg', titulo: 'Título 7', artista: 'Artista 7', premium: false, colecaoNandart: true },
+  { url: 'obra8.jpg', titulo: 'Título 8', artista: 'Artista 8', premium: false, colecaoNandart: true },
 ];
 
-// Array de obras premium
-const obrasPremium = [
-  { src: 'galeria/obras/premium1.jpg', titulo: 'Premium 1', artista: 'Artista Premium 1', premium: true },
-  { src: 'galeria/obras/premium2.jpg', titulo: 'Premium 2', artista: 'Artista Premium 2', premium: true }
-];
+const loader = new THREE.TextureLoader();
+const artworks = [];
+const radius = 8;
+const rotationSpeed = 0.001; // Velocidade lenta
 
-// Gerar obras normais em círculo
-const circulo = document.querySelector('.circulo');
+obras.forEach((obra, i) => {
+  loader.load(obra.url, (texture) => {
+    const geometry = new THREE.PlaneGeometry(2, 2.5);
+    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+    const mesh = new THREE.Mesh(geometry, material);
 
-obrasNormais.forEach((obra, index) => {
-  const img = document.createElement('img');
-  img.src = obra.src;
-  img.alt = obra.titulo;
-  img.style.transformOrigin = 'center center';
-  img.dataset.titulo = obra.titulo;
-  img.dataset.artista = obra.artista;
-  img.dataset.premium = obra.premium;
-  circulo.appendChild(img);
-});
+    if (obra.premium) {
+      mesh.position.set(0, 3, 0); // Obras premium suspensas
+    } else {
+      const angle = i * ((2 * Math.PI) / obras.length);
+      mesh.position.x = radius * Math.cos(angle);
+      mesh.position.z = radius * Math.sin(angle);
+    }
 
-// Gerar obras premium suspensas
-const obrasPremiumDiv = document.querySelector('.obras-premium');
-
-obrasPremium.forEach((obra) => {
-  const img = document.createElement('img');
-  img.src = obra.src;
-  img.alt = obra.titulo;
-  img.dataset.titulo = obra.titulo;
-  img.dataset.artista = obra.artista;
-  img.dataset.premium = obra.premium;
-  obrasPremiumDiv.appendChild(img);
-});
-
-// Rotação das obras normais
-let angulo = 0;
-function animarGaleria() {
-  const imgs = document.querySelectorAll('.circulo img');
-  const raio = 200;
-  imgs.forEach((img, index) => {
-    const anguloIndividual = (360 / imgs.length) * index + angulo;
-    const rad = anguloIndividual * (Math.PI / 180);
-    const x = Math.cos(rad) * raio;
-    const y = Math.sin(rad) * raio;
-    img.style.left = 50 + x / 5 + '%';
-    img.style.top = 50 + y / 5 + '%';
-    img.style.transform = `translate(-50%, -50%) scale(${1 - Math.abs(y) / 400})`;
+    mesh.userData = obra;
+    scene.add(mesh);
+    artworks.push(mesh);
   });
-  angulo += 0.3;
-  requestAnimationFrame(animarGaleria);
-}
-animarGaleria();
-
-// Modal
-const modal = document.getElementById('modal-obra');
-const imagemModal = document.getElementById('imagem-obra');
-const tituloModal = document.getElementById('titulo-obra');
-const visualizacoesSpan = document.getElementById('visualizacoes');
-const botaoComprar = document.getElementById('botao-comprar');
-
-// Abrir Modal
-function abrirModal(img) {
-  imagemModal.src = img.src;
-  tituloModal.textContent = img.dataset.titulo + ' — ' + img.dataset.artista;
-  incrementarVisualizacoes();
-  modal.style.display = 'block';
-}
-
-// Incrementar visualizações
-function incrementarVisualizacoes() {
-  let atual = parseInt(visualizacoesSpan.textContent);
-  atual++;
-  visualizacoesSpan.textContent = atual;
-}
-
-// Fechar Modal
-document.querySelector('.close-modal').onclick = () => {
-  modal.style.display = 'none';
-};
-
-// Clicar nas obras normais
-document.querySelectorAll('.circulo img').forEach(img => {
-  img.onclick = () => abrirModal(img);
 });
 
-// Clicar nas obras premium
-document.querySelectorAll('.obras-premium img').forEach(img => {
-  img.onclick = () => abrirModal(img);
+// Música ambiente controlo
+const music = document.getElementById('background-music');
+const toggleMusic = document.getElementById('toggle-music');
+toggleMusic.addEventListener('click', () => {
+  if (music.paused) {
+    music.play();
+    toggleMusic.textContent = '🔈';
+  } else {
+    music.pause();
+    toggleMusic.textContent = '🔇';
+  }
 });
+
+// Modal e visualizações
+const modal = document.getElementById('modal');
+const modalImage = document.getElementById('modal-image');
+const modalTitle = document.getElementById('modal-title');
+const modalArtist = document.getElementById('modal-artist');
+const modalViews = document.getElementById('views-count');
+const closeModal = document.getElementById('close-modal');
+const buyButton = document.getElementById('buy-button');
+
+// Guardar visualizações localmente
+function incrementViews(title) {
+  const views = JSON.parse(localStorage.getItem('views')) || {};
+  views[title] = (views[title] || 0) + 1;
+  localStorage.setItem('views', JSON.stringify(views));
+  return views[title];
+}
+
+function getViews(title) {
+  const views = JSON.parse(localStorage.getItem('views')) || {};
+  return views[title] || 0;
+}
+
+// Evento clicar numa obra
+function onDocumentMouseDown(event) {
+  event.preventDefault();
+  const mouse = new THREE.Vector2();
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+  const raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(artworks);
+
+  if (intersects.length > 0) {
+    const obra = intersects[0].object.userData;
+    modalImage.src = intersects[0].object.material.map.image.src;
+    modalTitle.textContent = obra.titulo;
+    modalArtist.textContent = obra.artista;
+    modalViews.textContent = incrementViews(obra.titulo);
+    buyButton.onclick = () => {
+      window.location.href = `mailto:info@nandart.art?subject=Compra de obra: ${obra.titulo}`;
+    };
+    modal.classList.remove('hidden');
+  }
+}
+
+closeModal.addEventListener('click', () => {
+  modal.classList.add('hidden');
+});
+
+window.addEventListener('mousedown', onDocumentMouseDown, false);
+
+// Animação da galeria
+function animate() {
+  requestAnimationFrame(animate);
+
+  artworks.forEach((mesh) => {
+    if (!mesh.userData.premium) {
+      mesh.rotation.y += rotationSpeed; // Rotação suave
+      const angle = Math.atan2(mesh.position.z, mesh.position.x) + rotationSpeed;
+      mesh.position.x = radius * Math.cos(angle);
+      mesh.position.z = radius * Math.sin(angle);
+    }
+  });
+
+  renderer.render(scene, camera);
+}
+
+animate();
