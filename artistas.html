@@ -1,19 +1,61 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Artistas - NANdART</title>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="stylesheet" href="menu.css">
+  <title>Artists – NANdART</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="modal-submissao.js" defer></script>
+  <link rel="icon" type="image/x-icon" href="imagem/casa-icon.png">
 </head>
 <body>
-  <h1>Os Artistas da NANdART</h1>
-       <h2>És artista? Junta-te à nova era da arte.</h2>
-     <p>A NANdART convida artistas visuais, digitais, plásticos ou experimentais a exporem as suas obras no mundo Web3. Aqui, cada venda é tua. Cada revenda, também.</p>
-     <button onclick="window.location.href='submeter.html'">Submeter Obra</button>
-   </section>
 
-  <a href="index.html">Voltar à Página Inicial</a>
+  <div class="home-icon">
+    <a href="index.html">
+      <img src="imagem/casa-icon.png" alt="Home" width="32" height="32">
+    </a>
+  </div>
+
+  <div class="container">
+    <h1 class="titulo-principal">Join the New Era of Art</h1>
+    <p class="descricao-principal">Submit your artwork and become part of NANdART's timeless collection.</p>
+
+    <button class="botao-submeter" onclick="abrirModal()">Submit Artwork</button>
+  </div>
+
+  <!-- Modal de Submissão -->
+  <div id="modalSubmissao" class="modal">
+    <div class="modal-conteudo">
+      <span class="fechar" onclick="fecharModal()">&times;</span>
+      <h2>Submit Your Artwork</h2>
+      <form id="formSubmissao">
+        <label>Artist Name*:</label><br>
+        <input type="text" name="nomeArtista" required><br>
+
+        <label>Artwork Title*:</label><br>
+        <input type="text" name="tituloObra" required><br>
+
+        <label>Creation Year*:</label><br>
+        <input type="text" name="anoCriacao" required><br>
+
+        <label>Technique/Material*:</label><br>
+        <input type="text" name="tecnica" required><br>
+
+        <label>Description:</label><br>
+        <textarea name="descricao" rows="4"></textarea><br>
+
+        <label>Upload Artwork*:</label><br>
+        <input type="file" name="imagem" accept="image/*" required><br><br>
+
+        <button type="submit" class="botao-enviar">Send Artwork</button>
+      </form>
+
+      <div id="mensagemSucesso" class="mensagem-sucesso" style="display:none;">
+        <p>Your artwork has been successfully submitted!</p>
+        <button onclick="window.location.href='index.html'" class="botao-enviar">Return to Home</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
