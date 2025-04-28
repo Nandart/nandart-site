@@ -1,39 +1,60 @@
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NANdART – Galeria 3D</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NANdART - Galeria de Arte</title>
+  <link rel="stylesheet" href="menu.css">
+  <link rel="icon" type="image/png" href="imagens/home-icon.png">
 </head>
 <body>
-  <div id="scene-container"></div>
 
-  <!-- Controlo de Música -->
-  <audio id="background-music" loop autoplay>
+  <!-- Ícones de Menu -->
+  <div id="menu-buttons">
+    <img id="menu-icon" src="imagens/menu-icon.png" alt="Menu" onclick="toggleMenu()">
+    <img id="plus-icon" src="imagens/plus-icon.png" alt="Mais" onclick="togglePlus()">
+  </div>
+
+  <!-- Música -->
+  <div id="toggle-music" onclick="toggleMusic()">♫</div>
+  <audio id="background-music" loop>
     <source src="musica.mp3" type="audio/mpeg">
-    O seu navegador não suporta áudio HTML5.
   </audio>
-  <button id="toggle-music">🔈</button>
 
-  <!-- Ícone Casa -->
-  <a href="index.html" id="home-icon">
-    <img src="casa-icon.png" alt="Home" />
-  </a>
+  <!-- Nome da Galeria -->
+  <h1 id="gallery-title">NANdART</h1>
 
-  <!-- Modal -->
-  <div id="modal" class="hidden">
-    <div id="modal-content">
-      <span id="close-modal">&times;</span>
-      <img id="modal-image" src="" alt="Obra de Arte" />
+  <!-- Canvas da Galeria -->
+  <canvas id="gallery-canvas"></canvas>
+
+  <!-- Menus Laterais -->
+  <div id="menu-options" class="hidden">
+    <a href="artistas.html">Artistas</a>
+    <a href="contactos.html">Contactos</a>
+    <a href="clausulas.html">Cláusulas</a>
+  </div>
+
+  <div id="plus-options" class="hidden">
+    <a href="info.html">Info</a>
+  </div>
+
+  <!-- Modal da Obra -->
+  <div id="art-modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-button" onclick="closeModal()">&times;</span>
+      <img id="modal-artwork" src="" alt="Obra de Arte">
       <h2 id="modal-title"></h2>
       <p id="modal-artist"></p>
-      <div id="view-counter"><img src="eye-icon.png" alt="Visualizações" /> <span id="views-count">0</span></div>
+      <div id="modal-icons">
+        <img src="imagens/eye-icon.png" alt="Visualizações" id="eye-icon">
+        <span id="view-count">0</span>
+      </div>
       <button id="buy-button">Comprar Obra</button>
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- JavaScript -->
   <script src="gallery.js"></script>
+
 </body>
 </html>
