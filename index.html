@@ -1,60 +1,31 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NANdART - Galeria de Arte</title>
-  <link rel="stylesheet" href="menu.css">
-  <link rel="icon" type="image/png" href="imagens/home-icon.png">
+  <title>NANdART – Web3 Art Gallery</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/x-icon" href="imagem/casa-icon.png">
 </head>
 <body>
 
-  <!-- Ícones de Menu -->
-  <div id="menu-buttons">
-    <img id="menu-icon" src="imagens/menu-icon.png" alt="Menu" onclick="toggleMenu()">
-    <img id="plus-icon" src="imagens/plus-icon.png" alt="Mais" onclick="togglePlus()">
+  <div class="home-icon">
+    <a href="index.html">
+      <img src="imagem/casa-icon.png" alt="Home" width="32" height="32">
+    </a>
   </div>
 
-  <!-- Música -->
-  <div id="toggle-music" onclick="toggleMusic()">♫</div>
-  <audio id="background-music" loop>
-    <source src="musica.mp3" type="audio/mpeg">
-  </audio>
+  <div class="container">
+    <h1 class="titulo-principal">NANdART</h1>
+    <p class="descricao-principal">Where Art Meets Eternity</p>
 
-  <!-- Nome da Galeria -->
-  <h1 id="gallery-title">NANdART</h1>
-
-  <!-- Canvas da Galeria -->
-  <canvas id="gallery-canvas"></canvas>
-
-  <!-- Menus Laterais -->
-  <div id="menu-options" class="hidden">
-    <a href="artistas.html">Artistas</a>
-    <a href="contactos.html">Contactos</a>
-    <a href="clausulas.html">Cláusulas</a>
-  </div>
-
-  <div id="plus-options" class="hidden">
-    <a href="info.html">Info</a>
-  </div>
-
-  <!-- Modal da Obra -->
-  <div id="art-modal" class="modal hidden">
-    <div class="modal-content">
-      <span class="close-button" onclick="closeModal()">&times;</span>
-      <img id="modal-artwork" src="" alt="Obra de Arte">
-      <h2 id="modal-title"></h2>
-      <p id="modal-artist"></p>
-      <div id="modal-icons">
-        <img src="imagens/eye-icon.png" alt="Visualizações" id="eye-icon">
-        <span id="view-count">0</span>
-      </div>
-      <button id="buy-button">Comprar Obra</button>
+    <div class="menu-principal">
+      <a href="artista.html">Artists</a>
+      <a href="galeria.html">Gallery</a>
+      <a href="info.html">Info</a>
+      <a href="clausulas.html">Terms</a>
     </div>
   </div>
-
-  <!-- JavaScript -->
-  <script src="gallery.js"></script>
 
 </body>
 </html>
