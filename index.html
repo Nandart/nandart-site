@@ -1,51 +1,39 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NANdART — Galeria Imersiva</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/png" href="favicon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NANdART – Galeria 3D</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div id="scene-container"></div>
 
-  <!-- Ícones de navegação -->
-  <div class="menu-icons">
-    <img src="menu-icon.png" id="menu-button" alt="Menu">
-    <img src="plus-icon.png" id="plus-button" alt="Mais">
-  </div>
+  <!-- Controlo de Música -->
+  <audio id="background-music" loop autoplay>
+    <source src="musica.mp3" type="audio/mpeg">
+    O seu navegador não suporta áudio HTML5.
+  </audio>
+  <button id="toggle-music">🔈</button>
 
-  <!-- Título no topo -->
-  <header>
-    <h1 class="titulo-nandart">NANdART</h1>
-  </header>
+  <!-- Ícone Casa -->
+  <a href="index.html" id="home-icon">
+    <img src="casa-icon.png" alt="Home" />
+  </a>
 
-  <!-- Sala tridimensional -->
-  <main class="sala">
-    <div class="circulo">
-      <!-- Obras normais serão geradas dinamicamente aqui -->
-    </div>
-    <div class="obras-premium">
-      <!-- Obras premium serão geradas dinamicamente aqui -->
-    </div>
-  </main>
-
-  <!-- Modal de Obra -->
-  <div id="modal-obra" class="modal">
-    <div class="modal-content">
-      <span class="close-modal">&times;</span>
-      <img id="imagem-obra" src="" alt="Obra">
-      <h2 id="titulo-obra"></h2>
-      <div class="contador-visualizacoes">
-        <img src="eye-icon.png" alt="Visualizações">
-        <span id="visualizacoes">0</span>
-      </div>
-      <button id="botao-comprar">Comprar Obra</button>
+  <!-- Modal -->
+  <div id="modal" class="hidden">
+    <div id="modal-content">
+      <span id="close-modal">&times;</span>
+      <img id="modal-image" src="" alt="Obra de Arte" />
+      <h2 id="modal-title"></h2>
+      <p id="modal-artist"></p>
+      <div id="view-counter"><img src="eye-icon.png" alt="Visualizações" /> <span id="views-count">0</span></div>
+      <button id="buy-button">Comprar Obra</button>
     </div>
   </div>
 
-  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="gallery.js"></script>
-
 </body>
 </html>
