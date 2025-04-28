@@ -1,163 +1,127 @@
-/* Estilo geral */
-body {
+/* Estilo Base */
+body, html {
   margin: 0;
   padding: 0;
-  background: linear-gradient(to bottom, #000000, #1a1a1a);
+  overflow: hidden;
   font-family: 'Georgia', serif;
-  color: #D4AF37;
-  overflow-x: hidden;
-  height: 100vh;
+  background: linear-gradient(to bottom, #0d0d0d, #1a1a1a);
 }
 
-/* Ícones de navegação */
-.menu-icons {
+/* Container da cena 3D */
+#scene-container {
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  position: relative;
+}
+
+/* Botão de música */
+#toggle-music {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #D4AF37;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  color: #000;
+  z-index: 10;
+}
+
+/* Ícone da casa */
+#home-icon {
   position: fixed;
   top: 20px;
   left: 20px;
-  z-index: 1000;
+  z-index: 10;
 }
 
-.menu-icons img {
-  width: 32px;
-  margin: 5px;
-  cursor: pointer;
+#home-icon img {
+  width: 40px;
+  height: 40px;
 }
 
-/* Título */
-header {
-  text-align: center;
-  padding: 20px;
-}
-
-.titulo-nandart {
-  font-size: 36px;
-  color: #D4AF37;
-  letter-spacing: 2px;
-}
-
-/* Sala principal */
-.sala {
-  position: relative;
-  width: 100%;
-  height: calc(100vh - 120px);
-  overflow: hidden;
-}
-
-/* Círculo no chão */
-.circulo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 500px;
-  height: 500px;
-  margin-top: -250px;
-  margin-left: -250px;
-  border: 2px solid rgba(212, 175, 55, 0.5);
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 70%);
-}
-
-/* Obras normais */
-.circulo img {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border: 2px solid #D4AF37;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
-  transition: transform 0.5s, box-shadow 0.5s;
-  cursor: pointer;
-}
-
-/* Obras premium */
-.obras-premium img {
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border: 3px solid #FFD700;
-  border-radius: 50%;
-  box-shadow: 0 0 20px #FFD700;
-  animation: flutuar 3s infinite ease-in-out;
-}
-
-/* Animação de flutuação premium */
-@keyframes flutuar {
-  0%, 100% { transform: translate(-50%, 0); }
-  50% { transform: translate(-50%, -15px); }
-}
-
-/* Modal */
-.modal {
-  display: none;
+/* Modal para obra */
+#modal {
   position: fixed;
-  z-index: 2000;
-  left: 0;
   top: 0;
-  width: 100%;
-  height: 100%;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(10px);
-}
-
-.modal-content {
-  background-color: #1a1a1a;
-  margin: 10% auto;
-  padding: 20px;
-  border: 1px solid #D4AF37;
-  width: 90%;
-  max-width: 600px;
-  text-align: center;
-  color: #D4AF37;
-  border-radius: 10px;
-}
-
-.modal-content img {
-  width: 100%;
-  border-radius: 8px;
-}
-
-.close-modal {
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  color: #D4AF37;
-  cursor: pointer;
-}
-
-.close-modal:hover {
-  color: #ffffff;
-}
-
-/* Contador de visualizações */
-.contador-visualizacoes {
-  margin-top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 20;
 }
 
-.contador-visualizacoes img {
-  width: 20px;
-  margin-right: 8px;
+.hidden {
+  display: none;
 }
 
-#botao-comprar {
-  background-color: #D4AF37;
+#modal-content {
+  background: #1f1f1f;
+  border: 2px solid #D4AF37;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 400px;
+  text-align: center;
+  color: #FFD700;
+  position: relative;
+}
+
+#modal-content img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+#close-modal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  cursor: pointer;
+  font-size: 28px;
+  color: #FFD700;
+}
+
+#buy-button {
+  background: #D4AF37;
   color: #000;
   border: none;
   padding: 10px 20px;
   margin-top: 15px;
-  font-size: 16px;
-  border-radius: 5px;
   cursor: pointer;
+  font-weight: bold;
 }
 
-#botao-comprar:hover {
-  background-color: #fff;
+#buy-button:hover {
+  background: #fff;
   color: #000;
+}
+
+/* Contador de visualizações */
+#view-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+#view-counter img {
+  width: 24px;
+  height: 24px;
+  margin-right: 5px;
+}
+
+/* Estilo especial para obras premium */
+.premium-star {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 25px;
+  height: 25px;
 }
