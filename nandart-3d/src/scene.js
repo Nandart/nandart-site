@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { createGemaComTampa } from './gema.js';
 
 export function createScene() {
   const scene = new THREE.Scene();
@@ -50,28 +51,16 @@ export function createScene() {
   backWall.position.set(0, 10, -25);
   scene.add(backWall);
 
-  // Cubos e pedestais
-  const pedestalMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
-  const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xf3c677 });
-
+  // Adicionar gemas com tampa
+  const gemas = [];
   for (let i = -3; i <= 3; i += 2) {
-    const pedestal = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.4, 0.4, 1, 32),
-      pedestalMaterial
-    );
-    pedestal.position.set(i * 2, 0.5, 0);
-    pedestal.castShadow = true;
-    scene.add(pedestal);
-
-    const cube = new THREE.Mesh(
-      new THREE.BoxGeometry(1, 1, 1),
-      cubeMaterial
-    );
-    cube.position.set(i * 2, 1.5, 0);
-    cube.castShadow = true;
-    scene.add(cube);
+    const gema = createGemaComTampa(i * 2, 0);
+    gemas.push(gema);
+    scene.add(gema);
   }
+
+  // Guardar referência para interatividade futura
+  scene.userData.gemas = gemas;
 
   return { renderer, scene, camera };
 }
-
