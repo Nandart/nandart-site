@@ -1,14 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NANdART 3D Gallery</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <canvas id="scene"></canvas>
-  <script type="module" src="main.js"></script>
-  <script src="script.js"></script>
+  <audio id="ambiente" src="audio/musica.mp3" autoplay loop></audio>
+
+  <div id="galeria">
+    <canvas id="cena3d"></canvas>
+    <div id="ajuda-flutuante" onclick="abrirAjuda()">?</div>
+  </div>
+
+  <div id="painel-ajuda" style="display:none;">
+    <img src="assets/ajuda/ajuda-rotacao.jpg" alt="Ajuda de rotação" />
+    <img src="assets/ajuda/ajuda-modal.jpg" alt="Ajuda de modal" />
+    <img src="assets/ajuda/ajuda-cubo.jpg" alt="Ajuda de cubo" />
+    <img src="assets/ajuda/ajuda-premium.jpg" alt="Ajuda premium" />
+  </div>
+
+  <script type="module" src="script.js"></script>
 </body>
 </html>
