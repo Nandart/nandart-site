@@ -17,10 +17,10 @@
     </style>
   </head>
   <body>
-    <!-- Script principal como módulo -->
-    <script type="module">
-      import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
-      import './assets/index.js';
-    </script>
+    <!-- Biblioteca Three.js como script clássico -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+
+    <!-- Script principal clássico (sem type=module) -->
+    <script src="assets/index.js"></script>
   </body>
 </html>
