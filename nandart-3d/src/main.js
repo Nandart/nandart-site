@@ -14,4 +14,9 @@ function animate() {
 }
 
 animate();
-
+window.addEventListener('click', () => {
+  const cena = scene.userData.gemas;
+  if (cena && cena.length > 0) {
+    cena[0].userData.toggle(); // Testar a primeira gema
+  }
+});
