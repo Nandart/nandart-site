@@ -1,84 +1,87 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.module.js';
+// Cena
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d0d0d);
 
-let cena, camara, renderizador;
-let cubos = [];
-let obras = [];
+// Câmara
+const camera = new THREE.PerspectiveCamera(
+  60,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+camera.position.set(0, 5, 12);
 
-function iniciarCena() {
-  cena = new THREE.Scene();
+// Renderizador
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+document.body.appendChild(renderer.domElement);
 
-  // Fundo
-  const texturaFundo = new THREE.TextureLoader().load('assets/fundo/fundo.jpg');
-  cena.background = texturaFundo;
+// Controlo de órbita
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-  camara = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camara.position.z = 5;
+// Luzes
+const ambientLight = new THREE.AmbientLight(0x444444);
+scene.add(ambientLight);
 
-  renderizador = new THREE.WebGLRenderer({ canvas: document.getElementById('cena3d'), antialias: true });
-  renderizador.setSize(window.innerWidth, window.innerHeight);
+const spotLight = new THREE.SpotLight(0xffffff, 1);
+spotLight.position.set(5, 10, 5);
+spotLight.castShadow = true;
+scene.add(spotLight);
 
-  const luzAmbiente = new THREE.AmbientLight(0xffffff, 0.6);
-  cena.add(luzAmbiente);
+// Chão
+const floorGeometry = new THREE.PlaneGeometry(50, 50);
+const floorMaterial = new THREE.MeshStandardMaterial({
+  color: 0x101010,
+  metalness: 0.8,
+  roughness: 0.2
+});
+const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+floor.rotation.x = -Math.PI / 2;
+floor.receiveShadow = true;
+scene.add(floor);
 
-  const luzDirecional = new THREE.PointLight(0xffffff, 1.2);
-  luzDirecional.position.set(5, 10, 10);
-  cena.add(luzDirecional);
+// Parede traseira
+const wallGeometry = new THREE.PlaneGeometry(50, 20);
+const wallMaterial = new THREE.MeshStandardMaterial({
+  color: 0x111111
+});
+const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
+backWall.position.set(0, 10, -25);
+scene.add(backWall);
 
-  criarCubosPremium();
-  criarObrasCirculares();
+// Cubos com pedestais
+const pedestalMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
+const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xf3c677 });
 
-  animar();
+for (let i = -3; i <= 3; i += 2) {
+  const pedestal = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.4, 0.4, 1, 32),
+    pedestalMaterial
+  );
+  pedestal.position.set(i * 2, 0.5, 0);
+  pedestal.castShadow = true;
+  scene.add(pedestal);
+
+  const cube = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    cubeMaterial
+  );
+  cube.position.set(i * 2, 1.5, 0);
+  cube.castShadow = true;
+  scene.add(cube);
 }
 
-function criarCubosPremium() {
-  const imagens = ['cubo-premium1.jpg', 'cubo-premium2.jpg'];
-  const posicoes = [-2.5, 2.5];
-
-  imagens.forEach((img, i) => {
-    const textura = new THREE.TextureLoader().load(`assets/cubos/${img}`);
-    const material = new THREE.MeshStandardMaterial({ map: textura });
-    const geometria = new THREE.BoxGeometry(1, 1, 1);
-    const cubo = new THREE.Mesh(geometria, material);
-    cubo.position.set(posicoes[i], 0, 0);
-    cena.add(cubo);
-    cubos.push(cubo);
-  });
-}
-
-function criarObrasCirculares() {
-  const totalObras = 8;
-  const raio = 4;
-  for (let i = 1; i <= totalObras; i++) {
-    const angulo = (i / totalObras) * Math.PI * 2;
-    const textura = new THREE.TextureLoader().load(`assets/obras/obra${i}.jpg`);
-    const material = new THREE.MeshBasicMaterial({ map: textura });
-    const geometria = new THREE.PlaneGeometry(1.2, 1.2);
-    const quadro = new THREE.Mesh(geometria, material);
-    quadro.position.set(Math.cos(angulo) * raio, 0, Math.sin(angulo) * raio);
-    quadro.lookAt(0, 0, 0);
-    cena.add(quadro);
-    obras.push(quadro);
-  }
-}
-
-function animar() {
-  requestAnimationFrame(animar);
-  cubos.forEach((cubo, i) => {
-    const brilho = 0.5 + 0.5 * Math.sin(Date.now() * 0.002 + i);
-    cubo.material.emissive = new THREE.Color(brilho, brilho, brilho);
-  });
-  renderizador.render(cena, camara);
-}
-
+// Responsividade
 window.addEventListener('resize', () => {
-  camara.aspect = window.innerWidth / window.innerHeight;
-  camara.updateProjectionMatrix();
-  renderizador.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-window.abrirAjuda = () => {
-  const painel = document.getElementById('painel-ajuda');
-  painel.style.display = painel.style.display === 'none' ? 'block' : 'none';
-};
-
-iniciarCena();
+// Animação
+function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+}
+animate();
