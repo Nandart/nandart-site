@@ -1,8 +1,9 @@
 body {
   margin: 0;
-  background-color: #1a1a1a;
+  background-color: #1a1a1a; /* Cinzento escuro antracite */
   overflow: hidden;
 }
+
 canvas {
   display: block;
 }
