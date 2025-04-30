@@ -1,66 +1,54 @@
 import * as THREE from 'three';
-import { createGemaComTampa } from './gema.js';
+import { gsap } from 'gsap';
 
-export function createScene() {
-  const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0d0d0d);
+export function createGemaComTampa(x = 0, z = 0) {
+  const grupo = new THREE.Group();
 
-  const camera = new THREE.PerspectiveCamera(
-    60,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
+  // Pedestal
+  const pedestal = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.4, 0.4, 1, 32),
+    new THREE.MeshStandardMaterial({ color: 0x222222 })
   );
-  camera.position.set(0, 5, 12);
+  pedestal.position.y = 0.5;
+  pedestal.castShadow = true;
+  grupo.add(pedestal);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.shadowMap.enabled = true;
+  // Gema
+  const gema = new THREE.Mesh(
+    new THREE.OctahedronGeometry(0.5, 0),
+    new THREE.MeshPhysicalMaterial({
+      color: 0x66ccff,
+      roughness: 0,
+      metalness: 0.3,
+      transmission: 1,
+      thickness: 0.5,
+      transparent: true
+    })
+  );
+  gema.position.y = 1.5;
+  gema.castShadow = true;
+  grupo.add(gema);
 
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
+  // Tampa
+  const tampa = new THREE.Mesh(
+    new THREE.BoxGeometry(0.8, 0.05, 0.8),
+    new THREE.MeshStandardMaterial({ color: 0x333333 })
+  );
+  tampa.position.y = 1.85;
+  grupo.add(tampa);
 
-  // Luzes
-  const ambientLight = new THREE.AmbientLight(0x444444);
-  scene.add(ambientLight);
+  // Animação ao clicar
+  let aberta = false;
+  grupo.userData.toggle = () => {
+    if (!aberta) {
+      gsap.to(tampa.rotation, { x: Math.PI / 2, duration: 0.8, ease: 'power2.out' });
+      aberta = true;
+    } else {
+      gsap.to(tampa.rotation, { x: 0, duration: 0.8, ease: 'power2.in' });
+      aberta = false;
+    }
+  };
 
-  const spotLight = new THREE.SpotLight(0xffffff, 1);
-  spotLight.position.set(5, 10, 5);
-  spotLight.castShadow = true;
-  scene.add(spotLight);
-
-  // Chão
-  const floorGeometry = new THREE.PlaneGeometry(50, 50);
-  const floorMaterial = new THREE.MeshStandardMaterial({
-    color: 0x101010,
-    metalness: 0.8,
-    roughness: 0.2
-  });
-  const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-  floor.rotation.x = -Math.PI / 2;
-  floor.receiveShadow = true;
-  scene.add(floor);
-
-  // Parede traseira
-  const wallGeometry = new THREE.PlaneGeometry(50, 20);
-  const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x111111 });
-  const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
-  backWall.position.set(0, 10, -25);
-  scene.add(backWall);
-
-  // Adicionar gemas com tampa
-  const gemas = [];
-  for (let i = -3; i <= 3; i += 2) {
-    const gema = createGemaComTampa(i * 2, 0);
-    gemas.push(gema);
-    scene.add(gema);
-  }
-
-  // Guardar referência para interatividade futura
-  scene.userData.gemas = gemas;
-
-  return { renderer, scene, camera };
+  grupo.position.set(x, 0, z);
+  return grupo;
 }
