@@ -19,5 +19,19 @@
   <body>
     <!-- Script principal como módulo -->
     <script type="module" src="assets/index.js"></script>
+    <!-- Botão flutuante de ajuda -->
+<div class="help-icon" onclick="openHelp()">?</div>
+
+<script>
+  function openHelp() {
+    alert("Bem-vindo à galeria NANdART!\n\n- Usa o rato ou dedo para explorar.\n- Clica nos cubos para interagir.\n- Navega com calma e intuição.");
+  }
+
+  // Esconde o ícone após 20 segundos
+  setTimeout(() => {
+    const helpIcon = document.querySelector('.help-icon');
+    if (helpIcon) helpIcon.style.opacity = '0';
+  }, 20000);
+</script>
   </body>
 </html>
