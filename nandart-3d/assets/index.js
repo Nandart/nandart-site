@@ -58,9 +58,9 @@ scene.add(rightWall);
 
 // Texturas
 const loader = new THREE.TextureLoader();
-const frameTexture = loader.load('imagens/moldura-dourada.jpg');
-const obraEsquerda = loader.load('imagens/obra-esquerda.jpg');
-const obraDireita = loader.load('imagens/obra-direita.jpg');
+const frameTexture = loader.load('assets/imagens/moldura-dourada.jpg');
+const obraEsquerda = loader.load('assets/imagens/obra-esquerda.jpg');
+const obraDireita = loader.load('assets/imagens/obra-direita.jpg');
 
 // Molduras laterais
 const frameMaterial = new THREE.MeshStandardMaterial({ map: frameTexture });
