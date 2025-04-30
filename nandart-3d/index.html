@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <title>NANdART 3D</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="assets/styles.css" />
     <style>
       body {
         margin: 0;
@@ -17,10 +17,10 @@
     </style>
   </head>
   <body>
-    <!-- Biblioteca Three.js -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
-
     <!-- Script principal como módulo -->
-    <script type="module" src="assets/index.js"></script>
+    <script type="module">
+      import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
+      import './assets/index.js';
+    </script>
   </body>
 </html>
