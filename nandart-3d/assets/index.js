@@ -1,83 +1,93 @@
+import * as THREE from 'three';
+
+// Cena
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0d0d0d);
 
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 4, 10);
+// Câmara
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 3, 8);
 
-const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg'), antialias: true });
+// Renderizador
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
-
 document.body.appendChild(renderer.domElement);
 
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-
 // Luz ambiente
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+const ambientLight = new THREE.AmbientLight(0x333333);
 scene.add(ambientLight);
 
-// Luz direcional
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(10, 15, 10);
-directionalLight.castShadow = true;
-scene.add(directionalLight);
+// Luz superior
+const spotLight = new THREE.SpotLight(0xffffff, 2);
+spotLight.position.set(0, 10, 0);
+spotLight.castShadow = true;
+scene.add(spotLight);
+
+// Luz lateral de preenchimento
+const fillLight = new THREE.PointLight(0xffffff, 0.6);
+fillLight.position.set(0, 3, 6);
+scene.add(fillLight);
 
 // Chão
-const floorGeometry = new THREE.PlaneGeometry(50, 50);
+const floorGeometry = new THREE.PlaneGeometry(20, 20);
 const floorMaterial = new THREE.MeshStandardMaterial({
-  color: 0x202020,
-  metalness: 0.5,
-  roughness: 0.3
+    color: 0x101010,
+    metalness: 0.8,
+    roughness: 0.2
 });
 const floor = new THREE.Mesh(floorGeometry, floorMaterial);
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
-// Paredes
-const backWall = new THREE.Mesh(
-  new THREE.PlaneGeometry(50, 20),
-  new THREE.MeshStandardMaterial({ color: 0x181818 })
-);
-backWall.position.set(0, 10, -25);
+// Paredes traseiras
+const wallGeometry = new THREE.PlaneGeometry(20, 10);
+const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x111111 });
+const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
+backWall.position.set(0, 5, -10);
 scene.add(backWall);
 
-// Pedestais + gemas
-const pedestalMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
-const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xf3c677, metalness: 0.8, roughness: 0.1 });
+// Materiais
+const pedestalMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
+const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xf3c677 });
 
-for (let i = -3; i <= 3; i += 2) {
-  const pedestal = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.5, 0.5, 1, 32),
-    pedestalMaterial
-  );
-  pedestal.position.set(i * 2, 0.5, 0);
-  pedestal.castShadow = true;
-  pedestal.receiveShadow = true;
-  scene.add(pedestal);
+// Posição dos pedestais: dois à esquerda e dois à direita
+const pedestalPositions = [
+    { x: -4, z: -2 },
+    { x: -4, z: 2 },
+    { x: 4, z: -2 },
+    { x: 4, z: 2 }
+];
 
-  const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    cubeMaterial
-  );
-  cube.position.set(i * 2, 1.5, 0);
-  cube.castShadow = true;
-  cube.receiveShadow = true;
-  scene.add(cube);
-}
+pedestalPositions.forEach(pos => {
+    const pedestal = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.4, 0.4, 1, 32),
+        pedestalMaterial
+    );
+    pedestal.position.set(pos.x, 0.5, pos.z);
+    pedestal.castShadow = true;
+    scene.add(pedestal);
+
+    const cube = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 1, 1),
+        cubeMaterial
+    );
+    cube.position.set(pos.x, 1.5, pos.z);
+    cube.castShadow = true;
+    scene.add(cube);
+});
 
 // Responsividade
 window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+// Animação
 function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
 }
-
 animate();
