@@ -1,26 +1,112 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NANdART 3D Gallery</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>NANdART 3D Gallery Base</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #111;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-  <audio id="ambiente" src="audio/musica.mp3" autoplay loop></audio>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/controls/OrbitControls.js"></script>
+  <script>
+    // Cena
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0d0d0d);
 
-  <div id="galeria">
-    <canvas id="cena3d"></canvas>
-    <div id="ajuda-flutuante" onclick="abrirAjuda()">?</div>
-  </div>
+    // Câmara
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    camera.position.set(0, 5, 12);
 
-  <div id="painel-ajuda" style="display:none;">
-    <img src="assets/ajuda/ajuda-rotacao.jpg" alt="Ajuda de rotação" />
-    <img src="assets/ajuda/ajuda-modal.jpg" alt="Ajuda de modal" />
-    <img src="assets/ajuda/ajuda-cubo.jpg" alt="Ajuda de cubo" />
-    <img src="assets/ajuda/ajuda-premium.jpg" alt="Ajuda premium" />
-  </div>
+    // Renderizador
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    document.body.appendChild(renderer.domElement);
 
-  <script type="module" src="script.js"></script>
+    // Controlo de órbita (desativar no final para câmara fixa)
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+    // Luz ambiente
+    const ambientLight = new THREE.AmbientLight(0x444444);
+    scene.add(ambientLight);
+
+    // Spots de luz
+    const spotLight = new THREE.SpotLight(0xffffff, 1);
+    spotLight.position.set(5, 10, 5);
+    spotLight.castShadow = true;
+    scene.add(spotLight);
+
+    // Chão
+    const floorGeometry = new THREE.PlaneGeometry(50, 50);
+    const floorMaterial = new THREE.MeshStandardMaterial({
+      color: 0x101010,
+      metalness: 0.8,
+      roughness: 0.2
+    });
+    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true;
+    scene.add(floor);
+
+    // Paredes traseiras (exemplo)
+    const wallGeometry = new THREE.PlaneGeometry(50, 20);
+    const wallMaterial = new THREE.MeshStandardMaterial({
+      color: 0x111111
+    });
+    const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
+    backWall.position.set(0, 10, -25);
+    scene.add(backWall);
+
+    // Pedestais + cubos (protótipos)
+    const pedestalMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
+    const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xf3c677 });
+
+    for (let i = -3; i <= 3; i += 2) {
+      const pedestal = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.4, 0.4, 1, 32),
+        pedestalMaterial
+      );
+      pedestal.position.set(i * 2, 0.5, 0);
+      pedestal.castShadow = true;
+      scene.add(pedestal);
+
+      const cube = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 1, 1),
+        cubeMaterial
+      );
+      cube.position.set(i * 2, 1.5, 0);
+      cube.castShadow = true;
+      scene.add(cube);
+    }
+
+    // Responsividade
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Animação
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
 </body>
 </html>
