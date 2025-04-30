@@ -1,2 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>How to Navigate – NANdART</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="assets/styles.css">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #1a1a1a;
+    }
+    canvas {
+      display: block;
+    }
+    #home-button {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <!-- Ícone da casinha -->
+  <img id="home-button" src="assets/imagens/casa-icon.png" alt="Home" onclick="window.location.href='index.html'">
+
+  <!-- Three.js e lógica de painéis -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+  <script src="assets/como-navegar.js"></script>
+</body>
+</html>
 
 
