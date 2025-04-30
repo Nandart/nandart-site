@@ -1,4 +1,4 @@
-
+// index.js atualizado com caminhos corrigidos para imagens
 import * as THREE from 'three';
 
 // Cena
@@ -33,7 +33,6 @@ const floorMaterial = new THREE.MeshStandardMaterial({
 });
 
 const paredeMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a1a });
-
 const pedestalMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
 const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xf3c677 });
 
@@ -60,9 +59,9 @@ scene.add(rightWall);
 
 // Texturas de quadros
 const loader = new THREE.TextureLoader();
-const frameTexture = loader.load('imagens/moldura-dourada.jpg');
-const obraEsquerda = loader.load('imagens/obra-esquerda.jpg');
-const obraDireita = loader.load('imagens/obra-direita.jpg');
+const frameTexture = loader.load('./assets/imagens/moldura-dourada.jpg');
+const obraEsquerda = loader.load('./assets/imagens/obra-esquerda.jpg');
+const obraDireita = loader.load('./assets/imagens/obra-direita.jpg');
 
 // Quadros
 const frameMaterial = new THREE.MeshStandardMaterial({ map: frameTexture });
