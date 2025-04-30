@@ -1,4 +1,3 @@
-
 // Importar Three.js via CDN no HTML, portanto não usamos "import * as THREE"
 
 // Cena
