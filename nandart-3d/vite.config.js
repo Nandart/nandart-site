@@ -1,10 +1,5 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  root: '.',
-  publicDir: 'public',
-  build: {
-    outDir: 'dist'
-  }
+  base: '/nandart-site/nandart-3d/', // <-- caminho completo do GitHub Pages
 });
-
