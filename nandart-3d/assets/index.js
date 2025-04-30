@@ -1,4 +1,3 @@
-
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0d0d0d);
 
@@ -11,16 +10,12 @@ renderer.shadowMap.enabled = true;
 
 const loader = new THREE.TextureLoader();
 
-// Texturas
 const molduraMap = loader.load('./assets/textures/moldura-dourada.jpg');
-const paredeMap = loader.load('./assets/textures/parede-antracite.jpg');
 const chaoMap = loader.load('./assets/textures/chao-obsidiana.jpg');
 
-// Luz ambiente
 const ambient = new THREE.AmbientLight(0xffffff, 0.3);
 scene.add(ambient);
 
-// Spots de teto
 const spots = [
   new THREE.SpotLight(0xffffff, 1),
   new THREE.SpotLight(0xffffff, 1),
@@ -35,15 +30,12 @@ spots.forEach(light => {
   scene.add(light);
 });
 
-// Luzes nos pedestais
-const pedestalLights = [-4, -2, 2, 4].map(x => {
+[-4, -2, 2, 4].forEach(x => {
   const light = new THREE.PointLight(0xf3c677, 0.5, 3);
   light.position.set(x, 1, 0);
   scene.add(light);
-  return light;
 });
 
-// Chão
 const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(40, 40),
   new THREE.MeshStandardMaterial({ map: chaoMap, metalness: 1, roughness: 0.3 })
@@ -52,8 +44,7 @@ floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
-// Paredes
-const paredeMaterial = new THREE.MeshStandardMaterial({ map: paredeMap });
+const paredeMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a1a });
 const paredeGeo = new THREE.PlaneGeometry(40, 20);
 
 const paredeFundo = new THREE.Mesh(paredeGeo, paredeMaterial);
@@ -70,7 +61,6 @@ paredeDireita.rotation.y = -Math.PI / 2;
 paredeDireita.position.set(20, 10, 0);
 scene.add(paredeDireita);
 
-// Molduras
 const molduraMaterial = new THREE.MeshStandardMaterial({ map: molduraMap });
 const quadroGeo = new THREE.PlaneGeometry(3, 4);
 
@@ -88,7 +78,6 @@ quadroDireito.rotation.y = -Math.PI / 2;
 quadroDireito.position.set(19.9, 10, 5);
 scene.add(quadroDireito);
 
-// Pedestais e cubos de vidro
 const pedestalMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
 
 [-4, -2, 2, 4].forEach(x => {
