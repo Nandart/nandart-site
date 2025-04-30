@@ -1,7 +1,3 @@
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { gsap } from "gsap";
-
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0d0d0d);
 
@@ -18,12 +14,8 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-const controls = new OrbitControls(camera, renderer.domElement);
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
-controls.dampingFactor = 0.05;
-controls.rotateSpeed = 0.5;
-controls.zoomSpeed = 1.2;
-controls.panSpeed = 0.8;
 
 const ambientLight = new THREE.AmbientLight(0x444444);
 scene.add(ambientLight);
@@ -48,7 +40,7 @@ const backWall = new THREE.Mesh(
 backWall.position.set(0, 10, -25);
 scene.add(backWall);
 
-function createGemaComTampa(x, z) {
+function criarGemaComTampa(x, z) {
   const grupo = new THREE.Group();
 
   const pedestal = new THREE.Mesh(
@@ -97,7 +89,7 @@ function createGemaComTampa(x, z) {
 
 const gemas = [];
 for (let i = -3; i <= 3; i += 2) {
-  const gema = createGemaComTampa(i * 2, 0);
+  const gema = criarGemaComTampa(i * 2, 0);
   gemas.push(gema);
   scene.add(gema);
 }
@@ -109,5 +101,6 @@ window.addEventListener("click", () => {
 function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
+  controls.update();
 }
 animate();
