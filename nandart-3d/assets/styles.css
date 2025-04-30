@@ -1,8 +1,6 @@
-/* styles.css */
-
 body {
   margin: 0;
-  background-color: #1a1a1a; /* Cor uniforme antracite escura */
+  background-color: #1a1a1a;
   overflow: hidden;
   font-family: sans-serif;
 }
@@ -11,12 +9,12 @@ canvas {
   display: block;
 }
 
-/* Estética geral da galeria */
+/* Seleção de texto dourada (suave) */
 ::selection {
-  background: #f3c67733; /* Destaque suave dourado translúcido */
+  background: #f3c67733;
 }
 
-/* Estilo para eventuais ícones flutuantes ou elementos de ajuda */
+/* Estilo de ícone de ajuda flutuante */
 .help-icon {
   position: fixed;
   bottom: 20px;
@@ -34,6 +32,7 @@ canvas {
   z-index: 1000;
   animation: pulse 2s infinite ease-in-out;
   transition: opacity 0.3s ease;
+  opacity: 1;
 }
 
 @keyframes pulse {
@@ -47,3 +46,4 @@ canvas {
     box-shadow: 0 0 0 0 rgba(243, 198, 119, 0);
   }
 }
+
