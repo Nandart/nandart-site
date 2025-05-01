@@ -1,48 +1,52 @@
-/* Estilo base */
+/* Fundo e corpo */
 body {
   margin: 0;
   overflow: hidden;
   background-color: #1a1a1a;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #f2f2f2;
+  font-family: 'Segoe UI', sans-serif;
 }
 
+/* Canvas ocupa o ecrã todo */
 canvas {
   display: block;
+  width: 100vw;
+  height: 100vh;
 }
 
-/* Ícones no canto superior esquerdo */
-#top-icons {
+/* Ícones fixos no topo esquerdo */
+.icon {
   position: fixed;
-  top: 20px;
   left: 20px;
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-#top-icons img {
-  width: 40px;
+  z-index: 10;
+  width: 36px;
   height: auto;
-  cursor: pointer;
   opacity: 0.95;
-  transition: opacity 0.3s ease;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.3s;
 }
 
-/* Ícone de ajuda flutuante */
-#ajuda-flutuante {
+.info-icon {
+  top: 20px;
+}
+
+.menu-icon {
+  top: 70px;
+}
+
+/* Ícone flutuante de ajuda */
+.ajuda-flutuante {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 50px;
+  width: 48px;
   height: auto;
-  cursor: pointer;
   opacity: 0.9;
-  z-index: 1000;
+  cursor: pointer;
+  z-index: 10;
   animation: desaparecer 1s ease-out 20s forwards;
 }
 
+/* Animação para desaparecer após 20 segundos */
 @keyframes desaparecer {
   to {
     opacity: 0;
@@ -50,14 +54,13 @@ canvas {
   }
 }
 
-/* Responsivo para ecrãs pequenos */
+/* Ajustes para ecrãs pequenos */
 @media (max-width: 768px) {
-  #top-icons img {
-    width: 32px;
+  .icon {
+    width: 28px;
   }
 
-  #ajuda-flutuante {
+  .ajuda-flutuante {
     width: 40px;
   }
 }
-
