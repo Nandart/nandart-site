@@ -1,45 +1,38 @@
-// Cena
+// index.js — NANdART 3D com obras normais, premium, reflexos e interação
+
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x1a1a1a);
 
-// Câmara
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 5, 12);
+camera.position.set(0, 5, 15);
 
-// Renderizador
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
 
-// Luz ambiente
 const ambientLight = new THREE.AmbientLight(0x444444);
 scene.add(ambientLight);
 
-// Spot
 const spotLight = new THREE.SpotLight(0xffffff, 1);
 spotLight.position.set(5, 10, 5);
 spotLight.castShadow = true;
 scene.add(spotLight);
 
-// Materiais
-const floorMaterial = new THREE.MeshStandardMaterial({
-  color: 0x101010,
-  metalness: 0.8,
-  roughness: 0.2
-});
+const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x101010, metalness: 0.8, roughness: 0.2 });
 const paredeMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a1a });
 const pedestalMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
-const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xf3c677 });
-const gemaMaterial = new THREE.MeshStandardMaterial({ color: 0xffd700, transparent: true, opacity: 0.6 });
 
-// Chão
+const loader = new THREE.TextureLoader();
+const gemaTexture = loader.load('assets/imagens/gema-azul.jpg.png');
+const molduraTexture = loader.load('assets/imagens/moldura-dourada.jpg');
+const estrelaTexture = loader.load('assets/imagens/estrela-premium.png');
+
 const floor = new THREE.Mesh(new THREE.PlaneGeometry(50, 50), floorMaterial);
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
-// Paredes
 const backWall = new THREE.Mesh(new THREE.PlaneGeometry(50, 20), paredeMaterial);
 backWall.position.set(0, 10, -25);
 scene.add(backWall);
@@ -54,124 +47,155 @@ rightWall.rotation.y = -Math.PI / 2;
 rightWall.position.set(25, 10, 0);
 scene.add(rightWall);
 
-// Texturas
-const loader = new THREE.TextureLoader();
-const frameTexture = loader.load('assets/imagens/moldura-dourada.jpg');
-const obraEsquerda = loader.load('assets/imagens/obra-esquerda.jpg');
-const obraDireita = loader.load('assets/imagens/obra-direita.jpg');
-const obraCentral = loader.load('assets/imagens/obra-central.jpg');
-
-// Molduras laterais
-const frameMaterial = new THREE.MeshStandardMaterial({ map: frameTexture });
-
-const leftFrame = new THREE.Mesh(new THREE.BoxGeometry(2.5, 3.5, 0.2), frameMaterial);
-leftFrame.position.set(-24.9, 10, 0);
-scene.add(leftFrame);
-
-const rightFrame = new THREE.Mesh(new THREE.BoxGeometry(2.5, 3.5, 0.2), frameMaterial);
-rightFrame.position.set(24.9, 10, 0);
-scene.add(rightFrame);
-
-// Obras dentro das molduras
-const obraMaterialEsq = new THREE.MeshStandardMaterial({ map: obraEsquerda });
-const obraMaterialDir = new THREE.MeshStandardMaterial({ map: obraDireita });
-
-const leftArt = new THREE.Mesh(new THREE.PlaneGeometry(2, 3), obraMaterialEsq);
-leftArt.position.set(-24.8, 10, 0);
-scene.add(leftArt);
-
-const rightArt = new THREE.Mesh(new THREE.PlaneGeometry(2, 3), obraMaterialDir);
-rightArt.position.set(24.8, 10, 0);
-scene.add(rightArt);
-
-// Pedestais + Cubos com gemas animadas
 const pedestalXPositions = [-8, -4, 4, 8];
+const gemas = [];
+const tampas = [];
+const obrasEmergentes = [];
 
 pedestalXPositions.forEach((x) => {
-  // Pedestal
   const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 1, 32), pedestalMaterial);
   pedestal.position.set(x, 0.5, 0);
   pedestal.castShadow = true;
   scene.add(pedestal);
 
-  // Cubo base
+  const cubeMaterial = new THREE.MeshPhysicalMaterial({
+    transmission: 1,
+    opacity: 1,
+    transparent: true,
+    roughness: 0,
+    metalness: 0,
+    clearcoat: 1,
+    reflectivity: 1,
+    thickness: 0.5,
+    color: 0xffffff,
+    side: THREE.DoubleSide
+  });
   const cube = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), cubeMaterial);
   cube.position.set(x, 1.5, 0);
   cube.castShadow = true;
   scene.add(cube);
 
-  // Gema no interior
-  const gema = new THREE.Mesh(new THREE.SphereGeometry(0.4, 32, 32), gemaMaterial);
+  const gema = new THREE.Mesh(new THREE.OctahedronGeometry(0.4), new THREE.MeshStandardMaterial({ map: gemaTexture }));
   gema.position.set(x, 1.5, 0);
   scene.add(gema);
+  gemas.push(gema);
 
-  // Tampa animada
-  const tampa = new THREE.Mesh(new THREE.BoxGeometry(1.02, 0.1, 1.02), cubeMaterial);
+  const tampa = new THREE.Mesh(new THREE.BoxGeometry(1.02, 0.1, 1.02), pedestalMaterial);
   tampa.position.set(x, 2.05, 0);
   scene.add(tampa);
+  tampas.push(tampa);
 
-  // Obra oculta inicialmente
-  const obra = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 3.5), new THREE.MeshStandardMaterial({ map: obraCentral }));
-  obra.position.set(x, 2.5, 0);
+  const obra = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 3.5), new THREE.MeshStandardMaterial({ color: 0xffffff }));
+  obra.position.set(0, 5, 2);
   obra.visible = false;
   scene.add(obra);
+  obrasEmergentes.push(obra);
 
-  // Interação
-  cube.userData = { aberto: false };
-  cube.callback = () => {
-    if (!cube.userData.aberto) {
-      cube.userData.aberto = true;
-      new TWEEN.Tween(tampa.position).to({ y: 3 }, 1500).easing(TWEEN.Easing.Quadratic.InOut).start();
-      new TWEEN.Tween(obra.position).to({ x: 0, y: 5, z: 2 }, 2000).easing(TWEEN.Easing.Quadratic.InOut).onStart(() => {
-        obra.visible = true;
-      }).start();
-    } else {
-      cube.userData.aberto = false;
-      new TWEEN.Tween(tampa.position).to({ y: 2.05 }, 1500).easing(TWEEN.Easing.Quadratic.InOut).start();
-      new TWEEN.Tween(obra.position).to({ x: x, y: 2.5, z: 0 }, 1000).easing(TWEEN.Easing.Quadratic.InOut).onComplete(() => {
-        obra.visible = false;
-      }).start();
-    }
-  };
-
-  // Detetar clique
-  cube.cursor = 'pointer';
+  cube.userData.index = gemas.length - 1;
   cube.name = 'interactivo';
   scene.add(cube);
 });
 
-// Raycaster para interatividade
+// Obras normais suspensas
+const obrasGrupo = new THREE.Group();
+const numObras = 15;
+const raio = 10;
+
+for (let i = 0; i < numObras; i++) {
+  const ang = (i / numObras) * Math.PI * 2;
+  const x = Math.cos(ang) * raio;
+  const z = Math.sin(ang) * raio;
+
+  const tex = loader.load(`assets/imagens/obra${i + 1}.jpg`);
+  const quadro = new THREE.Mesh(new THREE.PlaneGeometry(2, 3), new THREE.MeshStandardMaterial({ map: tex }));
+  quadro.position.set(x, 3, z);
+  quadro.lookAt(0, 3, 0);
+  obrasGrupo.add(quadro);
+
+  const reflexo = quadro.clone();
+  reflexo.material = new THREE.MeshStandardMaterial({ map: tex, opacity: 0.2, transparent: true });
+  reflexo.scale.y = -1;
+  reflexo.position.y = 2.5;
+  obrasGrupo.add(reflexo);
+}
+scene.add(obrasGrupo);
+
+// Obras premium suspensas
+const premiumData = [
+  { file: 'premium1.jpg', x: -3, z: -2 },
+  { file: 'premium2.jpg', x: 3, z: 2 },
+  { file: 'estrela-premium.jpg', x: 0, z: 0 }
+];
+
+premiumData.forEach(({ file, x, z }) => {
+  const tex = loader.load(`assets/imagens/${file}`);
+  const moldura = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 3.6), new THREE.MeshStandardMaterial({ map: molduraTexture }));
+  moldura.position.set(x, 4.2, z);
+  scene.add(moldura);
+
+  const obra = new THREE.Mesh(new THREE.PlaneGeometry(2, 3), new THREE.MeshStandardMaterial({ map: tex }));
+  obra.position.set(x, 4.2, z + 0.01);
+  scene.add(obra);
+
+  const estrela = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.4), new THREE.MeshStandardMaterial({ map: estrelaTexture, transparent: true }));
+  estrela.position.set(x + 1.1, 5.7, z + 0.02);
+  scene.add(estrela);
+});
+
+// Interação cubos
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-function onClick(event) {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+function handleInteraction(clientX, clientY) {
+  mouse.x = (clientX / window.innerWidth) * 2 - 1;
+  mouse.y = - (clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(scene.children);
 
-  for (let i = 0; i < intersects.length; i++) {
-    if (intersects[i].object.name === 'interactivo') {
-      intersects[i].object.callback();
-      break;
+  if (intersects.length > 0) {
+    const object = intersects[0].object;
+    if (object.name === 'interactivo') {
+      const i = object.userData.index;
+      const tampa = tampas[i];
+      const obra = obrasEmergentes[i];
+      const isOpen = obra.visible;
+
+      if (!isOpen) {
+        obra.visible = true;
+        new TWEEN.Tween(tampa.position).to({ y: 3 }, 1200).easing(TWEEN.Easing.Quadratic.InOut).start();
+      } else {
+        new TWEEN.Tween(tampa.position).to({ y: 2.05 }, 1200).easing(TWEEN.Easing.Quadratic.InOut).start();
+        obra.visible = false;
+      }
+    } else {
+      obrasEmergentes.forEach((obra, i) => {
+        if (obra.visible) {
+          obra.visible = false;
+          new TWEEN.Tween(tampas[i].position).to({ y: 2.05 }, 1200).easing(TWEEN.Easing.Quadratic.InOut).start();
+        }
+      });
     }
   }
 }
 
-window.addEventListener('click', onClick);
+window.addEventListener('click', (e) => handleInteraction(e.clientX, e.clientY));
+window.addEventListener('touchstart', (e) => {
+  if (e.touches.length > 0) {
+    handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+  }
+});
 
-// Responsividade
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Animação
 function animate(time) {
   requestAnimationFrame(animate);
   TWEEN.update(time);
+  gemas.forEach((g) => { g.rotation.y += 0.005 });
+  obrasGrupo.rotation.y += 0.0015;
   renderer.render(scene, camera);
 }
 animate();
-
