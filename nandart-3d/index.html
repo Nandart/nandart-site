@@ -1,39 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
   <head>
     <meta charset="UTF-8" />
-    <title>NANdART 3D</title>
+    <title>NANdART</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="assets/styles.css" />
+    <link rel="stylesheet" href="assets/index.css" />
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #0f0f0f;
+        color: #f5f5f5;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+      p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        max-width: 600px;
+        text-align: center;
+      }
+      .links {
+        display: flex;
+        gap: 2rem;
+      }
+      .links a {
+        color: #f3c677;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+        border: 1px solid #f3c67744;
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
+        transition: background-color 0.3s;
+      }
+      .links a:hover {
+        background-color: #f3c67722;
+      }
+    </style>
   </head>
   <body>
-    <!-- Ícones de navegação -->
-   <img id="icone-info" src="assets/imagens/info.png" alt="Info" />
-<img id="icone-menu" src="assets/imagens/horizontes.png" alt="Menu" />
-    <img id="ajuda-flutuante" src="assets/imagens/ajuda-flutuante.png" alt="Ajuda" />
-
-    <!-- Menu lateral -->
-    <nav id="menu-lateral" class="oculto">
-      <ul>
-        <li><a href="submeter.html">Submeter Obra</a></li>
-        <li><a href="como-navegar.html">Como Navegar</a></li>
-        <li><a href="contactos.html">Contactos</a></li>
-      </ul>
-    </nav>
-
-    <!-- Modal Info -->
-    <div id="modal-info" class="oculto">
-      <div class="modal-conteudo">
-        <span id="fechar-modal">&times;</span>
-        <h2>Bem-vindo à NANdART</h2>
-        <p>Esta galeria é um santuário tridimensional onde cada obra respira eternidade.</p>
-      </div>
+    <h1>Bem-vindo à NANdART</h1>
+    <p>
+      Uma galeria de arte digital com alma, onde tradição e inovação se cruzam.
+    </p>
+    <div class="links">
+      <a href="nandart-3d/">Entrar na Galeria 3D</a>
+      <a href="como-navegar/como-navegar.html">Como Navegar</a>
+      <a href="contactos.html">Contactos</a>
     </div>
-
-    <!-- Biblioteca Three.js -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
-
-    <!-- Script principal -->
-    <script src="assets/index.js"></script>
   </body>
 </html>
