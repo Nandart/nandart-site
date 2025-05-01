@@ -1,6 +1,15 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vite'
+import path from 'path'
 
-// Configuração para garantir que os caminhos funcionam no GitHub Pages
 export default defineConfig({
-  base: '/nandart-site/nandart-3d/'
-});
+  root: './src',
+  build: {
+    outDir: '../dist',
+    emptyOutDir: true
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  }
+})
