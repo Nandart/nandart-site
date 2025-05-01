@@ -7,12 +7,35 @@
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
   <body>
-    <!-- Importa Three.js como módulo -->
-    <script type="module">
-      import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
-      import 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/loaders/FontLoader.js';
-      import 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/geometries/TextGeometry.js';
-      import './assets/index.js';
-    </script>
+    <!-- Ícones de navegação -->
+    <img id="icone-info" src="assets/imagens/info-icon.png" alt="Info" />
+    <img id="icone-menu" src="assets/imagens/menu-icon.png" alt="Menu" />
+
+    <!-- Ícone de ajuda flutuante -->
+    <img id="ajuda-flutuante" src="assets/imagens/ajuda-flutuante.png" alt="Ajuda" />
+
+    <!-- Menu lateral -->
+    <nav id="menu-lateral" class="oculto">
+      <ul>
+        <li><a href="submeter.html">Submeter Obra</a></li>
+        <li><a href="como-navegar.html">Como Navegar</a></li>
+        <li><a href="contactos.html">Contactos</a></li>
+      </ul>
+    </nav>
+
+    <!-- Modal Info -->
+    <div id="modal-info" class="oculto">
+      <div class="modal-conteudo">
+        <span id="fechar-modal">&times;</span>
+        <h2>Bem-vindo à NANdART</h2>
+        <p>Esta galeria é um santuário tridimensional onde cada obra respira eternidade.</p>
+      </div>
+    </div>
+
+    <!-- Biblioteca Three.js -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+
+    <!-- Script principal -->
+    <script src="assets/index.js"></script>
   </body>
 </html>
