@@ -68,14 +68,20 @@ body {
   gap: 2rem;
 }
 
-.vitrine {
+.vitrine-escura {
   width: 100px;
   height: 100px;
-  border-radius: 8px;
-  border: 2px solid #ccc;
-  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border: 1px solid #444;
+  background-color: rgba(255, 255, 255, 0.01);
   object-fit: cover;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.vitrine-escura:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
 .circulo-chao {
