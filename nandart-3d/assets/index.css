@@ -1,20 +1,31 @@
-/* Base */
+/* ======================== */
+/*       ESTILO GLOBAL      */
+/* ======================== */
 body, html {
   margin: 0;
   padding: 0;
   overflow: hidden;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #121212;
+  background-color: #121212; /* Cinzento muito escuro */
   color: #f5f5f5;
 }
 
-canvas#scene {
+/* Canvas ocupa todo o ecrã */
+canvas {
   display: block;
   width: 100vw;
   height: 100vh;
 }
 
-/* Ícone flutuante de ajuda */
+/* Compatibilidade com toque em dispositivos móveis */
+* {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ======================== */
+/*      ÍCONE AJUDA         */
+/* ======================== */
 #ajudaFlutuante {
   position: fixed;
   bottom: 20px;
@@ -27,7 +38,9 @@ canvas#scene {
   cursor: pointer;
 }
 
-/* Ícones no canto superior esquerdo */
+/* ======================== */
+/*   ÍCONES SUPERIORES ESQ  */
+/* ======================== */
 .top-left-icons {
   position: fixed;
   top: 20px;
@@ -49,18 +62,20 @@ canvas#scene {
   transform: scale(1.1);
 }
 
-/* Ícone info (ligeiramente acima do menu) */
+/* Info ligeiramente mais acima do que os traços */
 .icon-info {
   margin-bottom: -4px;
 }
 
-/* Menu lateral */
+/* ======================== */
+/*       MENU LATERAL       */
+/* ======================== */
 .menu {
   position: fixed;
   top: 100px;
   left: 20px;
   padding: 15px 20px;
-  background-color: rgba(18, 18, 18, 0.95);
+  background-color: rgba(18, 18, 18, 0.95); /* fundo translúcido */
   border: 1px solid #f3c67744;
   border-radius: 10px;
   z-index: 100;
@@ -87,6 +102,7 @@ canvas#scene {
   color: #ffffff;
 }
 
+/* Classe utilitária para esconder elementos */
 .hidden {
   display: none;
 }
