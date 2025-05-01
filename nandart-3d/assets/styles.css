@@ -1,124 +1,73 @@
+/* index.css para a galeria NANdART */
+
 body {
   margin: 0;
-  background-color: #1a1a1a;
   overflow: hidden;
-  touch-action: manipulation;
-  font-family: Arial, sans-serif;
+  background-color: #1a1a1a;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #f2f2f2;
 }
 
 canvas {
   display: block;
 }
 
-/* Ícones de navegação */
-#icone-info, #icone-menu {
+/* Ícones no canto superior esquerdo */
+#info-icon,
+#menu-icon {
   position: fixed;
-  top: 20px;
   left: 20px;
   width: 40px;
   height: auto;
   cursor: pointer;
-  z-index: 10;
+  z-index: 1000;
+  opacity: 0.95;
+  transition: opacity 0.3s ease;
 }
 
-#icone-info {
-  top: 10px;
+#info-icon {
+  top: 20px;
 }
 
-#icone-menu {
+#menu-icon {
   top: 60px;
 }
 
-/* Ícone de ajuda */
+/* Ícone de ajuda flutuante */
 #ajuda-flutuante {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 40px;
+  width: 50px;
   height: auto;
   cursor: pointer;
-  z-index: 10;
-  animation: fadeout 1s ease-in-out forwards;
-  animation-delay: 20s;
+  opacity: 0.9;
+  z-index: 1000;
+  animation: desaparecer 1s ease-out 20s forwards;
 }
 
-@keyframes fadeout {
+@keyframes desaparecer {
   to {
     opacity: 0;
     visibility: hidden;
   }
 }
 
-/* Modal */
-#modal-info {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.9);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 20;
-}
-
-.modal-conteudo {
-  background-color: #222;
-  color: #fff;
-  padding: 2rem;
-  border-radius: 8px;
-  text-align: center;
-  max-width: 400px;
-}
-
-#fechar-modal {
+/* Estilo do menu flutuante */
+.menu-flutuante {
   position: absolute;
-  top: 20px;
-  right: 30px;
-  font-size: 2rem;
-  color: #fff;
+  top: 60px;
+  left: 20px;
+  background-color: #111;
+  border: 1px solid #aaa;
+  padding: 10px;
+  border-radius: 8px;
+  z-index: 1000;
+  color: white;
+  font-family: sans-serif;
+}
+
+.menu-flutuante div {
   cursor: pointer;
-}
-
-/* Menu lateral */
-#menu-lateral {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 250px;
-  height: 100vh;
-  background-color: #1a1a1a;
-  color: #fff;
-  padding: 2rem;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
-  z-index: 15;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-}
-
-#menu-lateral ul {
-  list-style: none;
-  padding: 0;
-}
-
-#menu-lateral li {
-  margin: 1rem 0;
-}
-
-#menu-lateral a {
-  color: #f3c677;
-  text-decoration: none;
-  font-size: 1.2rem;
-}
-
-#menu-lateral.aberto {
-  transform: translateX(0);
-}
-
-.oculto {
-  display: none;
+  margin-bottom: 6px;
 }
