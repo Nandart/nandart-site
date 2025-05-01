@@ -1,49 +1,29 @@
-
 body {
   margin: 0;
   background-color: #1a1a1a;
   overflow: hidden;
-  font-family: sans-serif;
+  touch-action: manipulation; /* Suporte para toque suave */
 }
 
 canvas {
   display: block;
 }
 
-/* Destaque dourado suave */
-::selection {
-  background: #f3c67733;
+/* Estilo para futuros elementos flutuantes */
+.obra-destaque {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 90vw;
+  max-height: 90vh;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
 }
 
-/* Ícone de ajuda flutuante */
-.help-icon {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: rgba(255, 255, 255, 0.08);
-  border: 1px solid #f3c67755;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  color: #f3c677;
-  text-align: center;
-  line-height: 40px;
-  font-size: 24px;
-  cursor: pointer;
-  z-index: 1000;
-  animation: pulse 2s infinite ease-in-out;
-  transition: opacity 0.3s ease;
+.obra-destaque.visible {
+  pointer-events: auto;
   opacity: 1;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(243, 198, 119, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(243, 198, 119, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(243, 198, 119, 0);
-  }
 }
