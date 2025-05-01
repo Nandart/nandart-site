@@ -7,7 +7,42 @@
     <link rel="stylesheet" href="assets/index.css" />
   </head>
   <body>
-    <!-- Script principal como módulo -->
-    <script type="module" src="index.js"></script>
+    <div class="top-left-icons">
+      <img src="assets/imagens/info.png" class="icon-info" id="infoIcon" alt="Info" />
+      <img src="assets/imagens/horizontes.png" id="menuIcon" alt="Menu" />
+    </div>
+
+    <div id="ajudaFlutuante">
+      <img src="assets/imagens/ajuda-flutuante.png" alt="Ajuda" />
+    </div>
+
+    <div class="menu hidden" id="menuLateral">
+      <ul>
+        <li><a href="como-navegar/como-navegar.html">Como Navegar</a></li>
+        <li><a href="submeter.html">Submeter Obra</a></li>
+        <li><a href="contactos.html">Contactos</a></li>
+      </ul>
+    </div>
+
+    <canvas id="scene"></canvas>
+    <script type="module" src="assets/index.js"></script>
+    <script>
+      const menuIcon = document.getElementById('menuIcon');
+      const menuLateral = document.getElementById('menuLateral');
+      menuIcon.addEventListener('click', () => {
+        menuLateral.classList.toggle('hidden');
+      });
+
+      const ajuda = document.getElementById('ajudaFlutuante');
+      setTimeout(() => {
+        ajuda.style.opacity = '0';
+        setTimeout(() => ajuda.remove(), 1000);
+      }, 20000);
+
+      const infoIcon = document.getElementById('infoIcon');
+      infoIcon.addEventListener('click', () => {
+        window.location.href = 'info.html';
+      });
+    </script>
   </body>
 </html>
