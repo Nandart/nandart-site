@@ -1,4 +1,4 @@
-// Importar Three.js via CDN no HTML, portanto não usamos "import * as THREE"
+// index.js (com paredes realistas, iluminação refinada e chão tipo obsidiana líquida)
 
 // Cena
 const scene = new THREE.Scene();
@@ -14,29 +14,48 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
 
-// Luz ambiente
-const ambientLight = new THREE.AmbientLight(0x444444);
+// Luz ambiente difusa
+const ambientLight = new THREE.AmbientLight(0x333333, 1);
 scene.add(ambientLight);
 
-// Spot principal
-const spotLight = new THREE.SpotLight(0xffffff, 1);
-spotLight.position.set(5, 10, 5);
-spotLight.castShadow = true;
-scene.add(spotLight);
+// Spots de teto (cenográficos)
+const ceilingSpots = [
+  { x: -10, z: -5 },
+  { x: 0, z: -5 },
+  { x: 10, z: -5 }
+];
 
-// Materiais
-const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x101010, metalness: 0.8, roughness: 0.2 });
-const paredeMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a1a });
-const pedestalMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
-const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xf3c677 });
+ceilingSpots.forEach(pos => {
+  const spot = new THREE.SpotLight(0xffffff, 0.7);
+  spot.position.set(pos.x, 12, pos.z);
+  spot.angle = Math.PI / 6;
+  spot.penumbra = 0.4;
+  spot.decay = 2;
+  spot.distance = 30;
+  spot.castShadow = true;
+  scene.add(spot);
+});
 
-// Chão
+// Material do chão: obsidiana líquida
+const floorMaterial = new THREE.MeshStandardMaterial({
+  color: 0x101010,
+  metalness: 1,
+  roughness: 0.1,
+  envMapIntensity: 1
+});
+
 const floor = new THREE.Mesh(new THREE.PlaneGeometry(50, 50), floorMaterial);
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
-// Paredes
+// Materiais de parede com realismo
+const paredeMaterial = new THREE.MeshStandardMaterial({
+  color: 0x1a1a1a,
+  roughness: 0.7,
+  metalness: 0.2
+});
+
 const backWall = new THREE.Mesh(new THREE.PlaneGeometry(50, 20), paredeMaterial);
 backWall.position.set(0, 10, -25);
 scene.add(backWall);
@@ -50,45 +69,6 @@ const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(50, 20), paredeMaterial
 rightWall.rotation.y = -Math.PI / 2;
 rightWall.position.set(25, 10, 0);
 scene.add(rightWall);
-
-// Texturas
-const loader = new THREE.TextureLoader();
-const frameTexture = loader.load('assets/imagens/moldura-dourada.jpg');
-const obraEsquerda = loader.load('assets/imagens/obra-esquerda.jpg');
-const obraDireita = loader.load('assets/imagens/obra-direita.jpg');
-
-// Molduras laterais
-const frameMaterial = new THREE.MeshStandardMaterial({ map: frameTexture });
-const leftFrame = new THREE.Mesh(new THREE.BoxGeometry(2.5, 3.5, 0.2), frameMaterial);
-leftFrame.position.set(-24.9, 10, 0);
-scene.add(leftFrame);
-const rightFrame = new THREE.Mesh(new THREE.BoxGeometry(2.5, 3.5, 0.2), frameMaterial);
-rightFrame.position.set(24.9, 10, 0);
-scene.add(rightFrame);
-
-// Obras dentro das molduras
-const obraMaterialEsq = new THREE.MeshStandardMaterial({ map: obraEsquerda });
-const obraMaterialDir = new THREE.MeshStandardMaterial({ map: obraDireita });
-const leftArt = new THREE.Mesh(new THREE.PlaneGeometry(2, 3), obraMaterialEsq);
-leftArt.position.set(-24.8, 10, 0);
-scene.add(leftArt);
-const rightArt = new THREE.Mesh(new THREE.PlaneGeometry(2, 3), obraMaterialDir);
-rightArt.position.set(24.8, 10, 0);
-scene.add(rightArt);
-
-// Pedestais e cubos
-const pedestalXPositions = [-8, -4, 4, 8];
-pedestalXPositions.forEach((x) => {
-  const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 1.5, 32), pedestalMaterial);
-  pedestal.position.set(x, 0.75, 0);
-  pedestal.castShadow = true;
-  scene.add(pedestal);
-
-  const cube = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), cubeMaterial);
-  cube.position.set(x, 1.75, 0);
-  cube.castShadow = true;
-  scene.add(cube);
-});
 
 // Responsividade
 window.addEventListener('resize', () => {
@@ -105,18 +85,75 @@ function animate() {
 animate();
 
 // Interatividade dos ícones
-const ajuda = document.getElementById('ajuda-flutuante');
-const modal = document.getElementById('modal-info');
-const fecharModal = document.getElementById('fechar-modal');
-const iconeInfo = document.getElementById('icone-info');
-const iconeMenu = document.getElementById('icone-menu');
-const menuLateral = document.getElementById('menu-lateral');
+function redirecionarPara(url) {
+  window.location.href = url;
+}
 
-iconeInfo.addEventListener('click', () => modal.classList.remove('oculto'));
-iconeInfo.addEventListener('touchstart', () => modal.classList.remove('oculto'));
+const infoIcon = document.getElementById("info-icon");
+const menuIcon = document.getElementById("menu-icon");
+const ajudaIcon = document.getElementById("ajuda-flutuante");
 
-fecharModal.addEventListener('click', () => modal.classList.add('oculto'));
-fecharModal.addEventListener('touchstart', () => modal.classList.add('oculto'));
+if (infoIcon) {
+  infoIcon.addEventListener("click", () => redirecionarPara("/como-navegar/index.html"));
+  infoIcon.addEventListener("touchstart", () => redirecionarPara("/como-navegar/index.html"));
+}
 
-iconeMenu.addEventListener('click', () => menuLateral.classList.toggle('aberto'));
-iconeMenu.addEventListener('touchstart', () => menuLateral.classList.toggle('aberto'));
+if (menuIcon) {
+  menuIcon.addEventListener("click", () => abrirMenu());
+  menuIcon.addEventListener("touchstart", () => abrirMenu());
+}
+
+if (ajudaIcon) {
+  ajudaIcon.addEventListener("click", () => redirecionarPara("/como-navegar/index.html"));
+  ajudaIcon.addEventListener("touchstart", () => redirecionarPara("/como-navegar/index.html"));
+  setTimeout(() => {
+    ajudaIcon.style.display = "none";
+  }, 20000);
+}
+
+function abrirMenu() {
+  const opcoes = [
+    { nome: "Submeter Obra", url: "/submeter.html" },
+    { nome: "Como Navegar", url: "/como-navegar/index.html" },
+    { nome: "Contactos", url: "/contactos.html" }
+  ];
+
+  const menuContainer = document.createElement("div");
+  menuContainer.style.position = "absolute";
+  menuContainer.style.top = "60px";
+  menuContainer.style.left = "20px";
+  menuContainer.style.backgroundColor = "#111";
+  menuContainer.style.border = "1px solid #aaa";
+  menuContainer.style.padding = "10px";
+  menuContainer.style.borderRadius = "8px";
+  menuContainer.style.zIndex = "1000";
+  menuContainer.style.color = "white";
+  menuContainer.style.fontFamily = "sans-serif";
+
+  opcoes.forEach(opcao => {
+    const link = document.createElement("div");
+    link.textContent = opcao.nome;
+    link.style.cursor = "pointer";
+    link.style.marginBottom = "6px";
+    link.addEventListener("click", () => {
+      redirecionarPara(opcao.url);
+    });
+    link.addEventListener("touchstart", () => {
+      redirecionarPara(opcao.url);
+    });
+    menuContainer.appendChild(link);
+  });
+
+  document.body.appendChild(menuContainer);
+
+  function fecharMenu(event) {
+    if (!menuContainer.contains(event.target) && event.target !== menuIcon) {
+      menuContainer.remove();
+      document.removeEventListener("click", fecharMenu);
+      document.removeEventListener("touchstart", fecharMenu);
+    }
+  }
+  document.addEventListener("click", fecharMenu);
+  document.addEventListener("touchstart", fecharMenu);
+}
+
