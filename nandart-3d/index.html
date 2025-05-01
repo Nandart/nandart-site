@@ -4,45 +4,42 @@
     <meta charset="UTF-8" />
     <title>NANdART Galeria 3D</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="assets/index.css" />
+    <link rel="stylesheet" href="index.css" />
   </head>
   <body>
+    <canvas id="scene"></canvas>
+
+    <!-- Ícones topo esquerdo -->
     <div class="top-left-icons">
-      <img src="assets/imagens/info.png" class="icon-info" id="infoIcon" alt="Info" />
-      <img src="assets/imagens/horizontes.png" id="menuIcon" alt="Menu" />
+      <img src="icones/info.png" alt="Info" class="icon-info" onclick="window.location.href='info.html'" />
+      <img src="icones/horizontes.png" alt="Menu" onclick="toggleMenu()" />
     </div>
 
-    <div id="ajudaFlutuante">
-      <img src="assets/imagens/ajuda-flutuante.png" alt="Ajuda" />
-    </div>
-
-    <div class="menu hidden" id="menuLateral">
+    <!-- Menu lateral -->
+    <div id="menu" class="menu hidden">
       <ul>
+        <li><a href="index.html">Galeria</a></li>
         <li><a href="como-navegar/como-navegar.html">Como Navegar</a></li>
-        <li><a href="submeter.html">Submeter Obra</a></li>
         <li><a href="contactos.html">Contactos</a></li>
       </ul>
     </div>
 
-    <canvas id="scene"></canvas>
-    <script type="module" src="assets/index.js"></script>
+    <!-- Ícone de ajuda flutuante -->
+    <img id="ajudaFlutuante" src="icones/ajuda-flutuante.png" alt="Ajuda" onclick="window.location.href='como-navegar/como-navegar.html'" />
+
+    <!-- Script principal como módulo -->
+    <script type="module" src="main.js"></script>
     <script>
-      const menuIcon = document.getElementById('menuIcon');
-      const menuLateral = document.getElementById('menuLateral');
-      menuIcon.addEventListener('click', () => {
-        menuLateral.classList.toggle('hidden');
-      });
+      function toggleMenu() {
+        const menu = document.getElementById('menu');
+        menu.classList.toggle('hidden');
+      }
 
-      const ajuda = document.getElementById('ajudaFlutuante');
+      // Ocultar o ícone de ajuda após 20 segundos
       setTimeout(() => {
-        ajuda.style.opacity = '0';
-        setTimeout(() => ajuda.remove(), 1000);
+        const ajuda = document.getElementById('ajudaFlutuante');
+        if (ajuda) ajuda.style.display = 'none';
       }, 20000);
-
-      const infoIcon = document.getElementById('infoIcon');
-      infoIcon.addEventListener('click', () => {
-        window.location.href = 'info.html';
-      });
     </script>
   </body>
 </html>
