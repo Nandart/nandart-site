@@ -1,104 +1,72 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { OrbitControls } from './src/OrbitControls.js';
 
-// Cena e renderizador
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x1a1a1a);
+scene.background = new THREE.Color(0x121212);
 
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 5, 15);
+const camera = new THREE.PerspectiveCamera(
+  50,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+camera.position.set(0, 3, 10);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById('scene') });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
-document.body.appendChild(renderer.domElement);
 
-// Luz ambiente e spots
-scene.add(new THREE.AmbientLight(0x333333));
+// Iluminação ambiente e direcionada
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+scene.add(ambientLight);
 
-const spot = new THREE.SpotLight(0xffffff, 1.2);
-spot.position.set(5, 12, 5);
-spot.castShadow = true;
-scene.add(spot);
+const spotLight = new THREE.SpotLight(0xffffff, 1);
+spotLight.position.set(0, 10, 10);
+spotLight.castShadow = true;
+scene.add(spotLight);
 
-// Materiais
-const paredeMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a1a });
-const chaoMaterial = new THREE.MeshStandardMaterial({ color: 0x101010, metalness: 0.6, roughness: 0.3 });
-const pedestalMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
-const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0x444444, transparent: true, opacity: 0.7 });
+// Círculo no chão como referência visual
+const circleGeometry = new THREE.RingGeometry(2.8, 3, 64);
+const circleMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+const circle = new THREE.Mesh(circleGeometry, circleMaterial);
+circle.rotation.x = -Math.PI / 2;
+circle.position.y = 0.01;
+scene.add(circle);
 
-// Chão
-const chao = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), chaoMaterial);
-chao.rotation.x = -Math.PI / 2;
-chao.receiveShadow = true;
-scene.add(chao);
+// Obra central fixa
+const obraTexture = new THREE.TextureLoader().load('assets/imagens/premium1.jpg');
+const obraMaterial = new THREE.MeshBasicMaterial({ map: obraTexture });
+const obraGeometry = new THREE.PlaneGeometry(2.4, 3.2);
+const obraCentral = new THREE.Mesh(obraGeometry, obraMaterial);
+obraCentral.position.set(0, 2.5, -8);
+scene.add(obraCentral);
 
-// Paredes
-const paredeFundo = new THREE.Mesh(new THREE.PlaneGeometry(60, 20), paredeMaterial);
-paredeFundo.position.set(0, 10, -30);
-scene.add(paredeFundo);
+// ÍCONES E INTERAÇÕES
+const ajuda = document.getElementById('ajudaFlutuante');
+setTimeout(() => {
+  if (ajuda) ajuda.style.opacity = '0';
+}, 20000);
 
-const paredeEsq = new THREE.Mesh(new THREE.PlaneGeometry(60, 20), paredeMaterial);
-paredeEsq.rotation.y = Math.PI / 2;
-paredeEsq.position.set(-30, 10, 0);
-scene.add(paredeEsq);
-
-const paredeDir = new THREE.Mesh(new THREE.PlaneGeometry(60, 20), paredeMaterial);
-paredeDir.rotation.y = -Math.PI / 2;
-paredeDir.position.set(30, 10, 0);
-scene.add(paredeDir);
-
-// Texturas
-const loader = new THREE.TextureLoader();
-const texturaGema = loader.load('assets/imagens/gema-azul.jpg.png');
-
-// Pedestais e cubos
-const posicoesPedestais = [-18, -14, 14, 18];
-posicoesPedestais.forEach((x) => {
-  const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 1.4, 32), pedestalMaterial);
-  pedestal.position.set(x, 0.7, 0);
-  pedestal.castShadow = true;
-  scene.add(pedestal);
-
-  const cube = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), cubeMaterial);
-  cube.position.set(x, 1.7, 0);
-  cube.castShadow = true;
-
-  const gema = new THREE.Mesh(new THREE.OctahedronGeometry(0.4), new THREE.MeshStandardMaterial({
-    map: texturaGema,
-    transparent: true,
-    opacity: 0.8
-  }));
-  gema.position.set(x, 1.9, 0);
-  gema.rotation.y = Math.random() * Math.PI;
-  scene.add(cube);
-  scene.add(gema);
+const menuToggle = document.getElementById('menuToggle');
+const menu = document.getElementById('menu');
+menuToggle.addEventListener('click', () => {
+  menu.classList.toggle('hidden');
 });
 
-// Responsividade
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-
-// Toque e clique
-function registarInteracoes() {
-  const clique = () => console.log('Elemento interativo tocado.');
-  document.querySelectorAll('.icon, .ajuda-flutuante').forEach(el => {
-    el.addEventListener('click', clique);
-    el.addEventListener('touchstart', clique);
-  });
-}
-registarInteracoes();
-
-// Animação
-function animate() {
-  requestAnimationFrame(animate);
-  scene.traverse((obj) => {
-    if (obj.geometry && obj.geometry.type === 'OctahedronGeometry') {
-      obj.rotation.y += 0.005;
-    }
-  });
-  renderer.render(scene, camera);
-}
-animate();
