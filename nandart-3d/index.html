@@ -2,26 +2,20 @@
 <html lang="pt">
   <head>
     <meta charset="UTF-8" />
-    <title>Galeria NANdART</title>
+    <title>NANdART 3D</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="assets/index.css" />
-    <link rel="icon" type="image/png" href="assets/imagens/gema-azul.jpg.png" />
   </head>
   <body>
-    <!-- Ícones no topo esquerdo -->
-    <div id="top-icons">
-      <img src="assets/imagens/info.png" alt="Info" id="info-icon" />
-      <img src="assets/imagens/horizontes.png" alt="Menu" id="menu-icon" />
-    </div>
+    <canvas id="canvas"></canvas>
 
-    <!-- Ícone de ajuda flutuante -->
-    <img src="assets/imagens/ajuda-flutuante.png" alt="Ajuda" id="ajuda-flutuante" />
+    <!-- Ícones fixos no canto superior esquerdo -->
+    <img src="assets/imagens/info.png" alt="Info" class="icon info-icon" />
+    <img src="assets/imagens/horizontes.png" alt="Menu" class="icon menu-icon" />
 
-    <!-- Canvas principal da galeria -->
-    <canvas id="canvas3d"></canvas>
+    <!-- Ícone de ajuda flutuante (só aparece nos primeiros 20s) -->
+    <img src="assets/imagens/ajuda-flutuante.png" alt="Ajuda" class="ajuda-flutuante" id="ajudaFlutuante" />
 
-    <!-- Script principal -->
-    <script type="module" src="assets/index.js"></script>
+    <script type="module" src="index.js"></script>
   </body>
 </html>
-
