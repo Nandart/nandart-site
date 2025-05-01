@@ -1,5 +1,4 @@
-/* index.css para a galeria NANdART */
-
+/* Estilo base */
 body {
   margin: 0;
   overflow: hidden;
@@ -13,24 +12,22 @@ canvas {
 }
 
 /* Ícones no canto superior esquerdo */
-#info-icon,
-#menu-icon {
+#top-icons {
   position: fixed;
+  top: 20px;
   left: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#top-icons img {
   width: 40px;
   height: auto;
   cursor: pointer;
-  z-index: 1000;
   opacity: 0.95;
   transition: opacity 0.3s ease;
-}
-
-#info-icon {
-  top: 20px;
-}
-
-#menu-icon {
-  top: 60px;
 }
 
 /* Ícone de ajuda flutuante */
@@ -53,21 +50,14 @@ canvas {
   }
 }
 
-/* Estilo do menu flutuante */
-.menu-flutuante {
-  position: absolute;
-  top: 60px;
-  left: 20px;
-  background-color: #111;
-  border: 1px solid #aaa;
-  padding: 10px;
-  border-radius: 8px;
-  z-index: 1000;
-  color: white;
-  font-family: sans-serif;
+/* Responsivo para ecrãs pequenos */
+@media (max-width: 768px) {
+  #top-icons img {
+    width: 32px;
+  }
+
+  #ajuda-flutuante {
+    width: 40px;
+  }
 }
 
-.menu-flutuante div {
-  cursor: pointer;
-  margin-bottom: 6px;
-}
