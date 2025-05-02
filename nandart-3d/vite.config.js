@@ -1,4 +1,4 @@
-/ vite.config.js
+// vite.config.js
 import { defineConfig } from 'vite';
 import path from 'path';
 
@@ -13,6 +13,6 @@ export default defineConfig({
     }
   },
   server: {
-    open: true
+    host: true
   }
 });
