@@ -26,11 +26,13 @@
     <!-- Ícone flutuante de ajuda -->
     <img id="ajudaFlutuante" src="src/icones/ajuda-flutuante.png" alt="Ajuda" onclick="window.location.href='src/como-navegar/como-navegar.html'" />
 
-    <script type="module" src="src/main.js"></script>
+    <script type="module" src="./src/main.js"></script>
+
     <script>
       function toggleMenu() {
         document.getElementById('menu').classList.toggle('hidden');
       }
+
       setTimeout(() => {
         const ajuda = document.getElementById('ajudaFlutuante');
         if (ajuda) ajuda.style.display = 'none';
