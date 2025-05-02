@@ -4,45 +4,40 @@
     <meta charset="UTF-8" />
     <title>NANdART Galeria 3D</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="favicon.ico" />
-    <link rel="stylesheet" href="src/assets/index.css" />
+    <link rel="icon" type="image/png" href="./icones/horizontes.png" />
+    <link rel="stylesheet" href="./index.css" />
   </head>
   <body>
     <canvas id="scene"></canvas>
 
-    <!-- Ícones no canto superior esquerdo -->
     <div class="top-left-icons">
-      <img src="src/icones/info.png" alt="Info" class="icon-info" onclick="window.location.href='info.html'" />
-      <img src="src/icones/horizontes.png" alt="Menu" onclick="toggleMenu()" />
+      <img src="./icones/info.png" alt="Info" class="icon-info" onclick="window.location.href='../info.html'" />
+      <img src="./icones/horizontes.png" alt="Menu" onclick="toggleMenu()" />
     </div>
 
-    <!-- Menu lateral -->
     <div id="menu" class="menu hidden">
       <ul>
-        <li><a href="index.html">Galeria</a></li>
-        <li><a href="src/como-navegar/como-navegar.html">Como Navegar</a></li>
-        <li><a href="contactos.html">Contactos</a></li>
+        <li><a href="../index.html">Galeria</a></li>
+        <li><a href="./como-navegar/como-navegar.html">Como Navegar</a></li>
+        <li><a href="../contactos.html">Contactos</a></li>
       </ul>
     </div>
 
-    <!-- Ícone de ajuda flutuante -->
-    <img id="ajudaFlutuante" src="src/icones/ajuda-flutuante.png" alt="Ajuda" onclick="window.location.href='src/como-navegar/como-navegar.html'" />
+    <img id="ajudaFlutuante" src="./icones/ajuda-flutuante.png" alt="Ajuda" onclick="window.location.href='./como-navegar/como-navegar.html'" />
 
-    <!-- Modal de obra (preparado para ativação por JavaScript) -->
     <div id="modalObra" class="modal-obra hidden">
-      <h2 id="modalTitulo">Título da Obra</h2>
-      <p id="modalDescricao">Descrição detalhada da obra em exibição.</p>
-      <img id="modalImagem" src="" alt="Imagem da Obra" />
+      <h2>Título da Obra</h2>
+      <p>Descrição detalhada da obra em exibição.</p>
+      <img src="./imagens/obra-central.jpg" alt="Obra em foco" />
     </div>
 
-    <script type="module" src="src/main.js"></script>
+    <script type="module" src="./main.js"></script>
     <script>
       function toggleMenu() {
         const menu = document.getElementById('menu');
         menu.classList.toggle('hidden');
       }
 
-      // Ocultar o ícone de ajuda após 20 segundos
       setTimeout(() => {
         const ajuda = document.getElementById('ajudaFlutuante');
         if (ajuda) ajuda.style.display = 'none';
