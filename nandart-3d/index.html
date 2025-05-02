@@ -4,40 +4,33 @@
     <meta charset="UTF-8" />
     <title>NANdART Galeria 3D</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/x-icon" href="/public/favicon.ico" />
-    <link rel="stylesheet" href="/src/index.css" />
   </head>
   <body>
     <canvas id="scene"></canvas>
 
-    <!-- Ícones canto superior esquerdo -->
+    <!-- Ícones no canto superior esquerdo -->
     <div class="top-left-icons">
-      <img src="/src/icones/info.png" alt="Info" class="icon-info" onclick="window.location.href='info.html'" />
-      <img src="/src/icones/horizontes.png" alt="Menu" onclick="toggleMenu()" />
+      <img src="src/icones/info.png" alt="Info" class="icon-info" onclick="window.location.href='info.html'" />
+      <img src="src/icones/horizontes.png" alt="Menu" onclick="toggleMenu()" />
     </div>
 
     <!-- Menu lateral -->
     <div id="menu" class="menu hidden">
       <ul>
         <li><a href="index.html">Galeria</a></li>
-        <li><a href="como-navegar/como-navegar.html">Como Navegar</a></li>
+        <li><a href="src/como-navegar/como-navegar.html">Como Navegar</a></li>
         <li><a href="contactos.html">Contactos</a></li>
       </ul>
     </div>
 
-    <!-- Ícone de ajuda flutuante -->
-    <img id="ajudaFlutuante" src="/src/icones/ajuda-flutuante.png" alt="Ajuda" onclick="window.location.href='como-navegar/como-navegar.html'" />
+    <!-- Ícone flutuante de ajuda -->
+    <img id="ajudaFlutuante" src="src/icones/ajuda-flutuante.png" alt="Ajuda" onclick="window.location.href='src/como-navegar/como-navegar.html'" />
 
-    <!-- Script principal -->
-    <script type="module" src="/src/main.js"></script>
-
+    <script type="module" src="src/main.js"></script>
     <script>
       function toggleMenu() {
-        const menu = document.getElementById('menu');
-        menu.classList.toggle('hidden');
+        document.getElementById('menu').classList.toggle('hidden');
       }
-
-      // Ocultar ícone de ajuda após 20 segundos
       setTimeout(() => {
         const ajuda = document.getElementById('ajudaFlutuante');
         if (ajuda) ajuda.style.display = 'none';
@@ -45,4 +38,3 @@
     </script>
   </body>
 </html>
-
