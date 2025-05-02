@@ -1,17 +1,16 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt">
   <head>
     <meta charset="UTF-8" />
     <title>NANdART Galeria 3D</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="src/index.css" />
-    <link rel="icon" href="public/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="favicon.ico" />
+    <link rel="stylesheet" href="src/assets/index.css" />
   </head>
   <body>
     <canvas id="scene"></canvas>
 
-    <!-- Ícones canto superior esquerdo -->
+    <!-- Ícones no canto superior esquerdo -->
     <div class="top-left-icons">
       <img src="src/icones/info.png" alt="Info" class="icon-info" onclick="window.location.href='info.html'" />
       <img src="src/icones/horizontes.png" alt="Menu" onclick="toggleMenu()" />
@@ -29,15 +28,21 @@
     <!-- Ícone de ajuda flutuante -->
     <img id="ajudaFlutuante" src="src/icones/ajuda-flutuante.png" alt="Ajuda" onclick="window.location.href='src/como-navegar/como-navegar.html'" />
 
-    <!-- Script principal como módulo -->
-    <script type="module" src="src/main.js"></script>
+    <!-- Modal de obra (preparado para ativação por JavaScript) -->
+    <div id="modalObra" class="modal-obra hidden">
+      <h2 id="modalTitulo">Título da Obra</h2>
+      <p id="modalDescricao">Descrição detalhada da obra em exibição.</p>
+      <img id="modalImagem" src="" alt="Imagem da Obra" />
+    </div>
 
+    <script type="module" src="src/main.js"></script>
     <script>
       function toggleMenu() {
         const menu = document.getElementById('menu');
         menu.classList.toggle('hidden');
       }
 
+      // Ocultar o ícone de ajuda após 20 segundos
       setTimeout(() => {
         const ajuda = document.getElementById('ajudaFlutuante');
         if (ajuda) ajuda.style.display = 'none';
