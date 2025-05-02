@@ -1,9 +1,7 @@
 {
   "name": "nandart-3d",
   "version": "1.0.0",
-  "description": "Galeria 3D imersiva com obras digitais e integração Web3",
-  "author": "NANdART",
-  "license": "MIT",
+  "description": "Galeria NANdART 3D - uma galeria de arte onírica em ambiente tridimensional.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
