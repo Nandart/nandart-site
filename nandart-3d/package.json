@@ -1,24 +1,16 @@
 {
   "name": "nandart-3d",
   "version": "1.0.0",
-  "description": "Galeria de arte digital 3D da NANdART - Um santuário onírico e intemporal.",
-  "main": "src/main.js",
+  "description": "Galeria 3D da NANdART com integração Web3 e NFTs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
-  "keywords": [
-    "arte",
-    "3D",
-    "galeria",
-    "NFT",
-    "Web3",
-    "NANdART"
-  ],
+  "keywords": ["vite", "three.js", "gallery", "NFT", "web3", "art"],
   "author": "NANdART",
   "license": "MIT",
   "devDependencies": {
-    "vite": "^5.0.0"
+    "vite": "^4.5.0"
   }
 }
