@@ -1,169 +1,157 @@
 <!DOCTYPE html>
 <html lang="pt">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel de Aprovação</title>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <style>
-     body {
-       font-family: Georgia, serif;
-       background-color: #121212;
-       color: #fff;
-       padding: 20px;
-       margin: 0;
-     }
- 
-     h1 {
-       color: #d4af37;
-       text-align: center;
-     }
- 
-     .contador {
-       color: #32cd32;
-       text-align: center;
-       margin-bottom: 20px;
-     }
- 
-     .obra {
-       border: 1px solid #d4af37;
-       padding: 10px;
-       margin-bottom: 15px;
-       background-color: #1e1e1e;
-     }
- 
-     .obra h3 {
-       margin: 0;
-       color: #ffd700;
-     }
- 
-     .obra a {
-       color: #d4af37;
-       text-decoration: none;
-     }
- 
-     .obra button {
-       background-color: #d4af37;
-       color: #000;
-       border: none;
-       padding: 6px 12px;
-       cursor: pointer;
-       margin-top: 10px;
-     }
- 
-     .obra button:disabled {
-       background-color: #aaa;
-       cursor: not-allowed;
-     }
- 
-     .mensagem {
-       margin-top: 10px;
-       font-size: 14px;
-     }
- 
-     .mensagem.sucesso {
-       color: #32cd32;
-     }
- 
-     .mensagem.erro {
-       color: #ff4d4d;
-     }
- 
-     @media (max-width: 600px) {
-       .obra h3 {
-         font-size: 18px;
-       }
-     }
-   </style>
-</head>
-<body>
-  <h1>Painel de Aprovação</h1>
-  <div class="contador" id="contador"></div>
-  <div id="lista-obras"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Painel de Aprovação - NANdART</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #121212;
+        color: #f5f5f5;
+        margin: 0;
+        padding: 2rem;
+      }
 
-  <script>
-    const tokenEsperado = 'fernanda2025visao';
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
+      h1 {
+        text-align: center;
+        color: #f3c677;
+      }
 
-    if (token !== tokenEsperado) {
-      document.body.innerHTML = '<h2 style="color: red; text-align: center">Acesso negado.</h2>';
-      throw new Error('Token inválido');
-    }
+      .obra {
+        border: 1px solid #444;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        background-color: #1e1e1e;
+      }
 
-    async function carregarObras() {
-      try {
-        const resposta = await fetch('https://nandart-api.vercel.app/api/submissoes');
-        const dados = await resposta.json();
+      .obra img {
+        max-width: 100%;
+        border-radius: 6px;
+        margin-top: 1rem;
+      }
 
-        const contador = document.getElementById('contador');
-        contador.textContent = `🌿 Submissões pendentes: ${dados.total}`;
+      button {
+        background-color: #f3c677;
+        color: #000;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        margin-top: 1rem;
+      }
 
-        const lista = document.getElementById('lista-obras');
-        lista.innerHTML = '';
+      button:disabled {
+        background-color: #777;
+        cursor: not-allowed;
+      }
 
-        dados.pendentes.forEach((obra) => {
+      .mensagem {
+        margin-top: 1rem;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Painel de Aprovação de Obras</h1>
+    <div id="painel"></div>
+
+    <script>
+      const token = new URLSearchParams(window.location.search).get('token');
+      if (token !== 'fernanda2025visao') {
+        document.body.innerHTML = '<h2>Acesso não autorizado</h2>';
+        throw new Error('Acesso negado');
+      }
+
+      async function carregarSubmissoes() {
+        const resp = await fetch('/api/submissoes');
+        const { obras } = await resp.json();
+        const painel = document.getElementById('painel');
+        painel.innerHTML = '';
+
+        obras.forEach((obra) => {
           const div = document.createElement('div');
           div.className = 'obra';
 
-          const msgId = `mensagem-${obra.id}`;
-          const btnId = `btn-${obra.id}`;
+          const obrigatorios = ['titulo', 'artista', 'ano', 'descricao', 'local', 'imagem'];
+          const emFalta = obrigatorios.filter((campo) => !obra[campo]);
 
           div.innerHTML = `
-            <h3>Nova Submissão: "${obra.titulo}" por ${obra.nomeArtista}</h3>
-            <p>🔗 <a href="${obra.url}" target="_blank">Ver submissão</a></p>
-            <button id="${btnId}" onclick="aprovarObra(${obra.id}, '${obra.titulo}', '${obra.nomeArtista}', '${obra.imagem}', '${btnId}', '${msgId}')">✅ Aprovar</button>
-            <div id="${msgId}" class="mensagem"></div>
+            <h3>${obra.titulo || 'Sem Título'}</h3>
+            <p><strong>Artista:</strong> ${obra.artista || '—'}</p>
+            <p><strong>Estilo:</strong> ${obra.estilo || '—'}</p>
+            <p><strong>Técnica:</strong> ${obra.tecnica || '—'}</p>
+            <p><strong>Ano:</strong> ${obra.ano || '—'}</p>
+            <p><strong>Dimensões:</strong> ${obra.dimensoes || '—'}</p>
+            <p><strong>Materiais:</strong> ${obra.materiais || '—'}</p>
+            <p><strong>Local:</strong> ${obra.local || '—'}</p>
+            <p><strong>Descrição:</strong> ${obra.descricao || '—'}</p>
+            ${obra.imagem ? `<img src="${obra.imagem}" alt="Imagem da obra" />` : ''}
+            <button onclick="aprovar(this, ${obra.numero})" ${emFalta.length ? 'disabled' : ''}>
+              Aprovar Obra
+            </button>
+            <div class="mensagem"></div>
           `;
-
-          lista.appendChild(div);
+          painel.appendChild(div);
         });
-      } catch (erro) {
-        console.error('Erro ao carregar obras:', erro);
-        document.getElementById('contador').innerText = 'Erro ao carregar submissões.';
       }
-    }
 
-    async function aprovarObra(id, titulo, nomeArtista, imagem, btnId, msgId) {
-      const botao = document.getElementById(btnId);
-      const mensagem = document.getElementById(msgId);
+      async function aprovar(botao, numero) {
+        botao.disabled = true;
+        botao.textContent = 'Aprovar...';
+        const mensagem = botao.nextElementSibling;
 
-      botao.disabled = true;
-      botao.textContent = '⏳ A processar...';
-      mensagem.textContent = '';
-      mensagem.className = 'mensagem';
+        const obraDiv = botao.parentElement;
+        const campos = ['Artista', 'Título', 'Estilo', 'Técnica', 'Ano', 'Dimensões', 'Materiais', 'Local', 'Descrição'];
+        const dados = {};
 
-      try {
-        const resposta = await fetch('https://nandart-api.vercel.app/api/aprovar', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ id, titulo, nomeArtista, imagem })
+        campos.forEach((campo) => {
+          const p = Array.from(obraDiv.querySelectorAll('p')).find((p) => p.textContent.startsWith(campo));
+          dados[campo.toLowerCase()] = p ? p.textContent.split(':').slice(1).join(':').trim() : '';
         });
 
-        const dados = await resposta.json();
+        const imagem = obraDiv.querySelector('img')?.src || '';
 
-        if (resposta.ok) {
-          mensagem.textContent = '✅ Obra aprovada com sucesso!';
-          mensagem.classList.add('sucesso');
-          setTimeout(() => carregarObras(), 1500);
-        } else {
-          mensagem.textContent = `❌ Erro: ${dados.message}`;
-          mensagem.classList.add('erro');
+        const payload = {
+          numero,
+          artista: dados['artista'],
+          titulo: dados['título'],
+          estilo: dados['estilo'],
+          tecnica: dados['técnica'],
+          ano: dados['ano'],
+          dimensoes: dados['dimensões'],
+          materiais: dados['materiais'],
+          local: dados['local'],
+          descricao: dados['descrição'],
+          imagem,
+        };
+
+        try {
+          const resp = await fetch('/api/aprovar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+
+          const res = await resp.json();
+          if (res.sucesso) {
+            mensagem.textContent = '✅ Obra aprovada com sucesso!';
+            obraDiv.style.opacity = 0.5;
+          } else {
+            mensagem.textContent = '❌ Erro: ' + res.mensagem;
+            botao.disabled = false;
+            botao.textContent = 'Aprovar Obra';
+          }
+        } catch (e) {
+          mensagem.textContent = '❌ Erro ao enviar a aprovação.';
           botao.disabled = false;
-          botao.textContent = '✅ Aprovar';
+          botao.textContent = 'Aprovar Obra';
         }
-      } catch (erro) {
-        console.error('Erro ao aprovar obra:', erro);
-        mensagem.textContent = '❌ Erro ao contactar o servidor.';
-        mensagem.classList.add('erro');
-        botao.disabled = false;
-        botao.textContent = '✅ Aprovar';
       }
-    }
 
-    carregarObras();
-  </script>
-</body>
+      carregarSubmissoes();
+    </script>
+  </body>
 </html>
