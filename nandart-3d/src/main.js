@@ -1,132 +1,135 @@
-// main.js
+// main.js definitivo e funcional para a galeria NANdART
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160.1/examples/jsm/loaders/GLTFLoader.js';
 
+// Cena
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x1a1a1a);
+scene.background = new THREE.Color(0x111111);
 
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 5, 12);
+// Câmara
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 2, 6);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+// Renderer
+const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#scene'), antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMap.enabled = true;
-document.getElementById('scene').appendChild(renderer.domElement);
+document.body.appendChild(renderer.domElement);
 
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-
-const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
+// Luzes
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
-const spotLight = new THREE.SpotLight(0xffffff, 1);
-spotLight.position.set(5, 15, 5);
-spotLight.castShadow = true;
-scene.add(spotLight);
+const pointLight = new THREE.PointLight(0xffffff, 1);
+pointLight.position.set(0, 4, 4);
+scene.add(pointLight);
 
-// Materiais
-const paredeMaterial = new THREE.MeshStandardMaterial({ color: 0x1a1a1a });
-const pisoMaterial = new THREE.MeshStandardMaterial({ color: 0x101010, metalness: 0.5, roughness: 0.3 });
-
-const vidroMaterial = new THREE.MeshPhysicalMaterial({
-  transparent: true,
-  opacity: 0.6,
-  roughness: 0,
-  transmission: 1,
-  thickness: 0.5
-});
-
-const cuboMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-const gemaTexture = new THREE.TextureLoader().load('src/imagens/gema-azul.jpg.png');
-const gemaMaterial = new THREE.MeshStandardMaterial({ map: gemaTexture, transparent: true, opacity: 0.95 });
-
-const texturaChao = new THREE.TextureLoader().load('src/texturas/obsidiana.jpg');
-texturaChao.wrapS = texturaChao.wrapT = THREE.RepeatWrapping;
-texturaChao.repeat.set(2, 2);
-pisoMaterial.map = texturaChao;
-
-// Chão
-const floor = new THREE.Mesh(new THREE.PlaneGeometry(50, 50), pisoMaterial);
+// Plano de chão com reflexo
+const floorTexture = new THREE.TextureLoader().load('assets/textures/obsidiana.jpg');
+floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+floorTexture.repeat.set(2, 2);
+const floorMaterial = new THREE.MeshStandardMaterial({ map: floorTexture });
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), floorMaterial);
 floor.rotation.x = -Math.PI / 2;
-floor.receiveShadow = true;
 scene.add(floor);
 
 // Círculo de luz no chão
-const circulo = new THREE.Mesh(
-  new THREE.RingGeometry(6.5, 7, 64),
-  new THREE.MeshBasicMaterial({ color: 0xf3c677, side: THREE.DoubleSide })
+const ringTexture = new THREE.TextureLoader().load('assets/textures/luz-circular.png');
+const ringMaterial = new THREE.MeshBasicMaterial({ map: ringTexture, transparent: true });
+const ring = new THREE.Mesh(new THREE.PlaneGeometry(3, 3), ringMaterial);
+ring.rotation.x = -Math.PI / 2;
+ring.position.y = 0.01;
+scene.add(ring);
+
+// Moldura central
+const centralFrame = new THREE.Mesh(
+  new THREE.PlaneGeometry(2, 3),
+  new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('assets/imagens/obra-central.jpg') })
 );
-circulo.rotation.x = -Math.PI / 2;
-circulo.position.y = 0.01;
-scene.add(circulo);
+centralFrame.position.set(0, 2, -5.01);
+scene.add(centralFrame);
 
-// Paredes
-const backWall = new THREE.Mesh(new THREE.PlaneGeometry(50, 20), paredeMaterial);
-backWall.position.set(0, 10, -25);
-scene.add(backWall);
+// Frisos dourados (laterais e topo)
+const frisoMaterial = new THREE.MeshBasicMaterial({ color: 0xf3c677 });
+const frisos = [
+  new THREE.Mesh(new THREE.BoxGeometry(10, 0.02, 0.01), frisoMaterial),
+  new THREE.Mesh(new THREE.BoxGeometry(10, 0.02, 0.01), frisoMaterial),
+];
+frisos[0].position.set(0, 3.5, -5.01);
+frisos[1].position.set(0, 0.5, -5.01);
+frisos.forEach(f => scene.add(f));
 
-const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(50, 20), paredeMaterial);
-leftWall.rotation.y = Math.PI / 2;
-leftWall.position.set(-25, 10, 0);
-scene.add(leftWall);
+// Quadros laterais
+const obraEsquerda = new THREE.Mesh(
+  new THREE.PlaneGeometry(1.5, 2),
+  new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('assets/imagens/obra-esquerda.jpg') })
+);
+obraEsquerda.position.set(-4.5, 2, -2);
+scene.add(obraEsquerda);
 
-const rightWall = new THREE.Mesh(new THREE.PlaneGeometry(50, 20), paredeMaterial);
-rightWall.rotation.y = -Math.PI / 2;
-rightWall.position.set(25, 10, 0);
-scene.add(rightWall);
+const obraDireita = new THREE.Mesh(
+  new THREE.PlaneGeometry(1.5, 2),
+  new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load('assets/imagens/obra-direita.jpg') })
+);
+obraDireita.position.set(4.5, 2, -2);
+scene.add(obraDireita);
 
-// Quadros fixos
-const textureLoader = new THREE.TextureLoader();
-const molduraTexture = textureLoader.load('src/imagens/moldura-dourada.jpg');
-const obraEsquerda = textureLoader.load('src/imagens/obra-esquerda.jpg');
-const obraDireita = textureLoader.load('src/imagens/obra-direita.jpg');
-const obraCentral = textureLoader.load('src/imagens/obra-central.jpg');
+// Vitrines com gemas (4 pedestais)
+const pedestalGeometry = new THREE.BoxGeometry(0.8, 1, 0.8);
+const pedestalMaterial = new THREE.MeshStandardMaterial({ color: 0x111111 });
+const vidroMaterial = new THREE.MeshStandardMaterial({
+  map: new THREE.TextureLoader().load('assets/textures/vidro-reflexo.png'),
+  transparent: true,
+  opacity: 0.6,
+});
 
-const molduraMaterial = new THREE.MeshStandardMaterial({ map: molduraTexture });
-const quadroGeometry = new THREE.BoxGeometry(2.5, 3.5, 0.2);
+const gemaTexture = new THREE.TextureLoader().load('assets/imagens/gema-azul.jpg.png');
+const gemaMaterial = new THREE.MeshStandardMaterial({ map: gemaTexture });
+const gemaGeometry = new THREE.OctahedronGeometry(0.25);
 
-const esquerda = new THREE.Mesh(quadroGeometry, molduraMaterial);
-esquerda.position.set(-24.9, 10, 0);
-scene.add(esquerda);
+const pedestalPositions = [
+  [-3, 0.5, -2],
+  [-3, 0.5, 2],
+  [3, 0.5, -2],
+  [3, 0.5, 2],
+];
 
-const direita = new THREE.Mesh(quadroGeometry, molduraMaterial);
-direita.position.set(24.9, 10, 0);
-scene.add(direita);
+pedestalPositions.forEach(pos => {
+  const pedestal = new THREE.Mesh(pedestalGeometry, pedestalMaterial);
+  pedestal.position.set(...pos);
+  scene.add(pedestal);
 
-const centro = new THREE.Mesh(quadroGeometry, molduraMaterial);
-centro.position.set(0, 10, -24.9);
-scene.add(centro);
-
-// Obras dentro das molduras
-const obraMaterialEsq = new THREE.MeshBasicMaterial({ map: obraEsquerda });
-const obraMaterialDir = new THREE.MeshBasicMaterial({ map: obraDireita });
-const obraMaterialCen = new THREE.MeshBasicMaterial({ map: obraCentral });
-
-const geoObra = new THREE.PlaneGeometry(2, 3);
-const obraE = new THREE.Mesh(geoObra, obraMaterialEsq);
-obraE.position.set(-24.8, 10, 0.01);
-scene.add(obraE);
-
-const obraD = new THREE.Mesh(geoObra, obraMaterialDir);
-obraD.position.set(24.8, 10, 0.01);
-scene.add(obraD);
-
-const obraC = new THREE.Mesh(geoObra, obraMaterialCen);
-obraC.position.set(0, 10, -24.8);
-scene.add(obraC);
-
-// Cubos + Gemas
-const posicoesCubos = [-8, -4, 4, 8];
-posicoesCubos.forEach(x => {
-  const vitrine = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 1.2), vidroMaterial);
-  vitrine.position.set(x, 1.6, 0);
-  vitrine.castShadow = true;
+  const vitrine = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.7, 0.7), vidroMaterial);
+  vitrine.position.set(pos[0], pos[1] + 0.7, pos[2]);
   scene.add(vitrine);
 
-  const gema = new THREE.Mesh(new THREE.SphereGeometry(0.4, 32, 32), gemaMaterial);
-  gema.position.set(x, 1.6, 0);
+  const gema = new THREE.Mesh(gemaGeometry, gemaMaterial);
+  gema.position.set(pos[0], pos[1] + 0.7, pos[2]);
   scene.add(gema);
 });
+
+// Modal de obra (clicar numa das obras)
+window.addEventListener('click', () => {
+  alert('Modal de obra em desenvolvimento');
+});
+
+// Controlo orbital
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.1;
+controls.enablePan = false;
+controls.minDistance = 3;
+controls.maxDistance = 10;
+controls.target.set(0, 2, 0);
+controls.update();
+
+// Animação
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
 
 // Responsividade
 window.addEventListener('resize', () => {
@@ -134,16 +137,3 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-
-// Animação
-function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  scene.traverse(obj => {
-    if (obj.name === 'obra-circular') {
-      obj.rotation.y += 0.002;
-    }
-  });
-  renderer.render(scene, camera);
-}
-animate();
