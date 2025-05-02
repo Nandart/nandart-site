@@ -1,16 +1,18 @@
 {
   "name": "nandart-3d",
   "version": "1.0.0",
-  "description": "Galeria 3D da NANdART com integração Web3 e NFTs",
+  "description": "Galeria 3D imersiva com obras digitais e integração Web3",
+  "author": "NANdART",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
-  "keywords": ["vite", "three.js", "gallery", "NFT", "web3", "art"],
-  "author": "NANdART",
-  "license": "MIT",
+  "dependencies": {
+    "three": "^0.160.1"
+  },
   "devDependencies": {
-    "vite": "^4.5.0"
+    "vite": "^5.1.4"
   }
 }
