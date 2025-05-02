@@ -45,7 +45,7 @@ texturaChao.wrapS = texturaChao.wrapT = THREE.RepeatWrapping;
 texturaChao.repeat.set(2, 2);
 pisoMaterial.map = texturaChao;
 
-// Chão
+Chão
 const floor = new THREE.Mesh(new THREE.PlaneGeometry(50, 50), pisoMaterial);
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
@@ -60,7 +60,7 @@ circulo.rotation.x = -Math.PI / 2;
 circulo.position.y = 0.01;
 scene.add(circulo);
 
-// Paredes
+Paredes
 const backWall = new THREE.Mesh(new THREE.PlaneGeometry(50, 20), paredeMaterial);
 backWall.position.set(0, 10, -25);
 scene.add(backWall);
@@ -75,7 +75,7 @@ rightWall.rotation.y = -Math.PI / 2;
 rightWall.position.set(25, 10, 0);
 scene.add(rightWall);
 
-// Quadros fixos
+Quadros fixos
 const textureLoader = new THREE.TextureLoader();
 const molduraTexture = textureLoader.load('src/imagens/moldura-dourada.jpg');
 const obraEsquerda = textureLoader.load('src/imagens/obra-esquerda.jpg');
@@ -97,7 +97,7 @@ const centro = new THREE.Mesh(quadroGeometry, molduraMaterial);
 centro.position.set(0, 10, -24.9);
 scene.add(centro);
 
-// Obras dentro das molduras
+Obras dentro das molduras
 const obraMaterialEsq = new THREE.MeshBasicMaterial({ map: obraEsquerda });
 const obraMaterialDir = new THREE.MeshBasicMaterial({ map: obraDireita });
 const obraMaterialCen = new THREE.MeshBasicMaterial({ map: obraCentral });
@@ -115,7 +115,7 @@ const obraC = new THREE.Mesh(geoObra, obraMaterialCen);
 obraC.position.set(0, 10, -24.8);
 scene.add(obraC);
 
-// Cubos + Gemas
+Cubos + Gemas
 const posicoesCubos = [-8, -4, 4, 8];
 posicoesCubos.forEach(x => {
   const vitrine = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 1.2), vidroMaterial);
@@ -128,14 +128,14 @@ posicoesCubos.forEach(x => {
   scene.add(gema);
 });
 
-// Responsividade
+Responsividade
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Animação
+Animação
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
