@@ -1,1 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sobre | NANdART</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="src/index.css" />
+  </head>
+  <body>
+    <canvas id="scene"></canvas>
 
+    <!-- Ícones topo esquerdo -->
+    <div class="top-left-icons">
+      <img src="src/icones/info.png" alt="Info" class="icon-info" onclick="window.location.href='info.html'" />
+      <img src="src/icones/horizontes.png" alt="Menu" onclick="toggleMenu()" />
+    </div>
+
+    <!-- Menu lateral -->
+    <div id="menu" class="menu hidden">
+      <ul>
+        <li><a href="index.html">Galeria</a></li>
+        <li><a href="src/como-navegar/como-navegar.html">Como Navegar</a></li>
+        <li><a href="contactos.html">Contactos</a></li>
+      </ul>
+    </div>
+
+    <!-- Conteúdo da página institucional -->
+    <main class="conteudo-texto">
+      <h1>A NANdART</h1>
+      <p>
+        A NANdART é uma galeria digital com alma descentralizada. Uma ode ao invisível, onde cada obra ecoa no tempo.
+      </p>
+
+      <h2>Missão</h2>
+      <p>
+        Dar palco à arte que ousa respirar fora do óbvio. Unir tradição e tecnologia, mantendo viva a essência do gesto artístico.
+      </p>
+
+      <h2>Tecnologia</h2>
+      <p>
+        Fundada sobre blockchain, com ligação a carteiras digitais e futuro suporte para NFTs. Transparência, autoria e rastreabilidade garantidas.
+      </p>
+
+      <h2>Visão</h2>
+      <p>
+        Tornar-se um santuário de criação. Um lugar onde o artista permanece eterno e a obra respira para lá da sua moldura.
+      </p>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="src/controls.js"></script>
+    <script>
+      function toggleMenu() {
+        const menu = document.getElementById('menu');
+        menu.classList.toggle('hidden');
+      }
+
+      setTimeout(() => {
+        const ajuda = document.getElementById('ajudaFlutuante');
+        if (ajuda) ajuda.style.display = 'none';
+      }, 20000);
+    </script>
+  </body>
+</html>
