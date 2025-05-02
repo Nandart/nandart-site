@@ -2,54 +2,46 @@
 <html lang="pt">
   <head>
     <meta charset="UTF-8" />
-    <title>Como Navegar | NANdART</title>
+    <title>Contactos | NANdART</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../index.css" />
+    <link rel="stylesheet" href="src/index.css" />
   </head>
   <body>
     <canvas id="scene"></canvas>
 
     <!-- Ícones topo esquerdo -->
     <div class="top-left-icons">
-      <img src="../icones/info.png" alt="Info" class="icon-info" onclick="window.location.href='../info.html'" />
-      <img src="../icones/horizontes.png" alt="Menu" onclick="toggleMenu()" />
+      <img src="src/icones/info.png" alt="Info" class="icon-info" onclick="window.location.href='info.html'" />
+      <img src="src/icones/horizontes.png" alt="Menu" onclick="toggleMenu()" />
     </div>
 
     <!-- Menu lateral -->
     <div id="menu" class="menu hidden">
       <ul>
-        <li><a href="../index.html">Galeria</a></li>
-        <li><a href="como-navegar.html">Como Navegar</a></li>
-        <li><a href="../contactos.html">Contactos</a></li>
+        <li><a href="index.html">Galeria</a></li>
+        <li><a href="src/como-navegar/como-navegar.html">Como Navegar</a></li>
+        <li><a href="contactos.html">Contactos</a></li>
       </ul>
     </div>
 
-    <!-- Conteúdo principal -->
+    <!-- Conteúdo da página de contactos -->
     <main class="conteudo-texto">
-      <h1>Como Navegar na NANdART</h1>
-      <p>Bem-vindo ao santuário digital da arte intemporal. Aqui, explicamos como interagir com o espaço:</p>
-
-      <h2>Exploração</h2>
-      <p>Use o rato ou toque no ecrã para explorar a galeria. As obras normais circulam suavemente e podem ser observadas de vários ângulos.</p>
-
-      <h2>Interação com Cubos</h2>
-      <p>Toque ou clique nos cubos para abrir e revelar obras suspensas. A obra flutua para o centro do ecrã. Toque fora da obra para fechar.</p>
-
-      <h2>Acesso a Informações</h2>
-      <p>No canto superior esquerdo, encontrará os ícones "Info" e "Menu" com acesso às restantes páginas.</p>
-
-      <h2>Dica Rápida</h2>
-      <p>Um ícone de ajuda aparece nos primeiros 20 segundos para orientar novos visitantes. Pode também aceder a esta página através do menu.</p>
+      <h1>Contactos</h1>
+      <p>Para questões sobre obras, colaborações ou imprensa, por favor escreve para:</p>
+      <p><strong>Email:</strong> contacto@nandart.pt</p>
+      <p><strong>Instagram:</strong> <a href="https://instagram.com/nandart" target="_blank">@nandart</a></p>
+      <p><strong>Morada:</strong> Rua do Vidro, 123 – Marinha da Luz, Portugal</p>
     </main>
 
     <!-- Scripts -->
-    <script type="module" src="../controls.js"></script>
+    <script type="module" src="src/controls.js"></script>
     <script>
       function toggleMenu() {
         const menu = document.getElementById('menu');
         menu.classList.toggle('hidden');
       }
 
+      // Ocultar o ícone de ajuda se ainda estiver visível
       setTimeout(() => {
         const ajuda = document.getElementById('ajudaFlutuante');
         if (ajuda) ajuda.style.display = 'none';
