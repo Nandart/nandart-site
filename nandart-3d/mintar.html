@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Criar NFT – NANdART</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="form-nft">
+      <h2>Criar Novo NFT</h2>
+      <form id="nftForm">
+        <label>Nome da Obra:</label>
+        <input type="text" id="nome" required />
+
+        <label>Descrição:</label>
+        <textarea id="descricao" required></textarea>
+
+        <label>Imagem (JPG, PNG):</label>
+        <input type="file" id="imagem" accept="image/*" required />
+
+        <button type="submit">Criar NFT</button>
+      </form>
+      <p id="estado"></p>
+    </div>
+
+    <script type="module" src="mintar.js"></script>
+  </body>
+</html>
