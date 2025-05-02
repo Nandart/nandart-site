@@ -1,32 +1,47 @@
+<!-- index.html -->
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sala da Galeria NANdART</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background-color: #000;
-    }
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <title>NANdART Galeria 3D</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="src/index.css" />
+    <link rel="icon" href="public/favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <canvas id="scene"></canvas>
 
-    .fundo-sala {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-image: url('sala-renderizada.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      z-index: 0;
-    }
-  </style>
-</head>
-<body>
-  <div class="fundo-sala"></div>
-</body>
+    <!-- Ícones canto superior esquerdo -->
+    <div class="top-left-icons">
+      <img src="src/icones/info.png" alt="Info" class="icon-info" onclick="window.location.href='info.html'" />
+      <img src="src/icones/horizontes.png" alt="Menu" onclick="toggleMenu()" />
+    </div>
+
+    <!-- Menu lateral -->
+    <div id="menu" class="menu hidden">
+      <ul>
+        <li><a href="index.html">Galeria</a></li>
+        <li><a href="src/como-navegar/como-navegar.html">Como Navegar</a></li>
+        <li><a href="contactos.html">Contactos</a></li>
+      </ul>
+    </div>
+
+    <!-- Ícone de ajuda flutuante -->
+    <img id="ajudaFlutuante" src="src/icones/ajuda-flutuante.png" alt="Ajuda" onclick="window.location.href='src/como-navegar/como-navegar.html'" />
+
+    <!-- Script principal como módulo -->
+    <script type="module" src="src/main.js"></script>
+
+    <script>
+      function toggleMenu() {
+        const menu = document.getElementById('menu');
+        menu.classList.toggle('hidden');
+      }
+
+      setTimeout(() => {
+        const ajuda = document.getElementById('ajudaFlutuante');
+        if (ajuda) ajuda.style.display = 'none';
+      }, 20000);
+    </script>
+  </body>
 </html>
