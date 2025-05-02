@@ -1,1 +1,18 @@
-
+{
+  "name": "nandart-3d",
+  "version": "1.0.0",
+  "description": "Galeria 3D imersiva com obras digitais e integração Web3",
+  "author": "NANdART",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "three": "^0.160.1"
+  },
+  "devDependencies": {
+    "vite": "^5.1.4"
+  }
+}
