@@ -1,14 +1,20 @@
-// vite.config.js (versão compatível com Vercel)
+// vite.config.js
 import { defineConfig } from 'vite';
+import path from 'path';
 
 export default defineConfig({
+  root: 'src',
   build: {
-    outDir: 'dist',
+    outDir: '../dist',
     emptyOutDir: true
   },
   resolve: {
     alias: {
-      '@': '/src'
+      '@': path.resolve(__dirname, 'src')
     }
+  },
+  server: {
+    port: 3000,
+    open: true
   }
 });
