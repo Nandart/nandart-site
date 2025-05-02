@@ -1,21 +1,39 @@
-// src/nft.js
+import { NFTStorage, File } from 'nft.storage';
+import { ethers } from 'ethers';
 
-export async function uploadParaIPFS(imageFile, token) {
-  const formData = new FormData();
-  formData.append("file", imageFile);
+const token = import.meta.env.VITE_NFT_STORAGE_TOKEN;
+const client = new NFTStorage({ token });
 
-  const response = await fetch("https://api.nft.storage/upload", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`
-    },
-    body: formData
+// Função para guardar no IPFS e obter URL
+export async function uploadToIPFS(imageFile, metadata) {
+  const content = await client.store({
+    image: new File([imageFile], imageFile.name, { type: imageFile.type }),
+    name: metadata.name,
+    description: metadata.description,
+    properties: metadata.properties || {}
   });
 
-  if (!response.ok) {
-    throw new Error("Erro ao fazer upload para IPFS.");
+  return content.url;
+}
+
+// Função para conectar carteira
+export async function connectWallet() {
+  if (!window.ethereum) {
+    throw new Error("MetaMask não está instalado.");
   }
 
-  const data = await response.json();
-  return `ipfs://${data.value.cid}`;
+  const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+
+  return { signer, address: accounts[0] };
+}
+
+// Função para mintar NFT
+export async function mintNFT(contractAddress, abi, toAddress, tokenURI) {
+  const { signer } = await connectWallet();
+  const contract = new ethers.Contract(contractAddress, abi, signer);
+  const tx = await contract.safeMint(toAddress, tokenURI);
+  await tx.wait();
+  return tx.hash;
 }
