@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="./favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Galeria 3D NANdART — um santuário digital de arte e emoção." />
+    <title>NANdART 3D</title>
+    <script type="module" crossorigin src="./assets/index-xxxxx.js"></script>
+    <link rel="stylesheet" href="./assets/index-yyyyy.css">
+  </head>
+  <body>
+    <canvas id="scene"></canvas>
+
+    <div class="top-left-icons">
+      <img src="./assets/info.png" alt="Info" class="icon-info" onclick="window.location.href='info.html'" />
+      <img src="./assets/horizontes.png" alt="Menu" onclick="document.getElementById('menu').classList.toggle('hidden')" />
+    </div>
+
+    <div id="menu" class="menu hidden">
+      <ul>
+        <li><a href="index.html">Galeria</a></li>
+        <li><a href="como-navegar.html">Como Navegar</a></li>
+        <li><a href="contactos.html">Contactos</a></li>
+      </ul>
+    </div>
+
+    <img id="ajudaFlutuante" src="./assets/ajuda-flutuante.png" alt="Ajuda"
+         onclick="window.location.href='como-navegar.html'" />
+
+    <script>
+      setTimeout(() => {
+        const ajuda = document.getElementById('ajudaFlutuante');
+        if (ajuda) ajuda.style.display = 'none';
+      }, 20000);
+    </script>
+  </body>
+</html>
