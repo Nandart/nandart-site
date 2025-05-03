@@ -8,45 +8,48 @@
     <link rel="icon" type="image/x-icon" href="/public/favicon.ico" />
   </head>
   <body>
-    <div id="app"></div>
+    <!-- Canvas principal da galeria 3D -->
+    <canvas id="scene"></canvas>
 
-    <!-- Menu Ícone -->
+    <!-- Botão do Menu -->
     <img
       id="menu-toggle"
       src="/src/assets/horizontes.png"
       alt="Menu"
-      style="
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        width: 32px;
-        height: 32px;
-        cursor: pointer;
-        z-index: 1000;
-      "
     />
 
-    <!-- Menu Opções -->
-    <div
-      class="menu-opcoes"
-      id="menu"
-      style="
-        position: fixed;
-        top: 60px;
-        left: 20px;
-        display: none;
-        flex-direction: column;
-        gap: 10px;
-        z-index: 999;
-      "
-    >
+    <!-- Menu de Navegação -->
+    <div class="menu-opcoes" id="menu">
       <a href="index.html">Galeria</a>
       <a href="como-navegar.html">Como Navegar</a>
       <a href="contactos.html">Contactos</a>
     </div>
 
+    <!-- Botão Música -->
+    <img
+      id="toggle-musica"
+      src="/src/assets/toggle-music.png"
+      alt="Música"
+    />
+    <audio id="audio-ambiente" src="/audio/musica.mp3" autoplay loop></audio>
+
+    <!-- Fundo de desfoque -->
+    <div id="blur-fundo"></div>
+
+    <!-- Modal de Obra -->
+    <div id="modal-obra">
+      <span id="fechar-modal">&times;</span>
+      <img id="imagem-modal" src="" alt="Obra em destaque" />
+      <h2 id="titulo-modal">Título da Obra</h2>
+      <p id="artista-modal">por Artista</p>
+      <p id="visualizacoes-modal">248 visualizações</p>
+      <button id="comprar-obra">Comprar NFT</button>
+    </div>
+
+    <!-- Script principal -->
     <script type="module" src="/src/main.js"></script>
     <script>
+      // Lógica do menu (abre/fecha)
       const menuToggle = document.getElementById("menu-toggle");
       const menu = document.getElementById("menu");
 
