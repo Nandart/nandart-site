@@ -1,4 +1,4 @@
-import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';  // Importando o Three.js
 
 // Criação da cena
 const scene = new THREE.Scene();
@@ -20,7 +20,7 @@ directionalLight.position.set(5, 10, 7);
 scene.add(directionalLight);
 
 // Controles da câmera
-const controls = new OrbitControls(camera, renderer.domElement); // Usando OrbitControls globalmente
+const controls = new THREE.OrbitControls(camera, renderer.domElement); // Usando OrbitControls importado corretamente
 controls.enableDamping = true;
 
 // Chão da galeria
