@@ -14,19 +14,18 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 document.getElementById('scene').appendChild(renderer.domElement);
 
-// Luz ambiente + Spot cenográfico
+// Luzes
 scene.add(new THREE.AmbientLight(0x333333));
 const spotLight = new THREE.SpotLight(0xffffff, 1.5);
 spotLight.position.set(10, 20, 10);
 spotLight.castShadow = true;
 scene.add(spotLight);
 
-// Luz focal de destaque
 const focusLight = new THREE.SpotLight(0xffffff, 1.2, 30, Math.PI / 6, 0.4, 2);
 focusLight.visible = false;
 scene.add(focusLight);
 
-// Chão com leve reflexo
+// Chão com reflexo
 const floorMaterial = new THREE.MeshStandardMaterial({
   color: 0x111111,
   metalness: 0.6,
@@ -37,7 +36,7 @@ floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
-// Paredes da galeria
+// Paredes
 const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x181818 });
 const criarParede = (w, h, x, y, z, ry = 0) => {
   const parede = new THREE.Mesh(new THREE.PlaneGeometry(w, h), wallMaterial);
@@ -49,7 +48,7 @@ criarParede(50, 20, 0, 10, -25);
 criarParede(50, 20, -25, 10, 0, Math.PI / 2);
 criarParede(50, 20, 25, 10, 0, -Math.PI / 2);
 
-// Texto NANdART na parede de fundo
+// Texto NANdART
 const fontLoader = new FontLoader();
 fontLoader.load('https://unpkg.com/three@0.155.0/examples/fonts/optimer_regular.typeface.json', font => {
   const geometry = new TextGeometry('NANdART', {
@@ -64,7 +63,7 @@ fontLoader.load('https://unpkg.com/three@0.155.0/examples/fonts/optimer_regular.
   scene.add(textMesh);
 });
 
-// Quadros fixos com moldura
+// Molduras fixas
 const loader = new THREE.TextureLoader();
 const quadroGeo = new THREE.PlaneGeometry(6, 8);
 const molduraMat = new THREE.MeshStandardMaterial({ color: 0xd4af37 });
@@ -80,10 +79,10 @@ function quadroFixo(img, x, y, z) {
   scene.add(moldura);
 }
 quadroFixo("obra-central.jpg", 0, 10, -24.95);
-quadroFixo("obra-esquerda.jpg", -24.95, 10, 0);
+quadroFixo("obra-lateral-esquerda.jpg", -24.95, 10, 0);
 quadroFixo("obra-lateral-direita.jpg", 24.95, 10, 0);
 
-// Círculo de luz no chão
+// Círculo de luz
 const circle = new THREE.Mesh(
   new THREE.RingGeometry(4.8, 5, 64),
   new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide })
@@ -92,7 +91,7 @@ circle.rotation.x = -Math.PI / 2;
 circle.position.y = 0.01;
 scene.add(circle);
 
-// Pedestais + Gemas transparentes
+// Pedestais + gemas
 const pedestalMaterial = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.5, roughness: 0.3 });
 const glassMaterial = new THREE.MeshPhysicalMaterial({
   color: 0x33aaff, transparent: true, transmission: 1, opacity: 0.5, roughness: 0, metalness: 0.8
@@ -110,7 +109,7 @@ pedestalGema(-10, 12);
 pedestalGema(10, -12);
 pedestalGema(10, 12);
 
-// Obras normais suspensas em círculo
+// Obras normais suspensas
 const obras = [], raio = 4.9;
 for (let i = 0; i < 12; i++) {
   const angle = (i / 12) * Math.PI * 2;
@@ -124,7 +123,7 @@ for (let i = 0; i < 12; i++) {
   scene.add(quadro);
 }
 
-// Obras premium com ícone estrela
+// Premium
 const premium = [];
 const premiumImgs = ["premium1.jpg", "premium2.jpg", "premium3.jpg"];
 const estrela = loader.load("./assets/estrela.png");
@@ -144,7 +143,7 @@ premiumImgs.forEach((img, i) => {
   quadro.add(icone);
 });
 
-// Legenda + Interação por clique e toque
+// Legenda
 let selecionada = null;
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
@@ -192,7 +191,7 @@ window.addEventListener('touchstart', e => {
   if (e.touches.length > 0) interagir(e.touches[0].clientX, e.touches[0].clientY);
 });
 
-// Animação contínua
+// Animação
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
