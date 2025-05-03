@@ -1,51 +1,56 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Contactos | NANdART</title>
+    <title>Contactos — NANdART</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="src/index.css" />
+    <link rel="icon" href="./favicon.ico" />
+    <link rel="stylesheet" href="./assets/index-2f84417a.css" />
+    <style>
+      .container {
+        padding: 60px 20px;
+        max-width: 800px;
+        margin: auto;
+        color: #f5f5f5;
+      }
+      h1 {
+        font-size: 2rem;
+        color: #f3c677;
+        margin-bottom: 20px;
+      }
+      p {
+        line-height: 1.6;
+        margin-bottom: 12px;
+      }
+      strong {
+        color: #f3c677;
+      }
+      #back-button {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        width: 40px;
+        height: auto;
+        cursor: pointer;
+        z-index: 10;
+      }
+    </style>
   </head>
   <body>
-    <canvas id="scene"></canvas>
+    <a href="index.html">
+      <img id="back-button" src="./assets/horizontes.png" alt="Menu" />
+    </a>
 
-    <!-- Ícones topo esquerdo -->
-    <div class="top-left-icons">
-      <img src="src/icones/info.png" alt="Info" class="icon-info" onclick="window.location.href='info.html'" />
-      <img src="src/icones/horizontes.png" alt="Menu" onclick="toggleMenu()" />
-    </div>
-
-    <!-- Menu lateral -->
-    <div id="menu" class="menu hidden">
-      <ul>
-        <li><a href="index.html">Galeria</a></li>
-        <li><a href="src/como-navegar/como-navegar.html">Como Navegar</a></li>
-        <li><a href="contactos.html">Contactos</a></li>
-      </ul>
-    </div>
-
-    <!-- Conteúdo da página de contactos -->
-    <main class="conteudo-texto">
+    <div class="container">
       <h1>Contactos</h1>
-      <p>Para questões sobre obras, colaborações ou imprensa, por favor escreve para:</p>
-      <p><strong>Email:</strong> contacto@nandart.pt</p>
+      <p>
+        Para parcerias, colaborações artísticas ou dúvidas técnicas, contacta-nos através dos canais abaixo:
+      </p>
+
+      <p><strong>Email:</strong> curadoria@nandart.art</p>
       <p><strong>Instagram:</strong> <a href="https://instagram.com/nandart" target="_blank">@nandart</a></p>
-      <p><strong>Morada:</strong> Rua do Vidro, 123 – Marinha da Luz, Portugal</p>
-    </main>
-
-    <!-- Scripts -->
-    <script type="module" src="src/controls.js"></script>
-    <script>
-      function toggleMenu() {
-        const menu = document.getElementById('menu');
-        menu.classList.toggle('hidden');
-      }
-
-      // Ocultar o ícone de ajuda se ainda estiver visível
-      setTimeout(() => {
-        const ajuda = document.getElementById('ajudaFlutuante');
-        if (ajuda) ajuda.style.display = 'none';
-      }, 20000);
-    </script>
+      <p><strong>Twitter (X):</strong> <a href="https://twitter.com/nandartweb3" target="_blank">@nandartweb3</a></p>
+      <p><strong>Morada:</strong> Rua da Visão Intemporal, 3000-001 Cidade da Arte Digital</p>
+    </div>
   </body>
 </html>
