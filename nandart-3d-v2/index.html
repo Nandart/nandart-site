@@ -26,7 +26,9 @@
     <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"></script>
 
     <!-- Carregar OrbitControls.js como módulo -->
-    <script type="module" src="src/examples/js/controls/OrbitControls.js"></script>
+   <script type="module">
+  import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
+</script>
 
     <!-- Carregar o script principal (main.js) -->
     <script type="module" src="src/main.js"></script>
