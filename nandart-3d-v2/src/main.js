@@ -20,7 +20,7 @@ directionalLight.position.set(5, 10, 7);
 scene.add(directionalLight);
 
 // Controles da câmera
-const controls = new OrbitControls(camera, renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement); // Usando OrbitControls globalmente
 controls.enableDamping = true;
 
 // Chão da galeria
