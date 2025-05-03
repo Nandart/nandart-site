@@ -69,7 +69,7 @@ const quadroGeo = new THREE.PlaneGeometry(6, 8);
 const molduraMat = new THREE.MeshStandardMaterial({ color: 0xd4af37 });
 
 function quadroFixo(img, x, y, z) {
-  const textura = loader.load(./assets/${img});
+  const textura = loader.load(/assets/${img});
   const mat = new THREE.MeshBasicMaterial({ map: textura });
   const quadro = new THREE.Mesh(quadroGeo, mat);
   quadro.position.set(x, y, z + 0.01);
