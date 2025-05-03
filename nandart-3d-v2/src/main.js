@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-// Cena, câmara e renderizador
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 1.5, 5);
@@ -42,7 +41,7 @@ for (let i = 0; i < totalNormais; i++) {
   const obra = new THREE.Mesh(
     new THREE.PlaneGeometry(0.5, 0.75),
     new THREE.MeshBasicMaterial({
-      map: new THREE.TextureLoader().load(`/src/obras/obra${(i % 6) + 1}.jpg`),
+      map: new THREE.TextureLoader().load('src/assets/imagens/obra' + (i % 6 + 1) + '.jpg'),
       transparent: true
     })
   );
@@ -62,7 +61,7 @@ for (let i = 0; i < totalPremium; i++) {
   const obra = new THREE.Mesh(
     new THREE.PlaneGeometry(0.5, 0.75),
     new THREE.MeshBasicMaterial({
-      map: new THREE.TextureLoader().load(`/src/obras/obra-premium${i + 1}.jpg`),
+      map: new THREE.TextureLoader().load('src/assets/imagens/obra-premium' + (i + 1) + '.jpg'),
       transparent: true
     })
   );
@@ -83,7 +82,6 @@ const comprarBtn = document.getElementById('comprar-obra');
 const fecharModal = document.getElementById('fechar-modal');
 const blurFundo = document.getElementById('blur-fundo');
 
-// Abrir modal com imagem
 function abrirModal(src, titulo = 'Obra NANdART', artista = 'por Nandart', views = '248 visualizações') {
   imagemModal.src = src;
   tituloModal.textContent = titulo;
@@ -93,7 +91,6 @@ function abrirModal(src, titulo = 'Obra NANdART', artista = 'por Nandart', views
   blurFundo.style.display = 'block';
 }
 
-// Fechar modal
 function fecharModalFunc() {
   modal.style.display = 'none';
   blurFundo.style.display = 'none';
@@ -121,32 +118,7 @@ window.addEventListener('click', (e) => {
   }
 });
 
-// Substituição contínua das obras
-const obras = [
-  'src/obras/obra1.jpg', 'src/obras/obra2.jpg', 'src/obras/obra3.jpg', 'src/obras/obra4.jpg', 'src/obras/obra5.jpg',
-  'src/obras/obra6.jpg', 'src/obras/obra7.jpg', 'src/obras/obra8.jpg', 'src/obras/obra9.jpg', 'src/obras/obra10.jpg',
-  'src/obras/obra11.jpg', 'src/obras/obra12.jpg', 'src/obras/obra13.jpg', 'src/obras/obra14.jpg', 'src/obras/obra15.jpg'
-];
-
-let indexAtual = 0;
-
-function substituirObra() {
-  const cubos = document.querySelectorAll('.cube img');
-  cubos.forEach((cub, index) => {
-    cub.style.transition = 'opacity 0.5s ease';
-    cub.style.opacity = '0'; // A obra desaparece suavemente
-
-    setTimeout(() => {
-      cub.src = obras[(index + 1) % obras.length]; // Substitui por outra obra
-      cub.style.opacity = '1'; // Faz a nova obra aparecer suavemente
-    }, 500);
-  });
-}
-
-// Controlar rotação e substituição de imagens
-setInterval(substituirObra, 10000); // Substituir a cada 10 segundos
-
-// Loop da cena
+// Loop
 function animate() {
   requestAnimationFrame(animate);
 
@@ -161,5 +133,4 @@ function animate() {
   controls.update();
   renderer.render(scene, camera);
 }
-
 animate();
