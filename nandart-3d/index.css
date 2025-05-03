@@ -1,1 +1,82 @@
-body { background-color: #111; margin: 0; }
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #111;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+canvas {
+  display: block;
+}
+
+.top-left-icons {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 10;
+}
+
+.top-left-icons img {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.menu {
+  position: fixed;
+  top: 80px;
+  left: 20px;
+  background-color: rgba(0, 0, 0, 0.85);
+  padding: 12px 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #000;
+  z-index: 10;
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  margin: 10px 0;
+}
+
+.menu a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.menu a:hover {
+  color: #d4af37;
+}
+
+.hidden {
+  display: none;
+}
+
+#ajudaFlutuante {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 38px;
+  height: 38px;
+  z-index: 10;
+  cursor: pointer;
+  animation: flutuar 2s ease-in-out infinite;
+  transition: opacity 0.3s ease;
+}
+
+@keyframes flutuar {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
