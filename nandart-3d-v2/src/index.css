@@ -1,163 +1,122 @@
-/* Estilo base */
+/* Estilos gerais da galeria */
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #000;
-  color: #fff;
-  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background-color: #1a1a1a; /* Cor escura para o fundo */
 }
 
-/* Canvas 3D */
-#scene {
-  width: 100vw;
-  height: 100vh;
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
+/* Estilos do layout */
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  min-height: 100vh;
+  background-color: #1a1a1a;
 }
 
-/* Botão de menu */
-#menu-toggle {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 32px;
-  height: 32px;
-  cursor: pointer;
-  z-index: 1000;
-  transition: transform 0.2s ease;
-}
-#menu-toggle:hover {
-  transform: scale(1.1);
-}
-
-/* Menu de navegação flutuante */
-.menu-opcoes {
-  position: fixed;
-  top: 60px;
-  left: 20px;
-  display: none;
+.wall {
+  display: flex;
   flex-direction: column;
-  gap: 10px;
-  z-index: 999;
-}
-.menu-opcoes a {
-  color: white;
-  font-size: 1.2rem;
-  text-decoration: none;
-  background: transparent;
-  border: none;
-}
-.menu-opcoes a:hover {
-  text-decoration: underline;
-}
-
-/* Botão de música */
-#toggle-musica {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  width: 40px;
-  cursor: pointer;
-  z-index: 1000;
-  opacity: 1;
-  transition: opacity 0.3s ease;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #111;
+  border: 2px solid #000;
+  /* Linhas douradas nas paredes */
+  background-image: linear-gradient(to right, #d4af37 1px, transparent 1px),
+                    linear-gradient(to bottom, #d4af37 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-position: left top;
 }
 
-/* Fundo blur */
-#blur-fundo {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  backdrop-filter: blur(8px);
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 50;
-}
-
-/* Modal da obra */
-#modal-obra {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 100;
-  background-color: rgba(20, 20, 20, 0.95);
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-  max-width: 90%;
-  width: 400px;
+h1 {
+  color: #d4af37; /* Dourado para o nome da galeria */
+  font-size: 3rem;
+  margin: 20px 0;
   text-align: center;
 }
 
-/* Imagem dentro do modal */
-#imagem-modal {
+/* Estilos dos cubos e das obras */
+.cube {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease-in-out;
+  z-index: 1;
+}
+
+.cube:hover {
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+/* Luz de fundo circular */
+.circle-light {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 350px;
+  height: 350px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  box-shadow: 0 0 100px rgba(255, 255, 255, 0.5);
+  z-index: 0;
+}
+
+/* Animações das obras */
+.modal-image {
   width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-/* Botão comprar */
-#comprar-obra {
-  background-color: #d4af37;
-  color: #111;
-  border: none;
-  padding: 12px 24px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-}
-#comprar-obra:hover {
-  background-color: #e0c54f;
-}
-
-/* Fechar modal (X) */
-#fechar-modal {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  color: #ccc;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-}
-#fechar-modal:hover {
-  color: #fff;
-}
-
-/* Painéis da ajuda */
-.painel-ajuda {
-  position: absolute;
-  width: 512px;
-  height: 512px;
+  max-height: 80vh;
   object-fit: contain;
-  z-index: 5;
-  pointer-events: none;
+  transition: all 0.3s ease-out;
 }
 
-/* Responsivo */
-@media (max-width: 768px) {
-  .menu-opcoes a {
-    font-size: 1rem;
-  }
-  #toggle-musica {
-    width: 32px;
-  }
-  #modal-obra {
-    width: 95%;
-    padding: 20px;
-  }
-  #fechar-modal {
-    font-size: 24px;
-  }
+.modal-active {
+  transform: scale(1.2);
+  filter: blur(5px);
+  transition: transform 0.4s, filter 0.4s;
+}
+
+/* Animação da galeria */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Estilos de iluminação e efeitos de reflexo */
+.floor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background-color: rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 100px rgba(255, 255, 255, 0.1);
+  z-index: -1;
+}
+
+/* Linhas douradas */
+.wall::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-top: 5px solid #d4af37;
+  border-bottom: 5px solid #d4af37;
+  border-left: 5px solid #d4af37;
+  border-right: 5px solid #d4af37;
 }
