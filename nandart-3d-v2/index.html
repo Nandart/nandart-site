@@ -3,52 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NANdART Gallery</title>
-    <link rel="stylesheet" href="index.css" />
-    <link rel="icon" type="image/x-icon" href="public/favicon.ico" />
+    <title>Gallery - NANdART</title>
+    <link rel="stylesheet" href="src/index.css" />
   </head>
   <body>
-    <!-- Galeria -->
-    <div class="gallery">
-      <h1>NANdART Gallery</h1>
-      <!-- Parede da galeria -->
-      <div class="wall">
-        <!-- Obras normais -->
-        <div class="cube">
-          <img src="src/obras/obra1.jpg" alt="Obra 1" />
-        </div>
-        <div class="cube">
-          <img src="src/obras/obra2.jpg" alt="Obra 2" />
-        </div>
-        <div class="cube">
-          <img src="src/obras/obra3.jpg" alt="Obra 3" />
-        </div>
-        <div class="cube">
-          <img src="src/obras/obra4.jpg" alt="Obra 4" />
-        </div>
-        <div class="cube">
-          <img src="src/obras/obra5.jpg" alt="Obra 5" />
-        </div>
-        <!-- Mais cubos podem ser adicionados conforme necessário -->
+    <div id="scene"></div>
+
+    <!-- Modal -->
+    <div id="modal-obra" style="display: none;">
+      <div id="blur-fundo" style="display: none;"></div>
+      <div class="modal-content">
+        <img id="imagem-modal" src="" alt="" />
+        <h2 id="titulo-modal">Obra NANdART</h2>
+        <p id="artista-modal">por Nandart</p>
+        <p id="visualizacoes-modal">248 visualizações</p>
+        <button id="comprar-obra">Comprar</button>
+        <button id="fechar-modal">Fechar</button>
       </div>
-
-      <!-- Luz de fundo -->
-      <div class="circle-light"></div>
-
-      <!-- Piso refletivo -->
-      <div class="floor"></div>
     </div>
 
-    <!-- Modal de Obra -->
-    <div id="modal-obra">
-      <span id="fechar-modal">&times;</span>
-      <img id="imagem-modal" src="" alt="Obra em destaque" />
-      <h2 id="titulo-modal">Título da Obra</h2>
-      <p id="artista-modal">por Artista</p>
-      <p id="visualizacoes-modal">248 visualizações</p>
-      <button id="comprar-obra">Comprar NFT</button>
-    </div>
-
-    <script type="module" src="src/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/OrbitControls.js"></script>
+    <script src="src/main.js"></script>
   </body>
 </html>
