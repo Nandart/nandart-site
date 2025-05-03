@@ -1,118 +1,95 @@
-
-body, html {
+/* Estilo base para o corpo */
+body {
   margin: 0;
-  padding: 0;
   overflow: hidden;
+  background-color: #111111;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #121212;
-  color: #f5f5f5;
 }
 
-canvas#scene {
-  display: block;
+/* Canvas principal da cena 3D */
+#scene {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
+  display: block;
+  z-index: 0;
 }
 
 /* Ícones no canto superior esquerdo */
 .top-left-icons {
-  position: fixed;
+  position: absolute;
   top: 20px;
   left: 20px;
-  z-index: 100;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  z-index: 10;
 }
+
 .top-left-icons img {
-  width: 48px;
-  height: auto;
+  width: 32px;
+  height: 32px;
   cursor: pointer;
-  transition: transform 0.3s ease;
-}
-.top-left-icons img:hover {
-  transform: scale(1.1);
-}
-.icon-info {
-  margin-bottom: -6px;
 }
 
 /* Menu lateral */
 .menu {
-  position: fixed;
-  top: 90px;
+  position: absolute;
+  top: 80px;
   left: 20px;
-  padding: 15px 20px;
-  background-color: rgba(18, 18, 18, 0.95);
-  border: 1px solid #f3c67744;
-  border-radius: 10px;
-  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.85);
+  padding: 16px 20px;
+  border-radius: 8px;
+  z-index: 11;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
+
 .menu ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
+
 .menu li {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
+
 .menu a {
-  color: #f3c677;
+  color: #ffffff;
   text-decoration: none;
-  font-size: 1.1rem;
+  font-size: 1rem;
   transition: color 0.3s ease;
 }
+
 .menu a:hover {
-  color: #ffffff;
+  color: #ffd700;
 }
 
 /* Ícone de ajuda flutuante */
 #ajudaFlutuante {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 50px;
-  height: auto;
-  opacity: 0.9;
-  z-index: 100;
-  transition: opacity 0.6s ease;
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  width: 42px;
+  height: 42px;
   cursor: pointer;
+  z-index: 12;
+  animation: flutuar 2.5s ease-in-out infinite;
+  opacity: 0.85;
 }
 
-/* Modal */
-.modal-obra {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #1f1f1f;
-  border: 2px solid #f3c677;
-  border-radius: 10px;
-  padding: 20px;
-  z-index: 1000;
-  width: 90%;
-  max-width: 600px;
-  display: none;
-  color: #fff;
-  box-shadow: 0 0 20px rgba(243, 198, 119, 0.3);
-}
-.modal-obra h2 {
-  margin-top: 0;
-  font-size: 1.8rem;
-  color: #f3c677;
-}
-.modal-obra p {
-  font-size: 1rem;
-  line-height: 1.5;
-}
-.modal-obra img {
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 1rem;
-  border-radius: 6px;
+@keyframes flutuar {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
-/* Ocultar elementos */
+/* Classe utilitária para esconder elementos */
 .hidden {
   display: none;
 }
