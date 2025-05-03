@@ -1,0 +1,109 @@
+/* Estilo geral */
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #111111;
+  color: #f1f1f1;
+}
+
+/* Canvas 3D ocupa todo o ecrã */
+#scene {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  z-index: 0;
+}
+
+/* Ícone de ajuda flutuante */
+#ajuda-flutuante {
+  transition: opacity 1s ease-in-out;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 50;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+/* Conteúdo do modal */
+.modal-content {
+  background-color: #1c1c1c;
+  margin: 5% auto;
+  padding: 30px;
+  border: 1px solid #444;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+/* Imagem da obra no modal */
+#imagem-modal {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Botão dourado */
+#comprar-obra {
+  background-color: #d4af37;
+  color: #111;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+#comprar-obra:hover {
+  background-color: #e0c54f;
+}
+
+/* Fechar modal (X) */
+#fechar-modal {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  color: #ccc;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#fechar-modal:hover {
+  color: #fff;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    padding: 20px;
+  }
+
+  #comprar-obra {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+
+  #fechar-modal {
+    font-size: 24px;
+  }
+}
