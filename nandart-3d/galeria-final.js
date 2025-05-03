@@ -1,4 +1,5 @@
-console.log("versão final")
+console.log("🚀 Início do carregamento da galeria final");
+
 import * as THREE from 'https://unpkg.com/three@0.155.0/build/three.module.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.155.0/examples/jsm/controls/OrbitControls.js';
 import { FontLoader } from 'https://unpkg.com/three@0.155.0/examples/jsm/loaders/FontLoader.js';
@@ -26,7 +27,7 @@ const focusLight = new THREE.SpotLight(0xffffff, 1.2, 30, Math.PI / 6, 0.4, 2);
 focusLight.visible = false;
 scene.add(focusLight);
 
-// Chão com reflexo
+// Chão
 const floorMaterial = new THREE.MeshStandardMaterial({
   color: 0x111111,
   metalness: 0.6,
@@ -51,18 +52,25 @@ criarParede(50, 20, 25, 10, 0, -Math.PI / 2);
 
 // Texto NANdART
 const fontLoader = new FontLoader();
-fontLoader.load('https://unpkg.com/three@0.155.0/examples/fonts/optimer_regular.typeface.json', font => {
-  const geometry = new TextGeometry('NANdART', {
-    font, size: 1.2, height: 0.2,
-    bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02
-  });
-  geometry.computeBoundingBox();
-  const offset = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
-  const material = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x222222, metalness: 0.3 });
-  const textMesh = new THREE.Mesh(geometry, material);
-  textMesh.position.set(offset, 18.5, -24.8);
-  scene.add(textMesh);
-});
+console.log("⌛ A carregar fonte...");
+fontLoader.load(
+  'https://unpkg.com/three@0.155.0/examples/fonts/optimer_regular.typeface.json',
+  font => {
+    console.log("✅ Fonte carregada com sucesso");
+    const geometry = new TextGeometry('NANdART', {
+      font, size: 1.2, height: 0.2,
+      bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02
+    });
+    geometry.computeBoundingBox();
+    const offset = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+    const material = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x222222, metalness: 0.3 });
+    const textMesh = new THREE.Mesh(geometry, material);
+    textMesh.position.set(offset, 18.5, -24.8);
+    scene.add(textMesh);
+  },
+  undefined,
+  err => console.error("❌ Erro ao carregar fonte:", err)
+);
 
 // Molduras fixas
 const loader = new THREE.TextureLoader();
@@ -70,14 +78,19 @@ const quadroGeo = new THREE.PlaneGeometry(6, 8);
 const molduraMat = new THREE.MeshStandardMaterial({ color: 0xd4af37 });
 
 function quadroFixo(img, x, y, z) {
-  const textura = loader.load(`./assets/${img}`);
-  const mat = new THREE.MeshBasicMaterial({ map: textura });
-  const quadro = new THREE.Mesh(quadroGeo, mat);
-  quadro.position.set(x, y, z + 0.01);
-  scene.add(quadro);
-  const moldura = new THREE.Mesh(new THREE.PlaneGeometry(6.2, 8.2), molduraMat);
-  moldura.position.set(x, y, z);
-  scene.add(moldura);
+  loader.load(`./assets/${img}`,
+    textura => {
+      const mat = new THREE.MeshBasicMaterial({ map: textura });
+      const quadro = new THREE.Mesh(quadroGeo, mat);
+      quadro.position.set(x, y, z + 0.01);
+      scene.add(quadro);
+      const moldura = new THREE.Mesh(new THREE.PlaneGeometry(6.2, 8.2), molduraMat);
+      moldura.position.set(x, y, z);
+      scene.add(moldura);
+    },
+    undefined,
+    err => console.error(`❌ Erro ao carregar textura ${img}:`, err)
+  );
 }
 quadroFixo("obra-central.jpg", 0, 10, -24.95);
 quadroFixo("obra-lateral-esquerda.jpg", -24.95, 10, 0);
@@ -114,34 +127,43 @@ pedestalGema(10, 12);
 const obras = [], raio = 4.9;
 for (let i = 0; i < 12; i++) {
   const angle = (i / 12) * Math.PI * 2;
-  const tex = loader.load(`./assets/obra${i + 1}.jpg`);
-  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true });
-  const quadro = new THREE.Mesh(new THREE.PlaneGeometry(2, 2.6), mat);
-  quadro.position.set(Math.cos(angle) * raio, 5, Math.sin(angle) * raio);
-  quadro.lookAt(0, 5, 0);
-  quadro.userData = { ang: angle, original: true };
-  obras.push(quadro);
-  scene.add(quadro);
+  const nome = `obra${i + 1}.jpg`;
+  loader.load(`./assets/${nome}`,
+    tex => {
+      const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true });
+      const quadro = new THREE.Mesh(new THREE.PlaneGeometry(2, 2.6), mat);
+      quadro.position.set(Math.cos(angle) * raio, 5, Math.sin(angle) * raio);
+      quadro.lookAt(0, 5, 0);
+      quadro.userData = { ang: angle, original: true };
+      obras.push(quadro);
+      scene.add(quadro);
+    },
+    undefined,
+    err => console.error(`❌ Erro ao carregar ${nome}`, err)
+  );
 }
 
 // Premium
-const premium = [];
 const premiumImgs = ["premium1.jpg", "premium2.jpg", "premium3.jpg"];
 const estrela = loader.load("./assets/estrela.png");
 premiumImgs.forEach((img, i) => {
-  const tex = loader.load(`./assets/${img}`);
-  const mat = new THREE.MeshBasicMaterial({ map: tex });
-  const quadro = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 3.2), mat);
-  const ang = (i / 3) * Math.PI * 2;
-  quadro.position.set(Math.cos(ang) * 3.5, 6.8, Math.sin(ang) * 3.5);
-  quadro.lookAt(0, 6.8, 0);
-  scene.add(quadro);
-  premium.push(quadro);
-  const estrelaMat = new THREE.SpriteMaterial({ map: estrela });
-  const icone = new THREE.Sprite(estrelaMat);
-  icone.scale.set(0.4, 0.4, 1);
-  icone.position.set(1, 1.6, 0.1);
-  quadro.add(icone);
+  loader.load(`./assets/${img}`,
+    tex => {
+      const mat = new THREE.MeshBasicMaterial({ map: tex });
+      const quadro = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 3.2), mat);
+      const ang = (i / 3) * Math.PI * 2;
+      quadro.position.set(Math.cos(ang) * 3.5, 6.8, Math.sin(ang) * 3.5);
+      quadro.lookAt(0, 6.8, 0);
+      scene.add(quadro);
+      const estrelaMat = new THREE.SpriteMaterial({ map: estrela });
+      const icone = new THREE.Sprite(estrelaMat);
+      icone.scale.set(0.4, 0.4, 1);
+      icone.position.set(1, 1.6, 0.1);
+      quadro.add(icone);
+    },
+    undefined,
+    err => console.error(`❌ Erro ao carregar premium ${img}`, err)
+  );
 });
 
 // Legenda
@@ -216,3 +238,5 @@ function animate() {
   renderer.render(scene, camera);
 }
 animate();
+
+console.log("🎯 Setup finalizado com sucesso.");
