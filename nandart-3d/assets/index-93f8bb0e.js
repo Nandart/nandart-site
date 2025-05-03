@@ -71,6 +71,12 @@ function init() {
     controls.update();
     renderer.render(scene, camera);
   }
-
+// Cubo de teste para confirmar que tudo está a funcionar
+const geometry = new THREE.BoxGeometry(2, 2, 2);
+const material = new THREE.MeshStandardMaterial({ color: 0xffaa00 });
+const cube = new THREE.Mesh(geometry, material);
+cube.position.set(0, 1, 0);
+cube.castShadow = true;
+scene.add(cube);
   animate();
 }
