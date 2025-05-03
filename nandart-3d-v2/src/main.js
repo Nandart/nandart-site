@@ -1,29 +1,30 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+// Criação da cena
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 1.5, 5);
 
+// Configuração do renderizador
 const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('scene'), antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.shadowMap.enabled = true;
 
-// Luz ambiente
+// Luzes da cena
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambientLight);
 
-// Luz direcional
 const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
 directionalLight.position.set(5, 10, 7);
 scene.add(directionalLight);
 
-// Controlo de câmara
+// Controles da câmera
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
-// Plano chão
+// Chão da galeria
 const floor = new THREE.Mesh(
   new THREE.CircleGeometry(6, 64),
   new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.3, roughness: 0.6 })
@@ -32,7 +33,7 @@ floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
-// Obras normais suspensas
+// Obras normais suspensas (do lado externo da galeria)
 const obrasNormais = [];
 const totalNormais = 12;
 const raioNormais = 4;
@@ -52,7 +53,7 @@ for (let i = 0; i < totalNormais; i++) {
   obrasNormais.push(obra);
 }
 
-// Obras premium suspensas no centro
+// Obras premium suspensas no centro da galeria
 const obrasPremium = [];
 const totalPremium = 3;
 const alturaPremium = 2.6;
@@ -118,7 +119,7 @@ window.addEventListener('click', (e) => {
   }
 });
 
-// Loop
+// Animação das obras
 function animate() {
   requestAnimationFrame(animate);
 
