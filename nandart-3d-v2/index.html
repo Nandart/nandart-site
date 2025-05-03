@@ -3,50 +3,57 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="NANdART — A galeria de arte tridimensional com alma descentralizada." />
-    <title>NANdART — 3D Gallery</title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <title>NANdART 3D Gallery</title>
     <link rel="stylesheet" href="/src/index.css" />
+    <link rel="icon" type="image/x-icon" href="/public/favicon.ico" />
   </head>
   <body>
-    <canvas id="scene"></canvas>
+    <div id="app"></div>
 
-    <!-- Ícone flutuante de ajuda (aparece nos primeiros 20s) -->
+    <!-- Menu Ícone -->
     <img
-      id="ajuda-flutuante"
-      src="/src/assets/ajuda-flutuante.png"
-      alt="Ajuda"
-      style="position: fixed; bottom: 20px; right: 20px; width: 50px; opacity: 0; cursor: pointer; z-index: 10;"
+      id="menu-toggle"
+      src="/src/assets/horizontes.png"
+      alt="Menu"
+      style="
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+        z-index: 1000;
+      "
     />
 
-    <!-- Ícones de navegação -->
-    <div id="menu-icons">
-      <img
-        src="/src/assets/info.png"
-        alt="Info"
-        id="info-icon"
-        style="position: fixed; top: 20px; left: 20px; width: 40px; cursor: pointer; z-index: 10;"
-      />
-      <img
-        src="/src/assets/horizontes.png"
-        alt="Menu"
-        id="menu-icon"
-        style="position: fixed; top: 65px; left: 20px; width: 40px; cursor: pointer; z-index: 10;"
-      />
-    </div>
-
-    <!-- Modal da Obra -->
-    <div id="modal-obra" class="modal">
-      <div class="modal-content">
-        <span id="fechar-modal">&times;</span>
-        <img id="imagem-modal" src="" alt="Obra em destaque" />
-        <h2 id="titulo-modal">Título da Obra</h2>
-        <p id="artista-modal">por Artista</p>
-        <p id="visualizacoes-modal">123 visualizações</p>
-        <button id="comprar-obra">Comprar Obra</button>
-      </div>
+    <!-- Menu Opções -->
+    <div
+      class="menu-opcoes"
+      id="menu"
+      style="
+        position: fixed;
+        top: 60px;
+        left: 20px;
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 999;
+      "
+    >
+      <a href="index.html">Galeria</a>
+      <a href="como-navegar.html">Como Navegar</a>
+      <a href="contactos.html">Contactos</a>
     </div>
 
     <script type="module" src="/src/main.js"></script>
+    <script>
+      const menuToggle = document.getElementById("menu-toggle");
+      const menu = document.getElementById("menu");
+
+      menuToggle.addEventListener("click", () => {
+        const isVisible = menu.style.display === "flex";
+        menu.style.display = isVisible ? "none" : "flex";
+      });
+    </script>
   </body>
 </html>
