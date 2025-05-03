@@ -4,8 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gallery - NANdART</title>
-    <link rel="stylesheet" href="src/index.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
+    <link rel="stylesheet" href="src/index.css" /> <!-- Referência ao arquivo CSS -->
   </head>
   <body>
     <div id="scene"></div>
@@ -23,10 +22,13 @@
       </div>
     </div>
 
-    <!-- Carregar Three.js e OrbitControls -->
+    <!-- Carregar Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/OrbitControls.js"></script>
+    
+    <!-- Carregar OrbitControls.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
 
+    <!-- Carregar o script principal -->
     <script type="module" src="src/main.js"></script>
   </body>
 </html>
