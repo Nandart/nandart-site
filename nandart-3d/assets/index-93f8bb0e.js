@@ -1,4 +1,4 @@
-/ index-93f8bb0e.js (compatível com GitHub Pages e Vercel)
+// index-93f8bb0e.js — compatível com GitHub Pages e Vercel
 
 // Carrega Three.js e OrbitControls via CDN
 const scriptThree = document.createElement('script');
@@ -6,7 +6,14 @@ scriptThree.src = 'https://unpkg.com/three@0.155.0/build/three.min.js';
 scriptThree.onload = () => {
   const scriptControls = document.createElement('script');
   scriptControls.src = 'https://unpkg.com/three@0.155.0/examples/js/controls/OrbitControls.js';
-  scriptControls.onload = init;
+  scriptControls.onload = () => {
+    // Aguarda o DOM estar pronto antes de iniciar
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  };
   document.head.appendChild(scriptControls);
 };
 document.head.appendChild(scriptThree);
@@ -21,6 +28,8 @@ function init() {
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
+
+  // Garantido que o body está pronto
   document.body.appendChild(renderer.domElement);
 
   const ambientLight = new THREE.AmbientLight(0x444444);
