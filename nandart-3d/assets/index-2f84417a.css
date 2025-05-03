@@ -1,83 +1,74 @@
-/* Estilo base */
 body {
   margin: 0;
   overflow: hidden;
   background-color: #111111;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-/* Container onde será injetado o canvas */
 #scene {
   width: 100vw;
   height: 100vh;
-  position: relative;
-  overflow: hidden;
+  display: block;
 }
 
-/* Ícones no canto superior esquerdo */
 .top-left-icons {
   position: fixed;
-  top: 20px;
-  left: 20px;
+  top: 16px;
+  left: 16px;
   z-index: 10;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .top-left-icons img {
   width: 50px;
   height: 50px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease;
 }
 
 .top-left-icons img:hover {
   transform: scale(1.1);
 }
 
-/* Menu flutuante */
-.menu {
+#menu {
   position: fixed;
-  top: 90px;
-  left: 20px;
+  top: 80px;
+  left: 16px;
   background-color: rgba(17, 17, 17, 0.95);
   border: 1px solid #444;
-  padding: 16px 24px;
+  padding: 12px 18px;
   border-radius: 8px;
-  z-index: 10;
+  z-index: 9;
+  box-shadow: 0 0 8px rgba(0,0,0,0.4);
 }
 
-.menu ul {
+#menu ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.menu li {
-  margin-bottom: 12px;
+#menu li {
+  margin: 8px 0;
 }
 
-.menu li:last-child {
-  margin-bottom: 0;
-}
-
-.menu a {
-  color: #eee;
+#menu a {
+  color: #ffffff;
   text-decoration: none;
   font-size: 16px;
+  transition: color 0.2s ease;
 }
 
-.menu a:hover {
+#menu a:hover {
   color: #d4af37;
 }
 
-/* Ocultar menu por padrão */
 .hidden {
   display: none;
 }
 
-/* Ícone de ajuda flutuante */
 #ajudaFlutuante {
   position: fixed;
   bottom: 20px;
@@ -86,15 +77,10 @@ body {
   height: 48px;
   cursor: pointer;
   z-index: 10;
-  animation: flutuar 2s ease-in-out infinite;
-  transition: opacity 0.3s ease;
+  animation: flutuar 2s infinite ease-in-out;
 }
 
 @keyframes flutuar {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
