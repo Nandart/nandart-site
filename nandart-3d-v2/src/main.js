@@ -6,11 +6,18 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 camera.position.set(0, 1.5, 5);
 
 // Configuração do renderizador
-const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('scene'), antialias: true });
+// Certifique-se de que o canvas seja corretamente referenciado
+const canvas = document.getElementById('scene');  // Aqui estamos pegando o canvas pelo ID
+
+// Se o canvas for nulo (não encontrado), vamos ter um erro de contexto
+if (!canvas) {
+    console.error("Canvas não encontrado!");
+}
+
+const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.shadowMap.enabled = true;
-
 // Luzes da cena
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambientLight);
