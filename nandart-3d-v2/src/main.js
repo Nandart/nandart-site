@@ -1,4 +1,6 @@
+// Importar módulos diretamente do Three.js
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js';
+import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js';
 
 // Criação da cena
 const scene = new THREE.Scene();
@@ -6,18 +8,11 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 camera.position.set(0, 1.5, 5);
 
 // Configuração do renderizador
-// Certifique-se de que o canvas seja corretamente referenciado
-const canvas = document.getElementById('scene');  // Aqui estamos pegando o canvas pelo ID
-
-// Se o canvas for nulo (não encontrado), vamos ter um erro de contexto
-if (!canvas) {
-    console.error("Canvas não encontrado!");
-}
-
-const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('scene'), antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.shadowMap.enabled = true;
+
 // Luzes da cena
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambientLight);
@@ -28,7 +23,7 @@ scene.add(directionalLight);
 
 // Controles da câmera
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
+controls.enableDamping = true; // Para suavizar os controles
 
 // Chão da galeria
 const floor = new THREE.Mesh(
@@ -39,7 +34,7 @@ floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
-// Obras normais suspensas (do lado externo da galeria)
+// Obras normais suspensas
 const obrasNormais = [];
 const totalNormais = 12;
 const raioNormais = 4;
@@ -59,7 +54,7 @@ for (let i = 0; i < totalNormais; i++) {
   obrasNormais.push(obra);
 }
 
-// Obras premium suspensas no centro da galeria
+// Obras premium suspensas no centro
 const obrasPremium = [];
 const totalPremium = 3;
 const alturaPremium = 2.6;
@@ -137,6 +132,10 @@ function animate() {
     obra.lookAt(0, 1.6, 0);
   });
 
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
   controls.update();
   renderer.render(scene, camera);
 }
