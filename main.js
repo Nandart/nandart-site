@@ -1,0 +1,1 @@
+// Simulação do conteúdo compilado de main.js
