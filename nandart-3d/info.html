@@ -2,43 +2,35 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="./favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Galeria 3D NANdART — um santuário digital de arte e emoção." />
-    <title>NANdART 3D</title>
-    <link rel="stylesheet" href="./assets/index-2f84417a.css" />
+    <title>Sobre a NANdART</title>
+    <link rel="stylesheet" href="./assets/index.css" />
   </head>
   <body>
-    <canvas id="scene"></canvas>
-
-    <!-- Ícones no canto superior esquerdo -->
     <div class="top-left-icons">
-      <img src="./assets/info.png" alt="Info" class="icon-info" onclick="window.location.href='info.html'" />
-      <img src="./assets/horizontes.png" alt="Menu" onclick="document.getElementById('menu').classList.toggle('hidden')" />
+      <img src="./assets/horizontes.png" alt="Menu" onclick="window.location.href='index.html'" />
     </div>
 
-    <!-- Menu lateral -->
-    <div id="menu" class="menu hidden">
-      <ul>
-        <li><a href="index.html">Galeria</a></li>
-        <li><a href="como-navegar.html">Como Navegar</a></li>
-        <li><a href="contactos.html">Contactos</a></li>
-      </ul>
-    </div>
+    <main style="color: #fff; max-width: 800px; margin: 100px auto; padding: 20px; line-height: 1.6;">
+      <h1 style="color: #d4af37; font-size: 2.2rem;">NANdART</h1>
+      <p>
+        A NANdART é mais do que uma galeria — é um santuário digital onde a arte suspensa ecoa memórias, futuros e fragmentos da alma. Cada obra paira num espaço intemporal, em diálogo com a luz, o silêncio e o toque.
+      </p>
 
-    <!-- Ícone flutuante de ajuda -->
-    <img id="ajudaFlutuante" src="./assets/ajuda-flutuante.png" alt="Ajuda"
-         onclick="window.location.href='como-navegar.html'" />
+      <h2 style="margin-top: 40px; color: #d4af37;">Missão</h2>
+      <p>
+        Honrar a criação artística com liberdade e justiça, oferecendo uma plataforma descentralizada onde os artistas mantêm a sua autoria, presença e valor em cada transação.
+      </p>
 
-    <!-- Script principal carregado como MÓDULO -->
-    <script type="module" src="./assets/index-93f8bb0e.js"></script>
+      <h2 style="margin-top: 40px; color: #d4af37;">Tecnologia</h2>
+      <p>
+        Utilizamos Web3, NFTs e armazenamento descentralizado para tornar cada obra imutável, eterna e rastreável. A experiência é construída em 3D com Three.js para uma navegação visual imersiva.
+      </p>
 
-    <!-- Oculta o ícone flutuante após 20 segundos -->
-    <script>
-      setTimeout(() => {
-        const ajuda = document.getElementById('ajudaFlutuante');
-        if (ajuda) ajuda.style.display = 'none';
-      }, 20000);
-    </script>
+      <h2 style="margin-top: 40px; color: #d4af37;">Visão</h2>
+      <p>
+        Queremos transformar a maneira como o mundo vê e coleciona arte digital. Sonhamos com uma galeria que perdura, mesmo quando a memória dos seus criadores for apenas poeira estelar.
+      </p>
+    </main>
   </body>
 </html>
