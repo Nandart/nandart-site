@@ -69,7 +69,7 @@ const quadroGeo = new THREE.PlaneGeometry(6, 8);
 const molduraMat = new THREE.MeshStandardMaterial({ color: 0xd4af37 });
 
 function quadroFixo(img, x, y, z) {
-  const textura = loader.load(/assets/${img});
+  const textura = loader.load(`./assets/${img}`);
   const mat = new THREE.MeshBasicMaterial({ map: textura });
   const quadro = new THREE.Mesh(quadroGeo, mat);
   quadro.position.set(x, y, z + 0.01);
@@ -113,7 +113,7 @@ pedestalGema(10, 12);
 const obras = [], raio = 4.9;
 for (let i = 0; i < 12; i++) {
   const angle = (i / 12) * Math.PI * 2;
-  const tex = loader.load(./assets/obra${i + 1}.jpg);
+  const tex = loader.load(`./assets/obra${i + 1}.jpg`);
   const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true });
   const quadro = new THREE.Mesh(new THREE.PlaneGeometry(2, 2.6), mat);
   quadro.position.set(Math.cos(angle) * raio, 5, Math.sin(angle) * raio);
@@ -128,7 +128,7 @@ const premium = [];
 const premiumImgs = ["premium1.jpg", "premium2.jpg", "premium3.jpg"];
 const estrela = loader.load("./assets/estrela.png");
 premiumImgs.forEach((img, i) => {
-  const tex = loader.load(./assets/${img});
+  const tex = loader.load(`./assets/${img}`);
   const mat = new THREE.MeshBasicMaterial({ map: tex });
   const quadro = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 3.2), mat);
   const ang = (i / 3) * Math.PI * 2;
@@ -214,4 +214,4 @@ function animate() {
   });
   renderer.render(scene, camera);
 }
-animate(); 
+animate();
