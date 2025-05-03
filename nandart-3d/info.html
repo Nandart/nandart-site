@@ -1,64 +1,68 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Sobre | NANdART</title>
+    <title>Info — NANdART</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="src/index.css" />
+    <link rel="icon" href="./favicon.ico" />
+    <link rel="stylesheet" href="./assets/index-2f84417a.css" />
+    <style>
+      .container {
+        padding: 60px 20px;
+        max-width: 800px;
+        margin: auto;
+        color: #f5f5f5;
+      }
+      h1 {
+        font-size: 2rem;
+        color: #f3c677;
+        margin-bottom: 20px;
+      }
+      h2 {
+        font-size: 1.3rem;
+        color: #f3c677;
+        margin-top: 40px;
+      }
+      p {
+        line-height: 1.6;
+        margin-bottom: 16px;
+      }
+      #back-button {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        width: 40px;
+        height: auto;
+        cursor: pointer;
+        z-index: 10;
+      }
+    </style>
   </head>
   <body>
-    <canvas id="scene"></canvas>
+    <a href="index.html">
+      <img id="back-button" src="./assets/horizontes.png" alt="Menu" />
+    </a>
 
-    <!-- Ícones topo esquerdo -->
-    <div class="top-left-icons">
-      <img src="src/icones/info.png" alt="Info" class="icon-info" onclick="window.location.href='info.html'" />
-      <img src="src/icones/horizontes.png" alt="Menu" onclick="toggleMenu()" />
-    </div>
-
-    <!-- Menu lateral -->
-    <div id="menu" class="menu hidden">
-      <ul>
-        <li><a href="index.html">Galeria</a></li>
-        <li><a href="src/como-navegar/como-navegar.html">Como Navegar</a></li>
-        <li><a href="contactos.html">Contactos</a></li>
-      </ul>
-    </div>
-
-    <!-- Conteúdo da página institucional -->
-    <main class="conteudo-texto">
-      <h1>A NANdART</h1>
+    <div class="container">
+      <h1>Sobre a NANdART</h1>
       <p>
-        A NANdART é uma galeria digital com alma descentralizada. Uma ode ao invisível, onde cada obra ecoa no tempo.
+        A <strong>NANdART</strong> é mais do que uma galeria — é um santuário tridimensional de arte, memória e eternidade. Cada obra suspensa no espaço desta sala escura e reflexiva carrega não só pigmentos e formas, mas fragmentos de alma.
       </p>
 
       <h2>Missão</h2>
       <p>
-        Dar palco à arte que ousa respirar fora do óbvio. Unir tradição e tecnologia, mantendo viva a essência do gesto artístico.
+        A nossa missão é criar uma ponte entre o humano e o eterno. Democratizar o acesso à arte digital, eternizando criações através da tecnologia blockchain.
       </p>
 
       <h2>Tecnologia</h2>
       <p>
-        Fundada sobre blockchain, com ligação a carteiras digitais e futuro suporte para NFTs. Transparência, autoria e rastreabilidade garantidas.
+        Utilizamos <strong>Three.js</strong> para ambientes tridimensionais realistas, <strong>Vite</strong> para desempenho e desenvolvimento modernos, e estamos a integrar <strong>Web3</strong> com NFTs na rede <strong>Polygon</strong> através de armazenamento em <strong>IPFS</strong>.
       </p>
 
       <h2>Visão</h2>
       <p>
-        Tornar-se um santuário de criação. Um lugar onde o artista permanece eterno e a obra respira para lá da sua moldura.
+        Queremos que a NANdART seja um espaço de contemplação, onde cada clique seja uma revelação. Um lugar onde a arte respira — e onde os artistas permanecem presentes, mesmo quando ausentes.
       </p>
-    </main>
-
-    <!-- Scripts -->
-    <script type="module" src="src/controls.js"></script>
-    <script>
-      function toggleMenu() {
-        const menu = document.getElementById('menu');
-        menu.classList.toggle('hidden');
-      }
-
-      setTimeout(() => {
-        const ajuda = document.getElementById('ajudaFlutuante');
-        if (ajuda) ajuda.style.display = 'none';
-      }, 20000);
-    </script>
+    </div>
   </body>
 </html>
