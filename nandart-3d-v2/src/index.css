@@ -1,14 +1,33 @@
+/* Estilo base */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', sans-serif;
-  background-color: black;
-  color: white;
+  background-color: #000;
+  color: #fff;
   overflow: hidden;
+}
+
+/* Canvas 3D */
+#scene {
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
 
 /* Botão de menu */
 #menu-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  z-index: 1000;
   transition: transform 0.2s ease;
 }
 #menu-toggle:hover {
@@ -36,7 +55,7 @@ body {
   text-decoration: underline;
 }
 
-/* Ícone de música (canto inferior esquerdo) */
+/* Botão de música */
 #toggle-musica {
   position: fixed;
   bottom: 20px;
@@ -48,7 +67,75 @@ body {
   transition: opacity 0.3s ease;
 }
 
-/* Painéis da sala 'Como Navegar' */
+/* Fundo blur */
+#blur-fundo {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(8px);
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 50;
+}
+
+/* Modal da obra */
+#modal-obra {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  background-color: rgba(20, 20, 20, 0.95);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+  max-width: 90%;
+  width: 400px;
+  text-align: center;
+}
+
+/* Imagem dentro do modal */
+#imagem-modal {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Botão comprar */
+#comprar-obra {
+  background-color: #d4af37;
+  color: #111;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+#comprar-obra:hover {
+  background-color: #e0c54f;
+}
+
+/* Fechar modal (X) */
+#fechar-modal {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  color: #ccc;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#fechar-modal:hover {
+  color: #fff;
+}
+
+/* Painéis da ajuda */
 .painel-ajuda {
   position: absolute;
   width: 512px;
@@ -58,7 +145,7 @@ body {
   pointer-events: none;
 }
 
-/* Ajuste responsivo */
+/* Responsivo */
 @media (max-width: 768px) {
   .menu-opcoes a {
     font-size: 1rem;
@@ -66,9 +153,11 @@ body {
   #toggle-musica {
     width: 32px;
   }
-  .painel-ajuda {
-    width: 320px;
-    height: 320px;
+  #modal-obra {
+    width: 95%;
+    padding: 20px;
+  }
+  #fechar-modal {
+    font-size: 24px;
   }
 }
-
