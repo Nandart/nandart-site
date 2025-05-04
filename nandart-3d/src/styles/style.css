@@ -1,0 +1,40 @@
+/* Estilos para o modal */
+#modal {
+  display: none; /* Inicialmente, o modal está oculto */
+  position: absolute;
+  top: 50%; /* Posiciona o modal no centro da tela */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8); /* Cor de fundo semitransparente */
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 100; /* Garante que o modal ficará acima dos outros elementos */
+  font-family: Arial, sans-serif;
+}
+
+/* Estilos para o texto dentro do modal */
+#modal h3 {
+  font-size: 24px;
+  margin: 0;
+  padding-bottom: 10px;
+}
+
+#modal p {
+  font-size: 18px;
+  margin: 0;
+}
+
+/* Opcional: animação para o modal aparecer suavemente */
+#modal.show {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
