@@ -1,8 +1,12 @@
-// vite.config.js
-export default {
-  root: '.',              // Usa a raiz do projeto
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  root: 'nandart-3d',
   build: {
-    outDir: 'dist',       // Onde o Vercel vai procurar os ficheiros gerados
-    emptyOutDir: true
+    outDir: '../dist',
+    emptyOutDir: true,
+  },
+  server: {
+    open: true
   }
-}
+});
