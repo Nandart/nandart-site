@@ -4,7 +4,7 @@
   "description": "Galeria 3D da NANdART com Vite e Three.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --config nandart-3d/vite.config.js"
     "preview": "vite preview"
   },
   "dependencies": {
