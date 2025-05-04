@@ -2,20 +2,20 @@
   "name": "nandart-3d",
   "version": "1.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "vite",            // Comando para rodar em ambiente de desenvolvimento
+    "build": "vite build",    // Comando para construir o projeto para produção
+    "preview": "vite preview" // Comando para visualizar a versão construída
   },
   "dependencies": {
-    "three": "^0.137.5",
-    "vite": "^4.0.0"
+    "three": "^0.137.5",      // Dependência do Three.js (necessária para 3D)
+    "vite": "^4.0.0"          // Dependência do Vite (bundler para o projeto)
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^3.0.0"
+    "@vitejs/plugin-vue": "^3.0.0"  // Dependência do plugin Vue, se necessário
   },
   "engines": {
     "node": ">=16.0.0"
   },
   "license": "MIT",
-  "description": "A 3D art gallery project using Vite and Three.js"
+  "description": "3D Art Gallery Project"
 }
