@@ -1,20 +1,20 @@
 {
   "name": "nandart-3d",
   "version": "1.0.0",
+  "description": "Galeria 3D da NANdART com Vite e Three.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "three": "^0.137.5",
-      "vite": "^4.0.0"
+    "three": "^0.137.5"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "vite": "^4.5.0"
+  },
   "engines": {
     "node": ">=16.0.0"
-  
   },
-  "license": "MIT",
-  "description": "Galeria 3D da NANdART com Vite e Three.js"
+  "license": "MIT"
 }
