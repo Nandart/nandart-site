@@ -976,8 +976,6 @@ createColumn(-10, config.wallDistance - 2);
 createColumn(10, config.wallDistance - 2);
 
 // === LUZES VOLUMÉTRICAS ===
-import { RectAreaLight, RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
-RectAreaLightUniformsLib.init();
 
 const rectLight1 = new THREE.RectAreaLight(0xfff2dd, 6, 8, 3);
 rectLight1.position.set(0, 10, -config.wallDistance + 0.2);
