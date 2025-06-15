@@ -135,7 +135,6 @@ html, body {
   font-family: 'Playfair Display', serif;
   cursor: pointer;
   box-shadow: 0 0 8px rgba(216, 178, 108, 0.3);
-  background-image: url('/assets/icons/metamask.svg');
   background-repeat: no-repeat;
   background-position: 12px center;
   background-size: 20px 20px;
