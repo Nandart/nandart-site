@@ -55,16 +55,6 @@ const configMap = {
 let config = configMap[getViewportLevel()];
 
 
-const artworkPaths = [
-  "/assets/obras/obra1.jpg",
-  "/assets/obras/obra2.jpg",
-  "/assets/obras/obra3.jpg",
-  "/assets/obras/obra4.jpg",
-  "/assets/obras/obra5.jpg",
-  "/assets/obras/obra6.jpg",
-  "/assets/obras/obra7.jpg",
-  "/assets/obras/obra8.jpg"
-];
 const artworkData = [
   {
     title: "Fragment of Eternity",
