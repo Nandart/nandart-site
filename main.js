@@ -1066,8 +1066,8 @@ rectLight3.lookAt(0, 6, 0);
 scene.add(rectLight3);
 
 // === TEXTURA NAS PAREDES ===
-const wallTexture = textureLoader.load('/assets/textures/wall_from_layout.jpg');
-const wallNormal = textureLoader.load('/assets/textures/wall_normal.jpg');
+const wallTexture = textureLoader.load('/wall_from_layout.jpg');
+const wallNormal = textureLoader.load('/wall_normal.jpg');
 const wallMaterial = new THREE.MeshStandardMaterial({
   map: wallTexture,
   normalMap: wallNormal,
