@@ -14,17 +14,16 @@ function getTokenId(data) {
 }
 
 import * as THREE from 'three';
-// Updated three.js addons imports (using examples/jsm path)
-import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
-// For RectAreaLight imports (added based on your previous error)
-import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
+import { Reflector } from 'three/addons/objects/Reflector.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { RectAreaLight } from 'three';
 
-// GSAP imports
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+import { ethers } from 'ethers';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 
 // Ethers import
