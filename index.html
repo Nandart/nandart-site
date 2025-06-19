@@ -377,7 +377,8 @@
 .floating-menu a:hover, .floating-menu button:hover {
   background-color: rgba(0, 0, 0, 0.6);
   color: white !important;
-  transform: translateY(-2px);
+  transform: translateY(-2px
+                       
 }
 
 </style>
@@ -438,9 +439,6 @@ window.addEventListener("DOMContentLoaded", () => {
     //   menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
     // });
 
-    document.getElementById('info-button').addEventListener('click', () => {
-      window.location.href = 'info.html';
-    });
 
     document.addEventListener('click', (e) => {
       const menu = document.getElementById('menu-dropdown');
