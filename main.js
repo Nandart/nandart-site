@@ -5,21 +5,27 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import gsap from 'gsap';
 import { ethers } from 'ethers';
 
-// Configuração inicial
+// 1. CONFIGURAÇÃO INICIAL
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ 
-  canvas: document.getElementById('scene'),
-  antialias: true 
-});
+scene.background = new THREE.Color(0x111111);
+scene.fog = new THREE.FogExp2(0x111111, 0.015);
 
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 150);
+camera.position.set(0, 12, 25);
+
+const renderer = new THREE.WebGLRenderer({
+  canvas: document.getElementById('scene'),
+  antialias: true,
+  alpha: true
+});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.6;
 
-// Elementos DOM
+// 2. ELEMENTOS DOM
 const modal = document.querySelector('.art-modal');
 const modalTitle = document.getElementById('art-title');
 const modalArtist = document.getElementById('art-artist');
@@ -30,7 +36,7 @@ const blurOverlay = document.getElementById('blur-overlay');
 const walletButton = document.getElementById('wallet-button');
 const curationPanel = document.getElementById('curation-panel');
 
-// Configurações responsivas
+// 3. CONFIGURAÇÕES
 const configMap = {
   XS: { obraSize: 0.9, circleRadius: 2.4, wallDistance: 8, cameraZ: 12, cameraY: 5.4, textSize: 0.4 },
   SM: { obraSize: 1.1, circleRadius: 2.8, wallDistance: 9.5, cameraZ: 13, cameraY: 5.7, textSize: 0.45 },
@@ -48,7 +54,7 @@ function getViewportLevel() {
 
 let config = configMap[getViewportLevel()];
 
-// Dados das obras de arte
+// 4. DADOS DAS OBRAS
 const artworkData = [
   {
     title: "Fragment of Eternity",
@@ -68,7 +74,7 @@ const artworkData = [
   }
 ];
 
-// Estado da aplicação
+// 5. ESTADO DA APLICAÇÃO
 let isHighlighted = false;
 let selectedArtwork = null;
 const artworks = [];
@@ -79,11 +85,10 @@ const LAYERS = {
   WALLS: 2
 };
 const textureLoader = new THREE.TextureLoader();
+let originalAnimationSpeed = -0.00012;
 
-// Configuração da cena
+// 6. CONFIGURAÇÃO DA CENA
 function setupScene() {
-  scene.background = new THREE.Color(0x111111);
-  
   // Chão reflexivo
   const groundMirror = new Reflector(
     new THREE.PlaneGeometry(100, 100),
@@ -208,6 +213,7 @@ function setupScene() {
         new THREE.MeshPhysicalMaterial({
           color: 0xd8b26c,
           metalness: 1,
+          reflectivity: 1,
           roughness: 0.25,
           emissive: 0x8b6e3b,
           emissiveIntensity: 0.25
@@ -215,7 +221,15 @@ function setupScene() {
       );
 
       text.position.set(-width / 2, 15.5, -config.wallDistance - 3.98);
+      text.castShadow = true;
+      
+      const textLight = new THREE.SpotLight(0xfff1cc, 2.5, 12, Math.PI / 9, 0.4);
+      textLight.position.set(0, 18, -config.wallDistance - 2);
+      textLight.target = text;
+      
       scene.add(text);
+      scene.add(textLight);
+      scene.add(textLight.target);
     }
   );
 
@@ -240,16 +254,41 @@ function setupScene() {
     artwork.rotation.y = rotationY;
     artwork.castShadow = true;
     artwork.receiveShadow = true;
+    scene.add(artwork);
+
+    const reflection = new THREE.Mesh(
+      new THREE.PlaneGeometry(config.obraSize, config.obraSize),
+      new THREE.MeshPhysicalMaterial({
+        map: texture,
+        roughness: 0.2,
+        metalness: 0.05,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.4
+      })
+    );
+    reflection.position.set(x, -4.2, z);
+    reflection.rotation.x = Math.PI;
+    reflection.rotation.y = rotationY;
+    reflection.receiveShadow = false;
+    reflection.castShadow = false;
+    reflection.position.y += 0.05;
+    reflection.scale.set(1, -1, 1);
+    scene.add(reflection);
+    artworkReflections.push(reflection);
+
     artwork.userData = {
       originalPosition: new THREE.Vector3(x, 4.2, z),
       originalRotation: new THREE.Euler(0, rotationY, 0),
-      originalScale: new THREE.Vector3(1, 1, 1)
+      originalScale: new THREE.Vector3(1, 1, 1),
+      reflection: reflection
     };
-    scene.add(artwork);
+
     artworks.push(artwork);
   });
 }
 
+// 7. FUNÇÕES DE INTERAÇÃO
 function handleArtInteraction(event) {
   event.preventDefault();
   
@@ -284,6 +323,10 @@ async function highlightArtwork(artwork, data) {
   if (isHighlighted) return;
   isHighlighted = true;
   selectedArtwork = artwork;
+  artwork.layers.set(LAYERS.DEFAULT);
+  artwork.userData.reflection.visible = true;
+  
+  scene.remove(artwork);
   
   const highlightGroup = new THREE.Group();
   highlightGroup.position.copy(artwork.position);
@@ -292,46 +335,71 @@ async function highlightArtwork(artwork, data) {
   highlightGroup.add(artwork);
   scene.add(highlightGroup);
   
-  scene.remove(artwork);
+  artwork.userData.highlightGroup = highlightGroup;
+  artwork.userData.reflection.visible = false;
+
   artwork.position.set(0, 0, 0);
   artwork.rotation.set(0, 0, 0);
   artwork.scale.set(1, 1, 1);
 
   await Promise.all([
-    gsap.to(highlightGroup.position, {
+    new Promise(resolve => gsap.to(highlightGroup.position, {
       x: 0,
       y: 8.4,
       z: -config.wallDistance / 2,
       duration: 0.7,
-      ease: 'power2.out'
-    }),
-    gsap.to(highlightGroup.scale, {
+      ease: 'power2.out',
+      onComplete: resolve
+    })),
+    new Promise(resolve => gsap.to(highlightGroup.scale, {
       x: 3,
       y: 3,
       z: 3,
       duration: 0.7,
-      ease: 'power2.out'
-    }),
-    gsap.to(highlightGroup.rotation, {
+      ease: 'power2.out',
+      onComplete: resolve
+    })),
+    new Promise(resolve => gsap.to(highlightGroup.rotation, {
       y: 0,
       duration: 0.4,
-      ease: 'power2.out'
-    })
+      ease: 'power2.out',
+      onComplete: resolve
+    }))
   ]);
 
-  showArtModal(data);
+  const artworkRect = calculateModalPosition(artwork);
+  showArtModal(artworkRect, data);
 }
 
-function showArtModal(data) {
+function calculateModalPosition(artwork) {
+  const vector = new THREE.Vector3();
+  vector.setFromMatrixPosition(artwork.matrixWorld);
+  vector.project(camera);
+
+  const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+  const y = (vector.y * -0.5 + 0.5) * window.innerHeight;
+  const width = artwork.geometry.parameters.width * 150 * (artwork.scale.x || 1);
+  const height = artwork.geometry.parameters.height * 150 * (artwork.scale.y || 1);
+
+  return {
+    top: y - height/2,
+    bottom: y + height/2,
+    left: x - width/2,
+    right: x + width/2,
+    width: width,
+    height: height
+  };
+}
+
+function showArtModal(artworkPosition, data) {
   modalTitle.textContent = data.title;
   modalArtist.textContent = data.artist;
   modalYear.textContent = data.year;
   modalPrice.textContent = `${data.price} ETH`;
 
   modal.style.display = 'flex';
-  modal.style.top = '50%';
-  modal.style.left = '50%';
-  modal.style.transform = 'translate(-50%, -50%)';
+  modal.style.top = `${artworkPosition.bottom - 5}px`;
+  modal.style.left = `${artworkPosition.left + (artworkPosition.width / 2) - 140}px`;
   
   setTimeout(() => {
     modal.classList.add('active');
@@ -343,28 +411,31 @@ async function restoreArtwork() {
   if (!isHighlighted || !selectedArtwork) return;
 
   const artwork = selectedArtwork;
-  const highlightGroup = artwork.parent;
+  const highlightGroup = artwork.userData.highlightGroup;
 
   await Promise.all([
-    gsap.to(highlightGroup.position, {
+    new Promise(resolve => gsap.to(highlightGroup.position, {
       x: artwork.userData.originalPosition.x,
       y: artwork.userData.originalPosition.y,
       z: artwork.userData.originalPosition.z,
       duration: 0.7,
-      ease: 'power2.out'
-    }),
-    gsap.to(highlightGroup.rotation, {
+      ease: 'power2.out',
+      onComplete: resolve
+    })),
+    new Promise(resolve => gsap.to(highlightGroup.rotation, {
       y: artwork.userData.originalRotation.y,
       duration: 0.7,
-      ease: 'power2.out'
-    }),
-    gsap.to(highlightGroup.scale, {
+      ease: 'power2.out',
+      onComplete: resolve
+    })),
+    new Promise(resolve => gsap.to(highlightGroup.scale, {
       x: 1,
       y: 1,
       z: 1,
       duration: 0.7,
-      ease: 'power2.out'
-    })
+      ease: 'power2.out',
+      onComplete: resolve
+    }))
   ]);
 
   highlightGroup.remove(artwork);
@@ -374,16 +445,18 @@ async function restoreArtwork() {
   scene.add(artwork);
   scene.remove(highlightGroup);
   
+  artwork.userData.reflection.visible = true;
+  isHighlighted = false;
+  selectedArtwork = null;
+  
   modal.classList.remove('active');
   blurOverlay.classList.remove('active');
   setTimeout(() => {
     modal.style.display = 'none';
   }, 300);
-  
-  isHighlighted = false;
-  selectedArtwork = null;
 }
 
+// 8. INTEGRAÇÃO WEB3
 async function toggleWalletConnection() {
   if (!window.ethereum) {
     alert('Please install MetaMask to connect your wallet.');
@@ -394,6 +467,7 @@ async function toggleWalletConnection() {
     if (walletButton.classList.contains('connected')) {
       walletButton.classList.remove('connected');
       walletButton.innerHTML = 'Connect Wallet';
+      walletButton.style.padding = '8px 18px 8px 42px';
     } else {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       const provider = new ethers.BrowserProvider(window.ethereum);
@@ -403,6 +477,7 @@ async function toggleWalletConnection() {
 
       walletButton.classList.add('connected');
       walletButton.innerHTML = `Connected <span>${shortBalance} ETH</span>`;
+      walletButton.style.padding = '8px 18px 8px 16px';
     }
   } catch (err) {
     console.error('Wallet connection error:', err);
@@ -440,6 +515,36 @@ async function handlePurchase() {
   }
 }
 
+// 9. ANIMAÇÃO
+function animate() {
+  requestAnimationFrame(animate);
+
+  const speedFactor = isHighlighted ? 0.5 : 1;
+  const time = Date.now() * originalAnimationSpeed * speedFactor;
+
+  artworks.forEach((artwork, i) => {
+    if (artwork === selectedArtwork) return;
+
+    const angle = time + (i / artworks.length) * Math.PI * 2;
+    const x = Math.cos(angle) * config.circleRadius;
+    const z = Math.sin(angle) * config.circleRadius;
+    const rotationY = -angle + Math.PI;
+
+    artwork.position.x = x;
+    artwork.position.z = z;
+    artwork.rotation.y = rotationY;
+
+    if (artwork.userData.reflection) {
+      artwork.userData.reflection.position.x = x;
+      artwork.userData.reflection.position.z = z;
+      artwork.userData.reflection.rotation.y = rotationY;
+    }
+  });
+
+  renderer.render(scene, camera);
+}
+
+// 10. INICIALIZAÇÃO
 function setupInteractions() {
   renderer.domElement.addEventListener('click', handleArtInteraction);
   
@@ -458,36 +563,14 @@ function setupInteractions() {
   });
 }
 
-function animate() {
-  requestAnimationFrame(animate);
-
-  const time = Date.now() * -0.00012 * (isHighlighted ? 0.5 : 1);
-
-  artworks.forEach((artwork, i) => {
-    if (artwork === selectedArtwork) return;
-
-    const angle = time + (i / artworks.length) * Math.PI * 2;
-    const x = Math.cos(angle) * config.circleRadius;
-    const z = Math.sin(angle) * config.circleRadius;
-    const rotationY = -angle + Math.PI;
-
-    artwork.position.x = x;
-    artwork.position.z = z;
-    artwork.rotation.y = rotationY;
-  });
-
-  renderer.render(scene, camera);
-}
-
-// Inicialização
-setupScene();
-setupInteractions();
-animate();
-
-// Resize handler
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
   config = configMap[getViewportLevel()];
 });
+
+// INICIAR TUDO
+setupScene();
+setupInteractions();
+animate();
