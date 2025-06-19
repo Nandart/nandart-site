@@ -14,17 +14,21 @@ function getTokenId(data) {
 }
 
 import * as THREE from 'three';
-import { Reflector } from 'three/addons/objects/Reflector.js';
-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
+// Updated three.js addons imports (using examples/jsm path)
+import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+// For RectAreaLight imports (added based on your previous error)
+import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
 import { RectAreaLight } from 'three';
 
+// GSAP imports
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
-import { ethers } from 'ethers';
 
+// Ethers import
+import { ethers } from 'ethers';
 // --- VARIÁVEIS DE ESTADO DA INTERAÇÃO ---
 let isHighlighted = false;
 let selectedArtwork = null;
@@ -108,7 +112,7 @@ const artworkData = [
     artist: "Rénner Nunes",
     year: "2023",
     price: "1.55",
-    tokenURI: "ipfs://bafkreieevpfuos62jiiflarwwpgubw3znzsfv5fjl3k2tv2uiykpeiueee",
+    tokenURI: "https://ipfs.io/ipfs/bafkreieevpfuos62jiiflarwwpgubw3znzsfv5fjl3k2tv2uiykpeiueee",
     artista: "0x913b3984583Ac44dE06Ef480a8Ac925DEA378b41",
     tokenId: 15
   },
@@ -117,7 +121,7 @@ const artworkData = [
     artist: "Rénner Nunes",
     year: "2024",
     price: "0.04",
-    tokenURI: "ipfs://bafkreif45vd7woswi3pbdzrowr6mtkobu6e7wop4yj3lukn4l4lm6k6h6y",
+    tokenURI: "https://ipfs.io/ipfs/bafkreif45vd7woswi3pbdzrowr6mtkobu6e7wop4yj3lukn4l4lm6k6h6y",
     artista: "0x913b3984583Ac44dE06Ef480a8Ac925DEA378b41"
   }
 ];
@@ -243,7 +247,12 @@ const frameWidth = 4.6;
 const frameHeight = 5.8;
 
 const centerArtGroup = new THREE.Group();
-const centerTexture = textureLoader.load(artworkPaths[0]);
+const centerTexture = textureLoader.load(artworkPaths[0], undefined, undefined, (err) => {
+  console.error('Error loading texture:', err);
+  textureLoader.load('/fallback.jpg', (fallbackTexture) => {
+    centerPainting.material.map = fallbackTexture;
+  });
+});
 
 const centerFrame = new THREE.Mesh(
   new THREE.BoxGeometry(frameWidth + 0.3, frameHeight + 0.3, 0.18),
@@ -426,7 +435,14 @@ const artworkReflections = [];
 let originalAnimationSpeed = -0.00012;
 
 artworkPaths.forEach((src, i) => {
-  const texture = textureLoader.load(src);
+  const texture = textureLoader.load(src, undefined, undefined, (err) => {
+    console.error('Error loading artwork texture:', src, err);
+    textureLoader.load('/fallback.jpg', (fallback) => {
+      artworks[i].material.map = fallback;
+      artworkReflections[i].material.map = fallback;
+    });
+  });
+  
   const angle = (i / artworkPaths.length) * Math.PI * 2;
   const x = Math.cos(angle) * config.circleRadius;
   const z = Math.sin(angle) * config.circleRadius;
