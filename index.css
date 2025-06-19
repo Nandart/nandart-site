@@ -1,27 +1,30 @@
-* {
+/* ===== RESET & BASE ===== */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
 
-body {
-  margin: 0;
+html, body {
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  background-color: #111;
-  font-family: 'Orbitron', sans-serif;
+  background-color: #111111;
 }
 
+/* ===== 3D SCENE ===== */
 #scene {
-  display: block;
-  width: 100vw;
-  height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: 0;
+  outline: none;
 }
 
+/* ===== INTERFACE ===== */
 .floating-menu {
   position: fixed;
   top: 16px;
@@ -47,12 +50,14 @@ body {
 .floating-menu a:hover, .floating-menu button:hover {
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
+  transform: translateY(-2px);
 }
 
-#wallet-button {
-  padding: 8px 16px;
+#wallet-button.connected {
+  background-color: rgba(137, 180, 255, 0.2);
 }
 
+/* ===== MODAL & OVERLAY ===== */
 #blur-overlay {
   position: fixed;
   top: 0;
@@ -64,6 +69,7 @@ body {
   opacity: 0;
   transition: opacity 0.4s ease;
   background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
 }
 
 #blur-overlay.active {
@@ -83,6 +89,7 @@ body {
   border-radius: 8px;
   max-width: 320px;
   backdrop-filter: blur(5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.3s ease, transform 0.3s ease;
@@ -97,11 +104,13 @@ body {
   color: #d8b26c;
   margin-bottom: 12px;
   font-size: 1.3rem;
+  font-family: 'Orbitron', sans-serif;
 }
 
 .art-modal p {
   font-size: 0.9rem;
   margin-bottom: 8px;
+  line-height: 1.5;
 }
 
 #art-artist {
@@ -129,11 +138,71 @@ body {
   border-radius: 4px;
   cursor: pointer;
   margin-top: 15px;
+  font-family: 'Orbitron', sans-serif;
+  transition: all 0.2s ease;
 }
 
+#buy-art:hover {
+  background-color: #e2c278;
+}
+
+/* ===== CURATION PANEL ===== */
+#curation-panel {
+  display: none;
+  padding: 2rem;
+  background: #1a1a1a;
+  color: #f5f5f5;
+  font-family: 'Orbitron', sans-serif;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 400;
+  width: 80%;
+  max-width: 800px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(216, 178, 108, 0.3);
+}
+
+.submission-card {
+  background: rgba(30, 30, 30, 0.8);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.submission-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.btn-approve, .btn-reject {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.btn-approve {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-reject {
+  background-color: #f44336;
+  color: white;
+}
+
+/* ===== RESPONSIVO ===== */
 @media (max-width: 768px) {
   .floating-menu {
     gap: 12px;
+    top: 12px;
+    right: 12px;
   }
   
   .floating-menu a, .floating-menu button {
@@ -144,11 +213,16 @@ body {
   .art-modal {
     max-width: 280px;
     padding: 16px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
+    left: 50% !important;
+    transform: translateX(-50%) translateY(20px) !important;
   }
   
   .art-modal.active {
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(-50%) translateY(0) !important;
+  }
+
+  #curation-panel {
+    width: 90%;
+    padding: 1rem;
   }
 }
