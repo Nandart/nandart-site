@@ -1,6 +1,6 @@
-import * as THREE from 'three';
-import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
-import { Reflector } from 'three/examples/jsm/objects/Reflector.js';
+import * as THREE from 'https://unpkg.com/three@0.161.0/build/three.module.js';
+import { PointerLockControls } from 'https://unpkg.com/three@0.161.0/examples/jsm/controls/PointerLockControls.js';
+import { Reflector } from 'https://unpkg.com/three@0.161.0/examples/jsm/objects/Reflector.js';
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
