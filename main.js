@@ -27,17 +27,22 @@ import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 
 // Ethers import
 import { ethers } from 'ethers';
+
 // --- VARIÁVEIS DE ESTADO DA INTERAÇÃO ---
 let isHighlighted = false;
 let selectedArtwork = null;
+
 // Configuração de camadas para evitar desfoque
 const LAYERS = {
   DEFAULT: 0,
   HIGHLIGHTED: 1,  // Camara para obras destacadas
   WALLS: 2         // Já existente para paredes
 };
+
 const walletButton = document.getElementById('wallet-button');
-gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+if (walletButton) {
+  gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+}
 
 function getViewportLevel() {
   const width = window.innerWidth;
@@ -124,6 +129,24 @@ const artworkData = [
   }
 ];
 
+// Create a fallback texture for error cases
+const createFallbackTexture = () => {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#333333';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '30px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillText('Artwork Loading', canvas.width/2, canvas.height/2);
+  ctx.fillText('Error', canvas.width/2, canvas.height/2 + 40);
+  const texture = new THREE.Texture(canvas);
+  texture.needsUpdate = true;
+  return texture;
+};
+
 const artworkPaths = artworkData.map(art => art.tokenURI);
 const scene = new THREE.Scene();
 
@@ -144,6 +167,7 @@ scene.add(groundMirror);
 scene.background = new THREE.Color(0x111111);
 
 const textureLoader = new THREE.TextureLoader();
+const fallbackTexture = createFallbackTexture();
 
 const camera = new THREE.PerspectiveCamera();
 function updateCamera() {
@@ -245,12 +269,18 @@ const frameWidth = 4.6;
 const frameHeight = 5.8;
 
 const centerArtGroup = new THREE.Group();
-const centerTexture = textureLoader.load(artworkPaths[0], undefined, undefined, (err) => {
-  console.error('Error loading texture:', err);
-  textureLoader.load('/fallback.jpg', (fallbackTexture) => {
+const centerTexture = textureLoader.load(artworkPaths[0], 
+  (texture) => {
+    centerPainting.material.map = texture;
+    centerPainting.material.needsUpdate = true;
+  },
+  undefined, 
+  (err) => {
+    console.error('Error loading texture:', err);
     centerPainting.material.map = fallbackTexture;
-  });
-});
+    centerPainting.material.needsUpdate = true;
+  }
+);
 
 const centerFrame = new THREE.Mesh(
   new THREE.BoxGeometry(frameWidth + 0.3, frameHeight + 0.3, 0.18),
@@ -433,13 +463,26 @@ const artworkReflections = [];
 let originalAnimationSpeed = -0.00012;
 
 artworkPaths.forEach((src, i) => {
-  const texture = textureLoader.load(src, undefined, undefined, (err) => {
-    console.error('Error loading artwork texture:', src, err);
-    textureLoader.load('/fallback.jpg', (fallback) => {
-      artworks[i].material.map = fallback;
-      artworkReflections[i].material.map = fallback;
-    });
-  });
+  const texture = textureLoader.load(src, 
+    (texture) => {
+      artworks[i].material.map = texture;
+      artworks[i].material.needsUpdate = true;
+      if (artworkReflections[i]) {
+        artworkReflections[i].material.map = texture;
+        artworkReflections[i].material.needsUpdate = true;
+      }
+    },
+    undefined,
+    (err) => {
+      console.error('Error loading artwork texture:', src, err);
+      artworks[i].material.map = fallbackTexture;
+      artworks[i].material.needsUpdate = true;
+      if (artworkReflections[i]) {
+        artworkReflections[i].material.map = fallbackTexture;
+        artworkReflections[i].material.needsUpdate = true;
+      }
+    }
+  );
   
   const angle = (i / artworkPaths.length) * Math.PI * 2;
   const x = Math.cos(angle) * config.circleRadius;
@@ -502,25 +545,29 @@ const modalPrice = document.getElementById('art-price');
 const buyButton = document.getElementById('buy-art');
 const blurOverlay = document.getElementById('blur-overlay');
 
-modal.style.border = 'none';
-modal.style.background = 'rgba(10, 10, 10, 0.88)';
-modal.style.backdropFilter = 'blur(1.5px)';
-modal.style.boxShadow = 'none';
-modal.style.padding = '12px 16px';
-modal.style.borderRadius = '4px';
-modal.style.width = 'auto';
-modal.style.maxWidth = 'none';
+if (modal) {
+  modal.style.border = 'none';
+  modal.style.background = 'rgba(10, 10, 10, 0.88)';
+  modal.style.backdropFilter = 'blur(1.5px)';
+  modal.style.boxShadow = 'none';
+  modal.style.padding = '12px 16px';
+  modal.style.borderRadius = '4px';
+  modal.style.width = 'auto';
+  modal.style.maxWidth = 'none';
+}
 
-buyButton.style.padding = '6px 12px';
-buyButton.style.fontSize = '0.82rem';
-buyButton.style.marginTop = '10px';
-buyButton.style.background = 'rgba(216, 178, 108, 0.9)';
-buyButton.style.width = '50px';
-buyButton.style.height = '30px';
-buyButton.style.border = 'none';
-buyButton.style.display = 'block';
-buyButton.style.marginLeft = 'auto';
-buyButton.style.marginRight = 'auto';
+if (buyButton) {
+  buyButton.style.padding = '6px 12px';
+  buyButton.style.fontSize = '0.82rem';
+  buyButton.style.marginTop = '10px';
+  buyButton.style.background = 'rgba(216, 178, 108, 0.9)';
+  buyButton.style.width = '50px';
+  buyButton.style.height = '30px';
+  buyButton.style.border = 'none';
+  buyButton.style.display = 'block';
+  buyButton.style.marginLeft = 'auto';
+  buyButton.style.marginRight = 'auto';
+}
 
 function calculateModalPosition(artwork) {
   const vector = new THREE.Vector3();
@@ -543,6 +590,8 @@ function calculateModalPosition(artwork) {
 }
 
 function showArtModal(artworkPosition, data) {
+  if (!modal) return;
+
   const dynamicElements = modal.querySelectorAll('.dynamic-element');
   dynamicElements.forEach(el => el.remove());
 
@@ -600,7 +649,9 @@ function showArtModal(artworkPosition, data) {
   setTimeout(() => {
     modal.style.opacity = '1';
     modal.style.transform = 'translateY(0)';
-    setTimeout(() => blurOverlay.style.opacity = '1', 10);
+    if (blurOverlay) {
+      setTimeout(() => blurOverlay.style.opacity = '1', 10);
+    }
   }, 10);
 }
 
@@ -609,7 +660,9 @@ async function highlightArtwork(artwork, data) {
   isHighlighted = true;
   selectedArtwork = artwork;
   artwork.layers.set(LAYERS.DEFAULT);
-  artwork.userData.reflection.visible = true;
+  if (artwork.userData.reflection) {
+    artwork.userData.reflection.visible = true;
+  }
   
   scene.remove(artwork);
   
@@ -621,7 +674,9 @@ async function highlightArtwork(artwork, data) {
   scene.add(highlightGroup);
   
   artwork.userData.highlightGroup = highlightGroup;
-  artwork.userData.reflection.visible = false;
+  if (artwork.userData.reflection) {
+    artwork.userData.reflection.visible = false;
+  }
 
   artwork.position.set(0, 0, 0);
   artwork.rotation.set(0, 0, 0);
@@ -694,17 +749,23 @@ async function restoreArtwork() {
   scene.add(artwork);
   scene.remove(highlightGroup);
   
-  artwork.userData.reflection.visible = true;
+  if (artwork.userData.reflection) {
+    artwork.userData.reflection.visible = true;
+  }
   isHighlighted = false;
   selectedArtwork = null;
   
-  modal.style.opacity = '0';
-  modal.style.transform = 'translateY(8px)';
-  blurOverlay.style.opacity = '0';
-  setTimeout(() => {
-    modal.style.display = 'none';
-    blurOverlay.style.display = 'none';
-  }, 250);
+  if (modal) {
+    modal.style.opacity = '0';
+    modal.style.transform = 'translateY(8px)';
+  }
+  if (blurOverlay) {
+    blurOverlay.style.opacity = '0';
+    setTimeout(() => {
+      if (modal) modal.style.display = 'none';
+      if (blurOverlay) blurOverlay.style.display = 'none';
+    }, 250);
+  }
 }
 
 function handleArtInteraction(event) {
@@ -738,11 +799,13 @@ function handleArtInteraction(event) {
 }
 
 function setupInteractionListeners() {
-  renderer.domElement.addEventListener('pointerdown', handleArtInteraction);
-  renderer.domElement.addEventListener('click', handleArtInteraction);
+  if (renderer.domElement) {
+    renderer.domElement.addEventListener('pointerdown', handleArtInteraction);
+    renderer.domElement.addEventListener('click', handleArtInteraction);
+  }
   
   document.addEventListener('click', (e) => {
-    if (isHighlighted && !modal.contains(e.target) && e.target !== renderer.domElement) {
+    if (isHighlighted && modal && !modal.contains(e.target) && e.target !== renderer.domElement) {
       restoreArtwork();
     }
   }, { passive: true });
