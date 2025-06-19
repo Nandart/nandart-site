@@ -24,7 +24,6 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { ethers } from 'ethers';
-import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 
 // Ethers import
 import { ethers } from 'ethers';
