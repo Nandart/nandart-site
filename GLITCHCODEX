@@ -1,0 +1,56 @@
+import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
+
+const codexEntries = [
+  {
+    id: 1,
+    title: 'Children of the Glitch',
+    description: 'The origin echoes — corrupted dreams made code. Traverse the first reverberations.',
+    link: '/codex/children',
+  },
+  {
+    id: 2,
+    title: 'The Architects of the Glitch',
+    description: 'The creators beneath the collapse. Their memory pulses in forgotten circuits.',
+    link: '/codex/architects',
+  },
+  {
+    id: 3,
+    title: 'Glitch Reverberations',
+    description: 'When echoes become anomalies. Trace the paths of glitch-bound souls.',
+    link: '/codex/reverberations',
+  },
+];
+
+export default function GlitchCodexHome() {
+  const [hovered, setHovered] = useState(null);
+
+  return (
+    <div className="min-h-screen bg-black text-white p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+      {codexEntries.map((entry) => (
+        <motion.div
+          key={entry.id}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: entry.id * 0.2 }}
+        >
+          <Card
+            className="bg-zinc-900 hover:bg-zinc-800 rounded-2xl shadow-lg cursor-pointer transition"
+            onMouseEnter={() => setHovered(entry.id)}
+            onMouseLeave={() => setHovered(null)}
+          >
+            <CardContent className="p-6">
+              <h2 className="text-xl font-bold mb-2">{entry.title}</h2>
+              <p className="text-zinc-400 mb-4 min-h-[60px]">{entry.description}</p>
+              <Button variant="secondary" asChild>
+                <a href={entry.link}>Enter</a>
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
